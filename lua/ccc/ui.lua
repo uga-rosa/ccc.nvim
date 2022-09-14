@@ -65,10 +65,10 @@ function UI:open(insert)
     end
     self.already_open = true
     self.is_insert = insert
+    self:init()
     if not insert then
         self:pick()
     end
-    self:init()
     self:_open()
     self:update()
 
