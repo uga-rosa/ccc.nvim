@@ -306,7 +306,7 @@ function UI:input_mode_toggle()
         self.color:rgb2hsl()
     else
         self.input_mode = "RGB"
-        self.color:rgb2hsl()
+        self.color:hsl2rgb()
     end
     self:update()
 end
