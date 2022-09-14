@@ -91,25 +91,27 @@ function Color:hsl2rgb()
     self.input_mode = "RGB"
 end
 
----@param int integer
+---@param v1? integer
+---@param v2? integer
+---@param v3? integer
+---@param mode? input_mode
 ---@return string
-local function to_hex(int)
-    return string.format("%02x", int)
-end
-
----@param R? integer
----@param G? integer
----@param B? integer
----@return string
-function Color:hex_str(R, G, B)
-    if not (R and G and B) then
+function Color:hex_str(v1, v2, v3, mode)
+    local R, G, B
+    if v1 and v2 and v3 then
+        if mode == "RGB" then
+            R, G, B = v1, v2, v3
+        else
+            R, G, B = utils.hsl2rgb(v1, v2, v3)
+        end
+    else
         if self.input_mode == "RGB" then
             R, G, B = self:get_rgb()
         else
             R, G, B = utils.hsl2rgb(self:get_hsl())
         end
     end
-    return "#" .. to_hex(R) .. to_hex(G) .. to_hex(B)
+    return ("#%02x%02x%02x"):format(R, G, B)
 end
 
 ---@return string

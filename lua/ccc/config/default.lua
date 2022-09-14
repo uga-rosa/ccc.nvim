@@ -15,7 +15,7 @@ return {
         border = "rounded",
     },
     default_color = "#000000",
-    preserve = true,
+    preserve = false,
     mappings = {
         ["q"] = mapping.quit,
         ["<CR>"] = mapping.complete,

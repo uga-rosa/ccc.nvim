@@ -122,72 +122,50 @@ local function update_end(is_point, start, bar_char_len, point_char_len)
     end
 end
 
-function UI:highlight_rgb()
-    local R, G, B = self.color:get_rgb()
-    local bar_char = config.get("bar_char")
-    local point_char = config.get("point_char")
-    local bar_len = config.get("bar_len")
-    local point_idx_R = utils.ratio(R, 255, bar_len)
-    local point_idx_G = utils.ratio(G, 255, bar_len)
-    local point_idx_B = utils.ratio(B, 255, bar_len)
-    local start_R, start_G, start_B = 7, 7, 7
-    local end_R, end_G, end_B
-    for i = 0, bar_len - 1 do
-        end_R = update_end(i == point_idx_R, start_R, #bar_char, #point_char)
-        end_G = update_end(i == point_idx_G, start_G, #bar_char, #point_char)
-        end_B = update_end(i == point_idx_B, start_B, #bar_char, #point_char)
-
-        local hex_R = Color:hex_str(utils.round((i + 0.5) * 255 / bar_len), G, B)
-        local hex_G = Color:hex_str(R, utils.round((i + 0.5) * 255 / bar_len), B)
-        local hex_B = Color:hex_str(R, G, utils.round((i + 0.5) * 255 / bar_len))
-        set_hl(0, "CccR" .. i, { fg = hex_R })
-        set_hl(0, "CccB" .. i, { fg = hex_G })
-        set_hl(0, "CccG" .. i, { fg = hex_B })
-        add_hl(0, self.ns_id, "CccR" .. i, 0, start_R, end_R)
-        add_hl(0, self.ns_id, "CccB" .. i, 1, start_G, end_G)
-        add_hl(0, self.ns_id, "CccG" .. i, 2, start_B, end_B)
-
-        start_R, start_G, start_B = end_R, end_G, end_B
+function UI:highlight()
+    local v1, v2, v3, max1, max2, max3
+    if self.input_mode == "RGB" then
+        v1, v2, v3 = self.color:get_rgb()
+        max1, max2, max3 = 255, 255, 255
+    else
+        v1, v2, v3 = self.color:get_hsl()
+        max1, max2, max3 = 360, 100, 100
     end
-end
 
-function UI:highlight_hsl()
-    local H, S, L = self.color:get_hsl()
     local bar_char = config.get("bar_char")
     local point_char = config.get("point_char")
     local bar_len = config.get("bar_len")
-    local point_idx_H = utils.ratio(H, 360, bar_len)
-    local point_idx_S = utils.ratio(S, 100, bar_len)
-    local point_idx_L = utils.ratio(L, 100, bar_len)
-    local start_H, start_S, start_L = 7, 7, 7
-    local end_H, end_S, end_L
+    local point_idx_v1 = utils.ratio(v1, max1, bar_len)
+    local point_idx_v2 = utils.ratio(v2, max2, bar_len)
+    local point_idx_v3 = utils.ratio(v3, max3, bar_len)
+    local start_v1, start_v2, start_v3 = 7, 7, 7
+    local end_v1, end_v2, end_v3
     for i = 0, bar_len - 1 do
-        end_H = update_end(i == point_idx_H, start_H, #bar_char, #point_char)
-        end_S = update_end(i == point_idx_S, start_S, #bar_char, #point_char)
-        end_L = update_end(i == point_idx_L, start_L, #bar_char, #point_char)
+        end_v1 = update_end(i == point_idx_v1, start_v1, #bar_char, #point_char)
+        end_v2 = update_end(i == point_idx_v2, start_v2, #bar_char, #point_char)
+        end_v3 = update_end(i == point_idx_v3, start_v3, #bar_char, #point_char)
 
-        local hex_H = Color:hex_str(utils.hsl2rgb((i + 0.5) * 360 / bar_len, S, L))
-        local hex_S = Color:hex_str(utils.hsl2rgb(H, (i + 0.5) * 100 / bar_len, L))
-        local hex_L = Color:hex_str(utils.hsl2rgb(H, S, (i + 0.5) * 100 / bar_len))
-        set_hl(0, "CccH" .. i, { fg = hex_H })
-        set_hl(0, "CccS" .. i, { fg = hex_S })
-        set_hl(0, "CccL" .. i, { fg = hex_L })
-        add_hl(0, self.ns_id, "CccH" .. i, 0, start_H, end_H)
-        add_hl(0, self.ns_id, "CccS" .. i, 1, start_S, end_S)
-        add_hl(0, self.ns_id, "CccL" .. i, 2, start_L, end_L)
+        local hex_v1 =
+            Color:hex_str(utils.round((i + 0.5) * max1 / bar_len), v2, v3, self.input_mode)
+        local hex_v2 =
+            Color:hex_str(v1, utils.round((i + 0.5) * max2 / bar_len), v3, self.input_mode)
+        local hex_v3 =
+            Color:hex_str(v1, v2, utils.round((i + 0.5) * max3 / bar_len), self.input_mode)
+        set_hl(0, "CccV1" .. i, { fg = hex_v1 })
+        set_hl(0, "CccV2" .. i, { fg = hex_v2 })
+        set_hl(0, "CccV3" .. i, { fg = hex_v3 })
+        add_hl(0, self.ns_id, "CccV1" .. i, 0, start_v1, end_v1)
+        add_hl(0, self.ns_id, "CccV2" .. i, 1, start_v2, end_v2)
+        add_hl(0, self.ns_id, "CccV3" .. i, 2, start_v3, end_v3)
 
-        start_H, start_S, start_L = end_H, end_S, end_L
+        start_v1, start_v2, start_v3 = end_v1, end_v2, end_v3
     end
 end
 
 function UI:update()
     api.nvim_buf_clear_namespace(0, self.ns_id, 0, -1)
     api.nvim_buf_set_lines(self.bufnr, 0, 4, false, self:buffer())
-    if self.input_mode == "RGB" then
-        self:highlight_rgb()
-    else
-        self:highlight_hsl()
-    end
+    self:highlight()
     local bg = self.color:hex_str()
     local fg = bg > "#800000" and "#000000" or "#ffffff"
     set_hl(0, "CccOutput", { fg = fg, bg = bg })
