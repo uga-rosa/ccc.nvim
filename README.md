@@ -8,15 +8,15 @@ Supported formats are RGB, HSL, and color code.
 
 # Usage
 
-This plugin provides two commands.
+This plugin provides one command and one mapping.
 
 - `:CccStart`
     - Detects and replaces the color under the cursor.
-    - If nothing is detected, it is inserted at a new cursor position.
+    - If nothing is detected, it is inserted at a cursor position.
 
-- `:CccInsert`
-    - For insert mode command.
-    - It is recommend to use `<Cmd>` mapping
+- `<Plug>(ccc-insert)`
+    - Defined in insert mode.
+    - Insert the color without detection.
 
 # Default mappings
 
