@@ -4,7 +4,10 @@
 
 **C**reate **C**olor **C**ode in neovim.
 
-Supported formats are RGB, HSL, and HEX.
+- Features
+    - RGB and HSL sliders for color adjustment.
+    - Dynamic highlighting of sliders.
+    - 3 output formats (HEX, RGB, HSL).
 
 # Usage
 
