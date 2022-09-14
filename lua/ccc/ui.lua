@@ -156,6 +156,11 @@ function UI:complete()
         local line_to_cursor = api.nvim_get_current_line():sub(1, utils.col())
         local idx = math.floor(#line_to_cursor / 8) + 1
         local color = self.prev_colors[idx]
+        if color.input_mode == "RGB" then
+            color:set(self.input_mode, "RGB", color:get_rgb())
+        else
+            color:set(self.input_mode, "HSL", color:get_hsl())
+        end
         self.color = color
         self:hide_prev_colors()
         return
