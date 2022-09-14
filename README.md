@@ -25,8 +25,8 @@ This plugin provides one command and one mapping.
 
 - `<CR>`: Complete, and perform a replace or insert.
 - `q`: Cancel.
-- `i`: Toggle input mode. They are `RGB` and `HSL`.
-- `o`: Toggle output mode. They are `RGB`, `HSL`, and `HEX`.
+- `i`: Toggle input mode. `RGB` -> `HSL` -> `RGB` -> ...
+- `o`: Toggle output mode. `HEX` -> `RGB` -> `HSL` -> `HEX` -> ...
 - `h/l`: Decrease/increase by 1.
 - `s/d`: Decrease/increase by 5.
 - `m/,`: Decrease/increase by 10.
