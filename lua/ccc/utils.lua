@@ -138,4 +138,36 @@ function utils.create_bar(value, max, bar_len)
     return string.rep(bar_char, ratio - 1) .. point_char .. string.rep(bar_char, bar_len - ratio)
 end
 
+local hex_pattern = "#" .. string.rep("([0-9a-fA-F][0-9a-fA-F])", 3)
+local rgb_pattern = "rgb%((%d+),%s*(%d+),%s*(%d+)%)"
+local hsl_pattern = "hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%%)"
+
+---@param s string
+---@return input_mode recognized
+---@return integer R or H
+---@return integer G or S
+---@return integer B or L
+---@return integer start
+---@return integer end_
+---@overload fun(s: string): fail: nil, err_msg: string
+function utils.parse_color(s)
+    local start, end_, cap1, cap2, cap3 = s:find(hex_pattern)
+    if start then
+        local R, G, B = tonumber(cap1, 16), tonumber(cap2, 16), tonumber(cap3, 16)
+        return "RGB", R, G, B, start, end_
+    end
+    start, end_, cap1, cap2, cap3 = s:find(rgb_pattern)
+    if start then
+        local R, G, B = tonumber(cap1, 10), tonumber(cap2, 10), tonumber(cap3, 10)
+        return "RGB", R, G, B, start, end_
+    end
+    start, end_, cap1, cap2, cap3 = s:find(hsl_pattern)
+    if start then
+        local H, S, L = tonumber(cap1, 10), tonumber(cap2, 10), tonumber(cap3, 10)
+        return "HSL", H, S, L, start, end_
+    end
+    ---@diagnostic disable-next-line
+    return nil, "Unable to recognize color patterns"
+end
+
 return utils

@@ -287,34 +287,16 @@ function UI:set_percent(percent)
     self:update()
 end
 
-local hex_pattern = "#" .. string.rep("([0-9a-fA-F][0-9a-fA-F])", 3)
-local rgb_pattern = "rgb%((%d+),%s*(%d+),%s*(%d+)%)"
-local hsl_pattern = "hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%%)"
-
 function UI:pick()
     ---@type string
     local current_line = api.nvim_get_current_line()
+    local recognized, v1, v2, v3, start, end_ = utils.parse_color(current_line)
     local cursor_col = api.nvim_win_get_cursor(0)[2] + 1
-    local s, e, cap1, cap2, cap3 = current_line:find(hex_pattern)
-    if s and s <= cursor_col and cursor_col <= e then
-        self.start_col = s
-        self.end_col = e
-        local R, G, B = tonumber(cap1, 16), tonumber(cap2, 16), tonumber(cap3, 16)
-        self.color:set(self.input_mode, "RGB", R, G, B)
-    end
-    s, e, cap1, cap2, cap3 = current_line:find(rgb_pattern)
-    if s and s <= cursor_col and cursor_col <= e then
-        self.start_col = s
-        self.end_col = e
-        local R, G, B = tonumber(cap1, 10), tonumber(cap2, 10), tonumber(cap3, 10)
-        self.color:set(self.input_mode, "RGB", R, G, B)
-    end
-    s, e, cap1, cap2, cap3 = current_line:find(hsl_pattern)
-    if s and s <= cursor_col and cursor_col <= e then
-        self.start_col = s
-        self.end_col = e
-        local H, S, L = tonumber(cap1, 10), tonumber(cap2, 10), tonumber(cap3, 10)
-        self.color:set(self.input_mode, "HSL", H, S, L)
+    if recognized and start <= cursor_col and cursor_col <= end_ then
+        ---@cast v1 integer
+        self.start_col = start
+        self.end_col = end_
+        self.color:set(self.input_mode, recognized, v1, v2, v3)
     end
 end
 

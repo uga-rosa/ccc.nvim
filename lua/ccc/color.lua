@@ -1,4 +1,5 @@
 local utils = require("ccc.utils")
+local config = require("ccc.config")
 
 ---@class Color
 ---@field R integer
@@ -13,15 +14,17 @@ local Color = {}
 ---@param input_mode input_mode
 ---@return Color
 function Color.new(input_mode)
-    return setmetatable({
-        R = 0,
-        G = 0,
-        B = 0,
-        H = 0,
-        S = 0,
-        L = 0,
-        input_mode = input_mode,
-    }, { __index = Color })
+    local new = setmetatable({ input_mode = input_mode }, { __index = Color })
+
+    local default_color = config.get("default_color")
+    local recognized, v1, v2, v3 = utils.parse_color(default_color)
+    if recognized == nil then
+        error("Invalid default color: " .. default_color)
+    end
+    ---@cast v1 integer
+
+    new:set(input_mode, recognized, v1, v2, v3)
+    return new
 end
 
 ---@param input_mode input_mode
