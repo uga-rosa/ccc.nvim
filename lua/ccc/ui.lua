@@ -190,13 +190,14 @@ end
 function UI:buffer()
     local buffer = {}
     local bar_len = config.get("bar_len")
+    local output = self:output()
     if self.input_mode == "RGB" then
         local R, G, B = self.color:get_rgb()
         buffer = {
             table.concat({ "R:", ("%3d"):format(R), utils.create_bar(R, 255, bar_len) }, " "),
             table.concat({ "G:", ("%3d"):format(G), utils.create_bar(G, 255, bar_len) }, " "),
             table.concat({ "B:", ("%3d"):format(B), utils.create_bar(B, 255, bar_len) }, " "),
-            ("%" .. opts.width .. "s"):format(self:output()),
+            string.rep(" ", opts.width - #output) .. output,
         }
     elseif self.input_mode == "HSL" then
         local H, S, L = self.color:get_hsl()
@@ -204,7 +205,7 @@ function UI:buffer()
             table.concat({ "H:", ("%3d"):format(H), utils.create_bar(H, 360, bar_len) }, " "),
             table.concat({ "S:", ("%3d"):format(S), utils.create_bar(S, 100, bar_len) }, " "),
             table.concat({ "L:", ("%3d"):format(L), utils.create_bar(L, 100, bar_len) }, " "),
-            ("%" .. opts.width .. "s"):format(self:output()),
+            string.rep(" ", opts.width - #output) .. output,
         }
     end
     return buffer
