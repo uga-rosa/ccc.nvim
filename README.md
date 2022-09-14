@@ -9,6 +9,7 @@
 - Features
     - RGB and HSL sliders for color adjustment.
     - Dynamic highlighting of sliders.
+    - Record and restore previously used colors.
     - 3 output formats (HEX, RGB, HSL).
 
 # Usage
