@@ -140,7 +140,7 @@ function UI:buffer()
     elseif self.input_mode == "HSL" then
         local H, S, L = self.color:get_hsl()
         buffer = {
-            table.concat({ "H:", ("%3d"):format(H), utils.create_bar(H, 255, 10) }, " "),
+            table.concat({ "H:", ("%3d"):format(H), utils.create_bar(H, 360, 10) }, " "),
             table.concat({ "S:", ("%3d"):format(S), utils.create_bar(S, 100, 10) }, " "),
             table.concat({ "L:", ("%3d"):format(L), utils.create_bar(L, 100, 10) }, " "),
             ("%" .. width .. "s"):format(self:output()),
@@ -182,7 +182,7 @@ function UI:delta(delta)
     else
         local H, S, L = self.color:get_hsl()
         if lnum == 1 then
-            H = fix_overflow(H + delta, 0, 255)
+            H = fix_overflow(H + delta, 0, 360)
         elseif lnum == 2 then
             S = fix_overflow(S + delta, 0, 100)
         elseif lnum == 3 then
