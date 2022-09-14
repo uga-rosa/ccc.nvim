@@ -36,7 +36,10 @@ The default settings are listed below.
 If you do not want to change this, there is no need to call setup (Empty setup is done automatically by plugin/ccc.lua).
 
 ```lua
-require("ccc").setup({
+local ccc = require("ccc")
+local mapping = ccc.mapping
+
+ccc.setup({
     default_input_mode = "RGB",
     default_output_mode = "ColorCode",
     win_opts = {
