@@ -68,11 +68,17 @@ local function to_hex(int)
     return string.format("%02x", int)
 end
 
+---@param R? integer
+---@param G? integer
+---@param B? integer
 ---@return string
-function Color:colorcode()
-    local R, G, B = self:get_rgb()
-    if self.input_mode == "HSL" then
-        R, G, B = utils.hsl2rgb(self:get_hsl())
+function Color:colorcode(R, G, B)
+    if not (R and G and B) then
+        if self.input_mode == "RGB" then
+            R, G, B = self:get_rgb()
+        else
+            R, G, B = utils.hsl2rgb(self:get_hsl())
+        end
     end
     return "#" .. to_hex(R) .. to_hex(G) .. to_hex(B)
 end

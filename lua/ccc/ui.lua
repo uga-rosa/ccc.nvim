@@ -1,5 +1,8 @@
 local api = vim.api
 
+local set_hl = api.nvim_set_hl
+local add_hl = api.nvim_buf_add_highlight
+
 local Color = require("ccc.color")
 local config = require("ccc.config")
 local utils = require("ccc.utils")
@@ -104,12 +107,36 @@ function UI:replace()
 end
 
 function UI:highlight_rgb()
+    local R, G, B = self.color:get_rgb()
     for i = 0, 9 do
         local start = i * 4 + 7
         local end_ = start + 4
-        api.nvim_buf_add_highlight(0, self.ns_id, "CccRed" .. i, 0, start, end_)
-        api.nvim_buf_add_highlight(0, self.ns_id, "CccBlue" .. i, 1, start, end_)
-        api.nvim_buf_add_highlight(0, self.ns_id, "CccGreen" .. i, 2, start, end_)
+        local r_color = Color:colorcode(utils.round(i * 25.5), G, B)
+        local g_color = Color:colorcode(R, utils.round(i * 25.5), B)
+        local b_color = Color:colorcode(R, G, utils.round(i * 25.5))
+        set_hl(0, "CccR" .. i, { fg = r_color })
+        set_hl(0, "CccB" .. i, { fg = g_color })
+        set_hl(0, "CccG" .. i, { fg = b_color })
+        add_hl(0, self.ns_id, "CccR" .. i, 0, start, end_)
+        add_hl(0, self.ns_id, "CccB" .. i, 1, start, end_)
+        add_hl(0, self.ns_id, "CccG" .. i, 2, start, end_)
+    end
+end
+
+function UI:highlight_hsl()
+    local H, S, L = self.color:get_hsl()
+    for i = 0, 9 do
+        local start = i * 4 + 7
+        local end_ = start + 4
+        local h_color = Color:colorcode(utils.hsl2rgb(i * 36, S, L))
+        local s_color = Color:colorcode(utils.hsl2rgb(H, i * 10, L))
+        local l_color = Color:colorcode(utils.hsl2rgb(H, S, i * 10))
+        set_hl(0, "CccH" .. i, { fg = h_color })
+        set_hl(0, "CccS" .. i, { fg = s_color })
+        set_hl(0, "CccL" .. i, { fg = l_color })
+        add_hl(0, self.ns_id, "CccH" .. i, 0, start, end_)
+        add_hl(0, self.ns_id, "CccS" .. i, 1, start, end_)
+        add_hl(0, self.ns_id, "CccL" .. i, 2, start, end_)
     end
 end
 
@@ -118,12 +145,14 @@ function UI:update()
     api.nvim_buf_set_lines(self.bufnr, 0, 4, false, self:buffer())
     if self.input_mode == "RGB" then
         self:highlight_rgb()
+    else
+        self:highlight_hsl()
     end
     local bg = self.color:colorcode()
     local fg = bg > "#800000" and "#000000" or "#ffffff"
-    api.nvim_set_hl(0, "CccOutput", { fg = fg, bg = bg })
+    set_hl(0, "CccOutput", { fg = fg, bg = bg })
     local start = api.nvim_buf_get_lines(0, 3, 4, true)[1]:find("%S") - 1
-    api.nvim_buf_add_highlight(0, self.ns_id, "CccOutput", 3, start, -1)
+    add_hl(0, self.ns_id, "CccOutput", 3, start, -1)
 end
 
 function UI:buffer()

@@ -10,17 +10,6 @@ function M.setup(opt)
     opt = vim.F.if_nil(opt, {})
     vim.validate({ opt = { opt, "t" } })
     config.setup(opt)
-    M.highlight_setup()
-end
-
-function M.highlight_setup()
-    local set_hl = vim.api.nvim_set_hl
-    for i = 0, 9 do
-        local hex = ("%02x"):format(255 * (i + 1) / 10)
-        set_hl(0, "CccRed" .. i, { fg = "#" .. hex .. "0000" })
-        set_hl(0, "CccBlue" .. i, { fg = "#00" .. hex .. "00" })
-        set_hl(0, "CccGreen" .. i, { fg = "#0000" .. hex })
-    end
 end
 
 ---@param delta integer
