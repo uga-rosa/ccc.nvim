@@ -1,0 +1,136 @@
+*ccc.txt*					Create Color Code in neovim.
+
+==============================================================================
+Contents                                                          *ccc-contents*
+
+
+Introduction						|ccc-introduction|
+Setup							|ccc-setup|
+Interface						|ccc-interface|
+- Command						|ccc-command|
+- Key mapping						|ccc-key-mapping|
+Action							|ccc-action|
+Setup							|ccc-setup|
+
+
+
+==============================================================================
+Introduction                                                  *ccc-introduction*
+
+
+Use the slide bar, easy, to create any color you want!
+
+
+
+==============================================================================
+Interface                                                        *ccc-interface*
+
+
+------------------------------------------------------------------------------
+commands                                                           *ccc-command*
+
+
+                                                                      *:CccPick*
+:CccPick ~
+	Detects and replaces the color under the cursor.
+	Detectable formats are color code (#000000), RGB (rgb(0,0,0)), and HSL
+	(hsl(0,0%,0%)).
+	If nothing is detected, it is inserted at a new cursor position.
+
+
+------------------------------------------------------------------------------
+key mappings                                                   *ccc-key-mapping*
+
+
+                                                            *<Plug>(ccc-insert)*
+<Plug>(ccc-insert) ~
+	Defined in insert mode.
+	Insert the color without detection.
+
+
+
+==============================================================================
+Action                                                              *ccc-action*
+
+
+<CR>		Complete, and perform a replace or insert.
+q		Cancel.
+i		Toggle input mode. They are `RGB` and `HSL`.
+o		Toggle output mode. They are `RGB`, `HSL`, and `ColorCode`.
+h/l		Decrease/increase by 1.
+s/d		Decrease/increase by 5.
+m/,		Decrease/increase by 10.
+H/M/L		Set to 0%/50%/100%.
+0-9		Set to 0% - 90%.
+
+
+==============================================================================
+Setup                                                                *ccc-setup*
+
+
+If you do not want to change the default setting, there is no need to call
+setup (Empty setup is done automatically by plugin/ccc.lua).
+
+
+>
+	local ccc = require("ccc")
+	local mapping = ccc.mapping
+	
+	ccc.setup({
+	    default_input_mode = "RGB",
+	    default_output_mode = "ColorCode",
+	    bar_char = "■",
+	    win_opts = {
+	        relative = "cursor",
+	        row = 1,
+	        col = 1,
+	        style = "minimal",
+	        border = "rounded",
+	    },
+	    mappings = {
+	        ["q"] = mapping.quit,
+	        ["<CR>"] = mapping.complete,
+	        ["i"] = mapping.input_mode_toggle,
+	        ["o"] = mapping.output_mode_toggle,
+	        ["h"] = mapping.decrease1,
+	        ["l"] = mapping.increase1,
+	        ["s"] = mapping.decrease5,
+	        ["d"] = mapping.increase5,
+	        ["m"] = mapping.decrease10,
+	        [","] = mapping.increase10,
+	        ["H"] = mapping.set0,
+	        ["M"] = mapping.set50,
+	        ["L"] = mapping.set100,
+	        ["0"] = mapping.set0,
+	        ["1"] = function()
+	            ccc.set_percent(10)
+	        end,
+	        ["2"] = function()
+	            ccc.set_percent(20)
+	        end,
+	        ["3"] = function()
+	            ccc.set_percent(30)
+	        end,
+	        ["4"] = function()
+	            ccc.set_percent(40)
+	        end,
+	        ["5"] = mapping.set50,
+	        ["6"] = function()
+	            ccc.set_percent(60)
+	        end,
+	        ["7"] = function()
+	            ccc.set_percent(70)
+	        end,
+	        ["8"] = function()
+	            ccc.set_percent(80)
+	        end,
+	        ["9"] = function()
+	            ccc.set_percent(90)
+	        end,
+	    },
+	})
+<
+
+
+
+vim:tw=78:ts=8:noet:ft=help:norl:
