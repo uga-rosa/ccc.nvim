@@ -4,12 +4,13 @@ local Color = require("ccc.color")
 local config = require("ccc.config")
 local utils = require("ccc.utils")
 
----@alias mode "RGB" | "HSL" | "ColorCode"
+---@alias input_mode "RGB" | "HSL"
+---@alias output_mode "RGB" | "HSL" | "ColorCode"
 
 ---@class UI
 ---@field color Color
----@field input_mode mode
----@field output_mode mode
+---@field input_mode input_mode
+---@field output_mode output_mode
 ---@field bufnr integer
 ---@field win_id integer
 ---@field ns_id integer
@@ -25,9 +26,9 @@ local opts = {
 }
 
 function UI:init()
-    self.color = Color.new()
     self.input_mode = self.input_mode or config.get("default_input_mode")
     self.output_mode = self.output_mode or config.get("default_output_mode")
+    self.color = Color.new(self.input_mode)
     self.ns_id = self.ns_id or api.nvim_create_namespace("ccc")
     local cursor_pos = api.nvim_win_get_cursor(0)
     self.row = cursor_pos[1]
@@ -260,8 +261,10 @@ end
 function UI:input_mode_toggle()
     if self.input_mode == "RGB" then
         self.input_mode = "HSL"
+        self.color:rgb2hsl()
     else
         self.input_mode = "RGB"
+        self.color:rgb2hsl()
     end
     self:update()
 end

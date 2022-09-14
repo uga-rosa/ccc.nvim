@@ -4,15 +4,24 @@ local utils = require("ccc.utils")
 ---@field R integer
 ---@field G integer
 ---@field B integer
+---@field H integer
+---@field S integer
+---@field L integer
+---@field input_mode "RGB" | "HSL"
 local Color = {}
 
-function Color.new()
-    local new = setmetatable({
+---@param input_mode input_mode
+---@return Color
+function Color.new(input_mode)
+    return setmetatable({
         R = 0,
         G = 0,
         B = 0,
+        H = 0,
+        S = 0,
+        L = 0,
+        input_mode = input_mode,
     }, { __index = Color })
-    return new
 end
 
 ---@return integer R
@@ -33,14 +42,24 @@ end
 ---@return integer S
 ---@return integer L
 function Color:get_hsl()
-    return utils.rgb2hsl(self.R, self.G, self.B)
+    return self.H, self.S, self.L
 end
 
 ---@param H integer
 ---@param S integer
 ---@param L integer
 function Color:set_hsl(H, S, L)
-    self.R, self.G, self.B = utils.hsl2rgb(H, S, L)
+    self.H, self.S, self.L = H, S, L
+end
+
+function Color:rgb2hsl()
+    self.H, self.S, self.L = utils.rgb2hsl(self.R, self.G, self.B)
+    self.input_mode = "HSL"
+end
+
+function Color:hsl2rgb()
+    self.R, self.G, self.B = utils.hsl2rgb(self.H, self.S, self.L)
+    self.input_mode = "RGB"
 end
 
 ---@param int integer
@@ -51,20 +70,32 @@ end
 
 ---@return string
 function Color:colorcode()
-    return "#" .. to_hex(self.R) .. to_hex(self.G) .. to_hex(self.B)
+    local R, G, B = self:get_rgb()
+    if self.input_mode == "HSL" then
+        R, G, B = utils.hsl2rgb(self:get_hsl())
+    end
+    return "#" .. to_hex(R) .. to_hex(G) .. to_hex(B)
 end
 
 ---@return string
 function Color:rgb_str()
-    return ("rgb(%s,%s,%s)"):format(self:get_rgb())
+    local R, G, B = self:get_rgb()
+    if self.input_mode == "HSL" then
+        R, G, B = utils.hsl2rgb(self:get_hsl())
+    end
+    return ("rgb(%s,%s,%s)"):format(R, G, B)
 end
 
 ---@return string
 function Color:hsl_str()
-    return ("hsl(%s,%s%%,%s%%)"):format(self:get_hsl())
+    local H, S, L = self:get_hsl()
+    if self.input_mode == "RGB" then
+        H, S, L = utils.rgb2hsl(self:get_rgb())
+    end
+    return ("hsl(%s,%s%%,%s%%)"):format(H, S, L)
 end
 
----@param output_mode mode
+---@param output_mode output_mode
 ---@return string
 function Color:output(output_mode)
     if output_mode == "RGB" then
