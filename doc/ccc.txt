@@ -81,7 +81,7 @@ setup (Empty setup is done automatically by plugin/ccc.lua).
 	    default_output_mode = "HEX",
 	    bar_char = "■",
 	    point_char = "◇",
-	    bar_len = 10,
+	    bar_len = 30,
 	    win_opts = {
 	        relative = "cursor",
 	        row = 1,
@@ -89,6 +89,7 @@ setup (Empty setup is done automatically by plugin/ccc.lua).
 	        style = "minimal",
 	        border = "rounded",
 	    },
+	    default_color = "#000000",
 	    mappings = {
 	        ["q"] = mapping.quit,
 	        ["<CR>"] = mapping.complete,
