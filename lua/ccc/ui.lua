@@ -111,9 +111,9 @@ function UI:highlight_rgb()
     for i = 0, 9 do
         local start = i * 4 + 7
         local end_ = start + 4
-        local r_color = Color:colorcode(utils.round(i * 25.5), G, B)
-        local g_color = Color:colorcode(R, utils.round(i * 25.5), B)
-        local b_color = Color:colorcode(R, G, utils.round(i * 25.5))
+        local r_color = Color:colorcode(utils.round((i + 0.5) * 25.5), G, B)
+        local g_color = Color:colorcode(R, utils.round((i + 0.5) * 25.5), B)
+        local b_color = Color:colorcode(R, G, utils.round((i + 0.5) * 25.5))
         set_hl(0, "CccR" .. i, { fg = r_color })
         set_hl(0, "CccB" .. i, { fg = g_color })
         set_hl(0, "CccG" .. i, { fg = b_color })
@@ -128,9 +128,9 @@ function UI:highlight_hsl()
     for i = 0, 9 do
         local start = i * 4 + 7
         local end_ = start + 4
-        local h_color = Color:colorcode(utils.hsl2rgb(i * 36, S, L))
-        local s_color = Color:colorcode(utils.hsl2rgb(H, i * 10, L))
-        local l_color = Color:colorcode(utils.hsl2rgb(H, S, i * 10))
+        local h_color = Color:colorcode(utils.hsl2rgb((i + 0.5) * 36, S, L))
+        local s_color = Color:colorcode(utils.hsl2rgb(H, (i + 0.5) * 10, L))
+        local l_color = Color:colorcode(utils.hsl2rgb(H, S, (i + 0.5) * 10))
         set_hl(0, "CccH" .. i, { fg = h_color })
         set_hl(0, "CccS" .. i, { fg = s_color })
         set_hl(0, "CccL" .. i, { fg = l_color })
