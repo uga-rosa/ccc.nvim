@@ -5,11 +5,20 @@ local M = {
     mapping = {},
 }
 
----@param opt? table
+local ready = false
+
+---@param opt table
+---@overload fun(from_plugin: boolean)
 function M.setup(opt)
-    opt = vim.F.if_nil(opt, {})
+    if opt == true then
+        if ready == true then
+            return
+        end
+        opt = {}
+    end
     vim.validate({ opt = { opt, "t" } })
     config.setup(opt)
+    ready = true
 end
 
 ---@param delta integer
