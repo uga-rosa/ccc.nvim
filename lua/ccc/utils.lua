@@ -2,8 +2,13 @@ local config = require("ccc.config")
 
 local utils = {}
 
-function utils.feedkey(key)
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, false, true), "n", false)
+---@param key string
+---@param plain? boolean
+function utils.feedkey(key, plain)
+    if not plain then
+        key = vim.api.nvim_replace_termcodes(key, true, false, true)
+    end
+    vim.api.nvim_feedkeys(key, "n", false)
 end
 
 ---@param ... integer

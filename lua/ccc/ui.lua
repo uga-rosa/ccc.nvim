@@ -70,7 +70,7 @@ function UI:open(insert)
     if insert then
         utils.feedkey("<Esc>")
     end
-    vim.opt_local.buftype = "nofile"
+    vim.opt_local.buftype = "nowrite"
 end
 
 function UI:close()
@@ -103,7 +103,7 @@ function UI:complete()
 end
 
 function UI:insert()
-    vim.api.nvim_feedkeys(self:output(), "n", false)
+    utils.feedkey(self:output(), true)
 end
 
 function UI:replace()
