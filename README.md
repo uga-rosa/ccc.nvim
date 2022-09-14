@@ -1,4 +1,4 @@
-![ccc](https://user-images.githubusercontent.com/82267684/190057476-903abdb0-ff0f-47c3-8c69-8e3fb1c211bf.gif)
+![ccc](https://user-images.githubusercontent.com/82267684/190062040-dfab7a26-cc04-485a-889f-9ce562d5fb40.gif)
 
 # ccc.nvim
 

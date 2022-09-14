@@ -5,6 +5,7 @@ return {
     default_input_mode = "RGB",
     default_output_mode = "ColorCode",
     bar_char = "■",
+    point_char = "◇",
     win_opts = {
         relative = "cursor",
         row = 1,
