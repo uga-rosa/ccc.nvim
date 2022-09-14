@@ -1,5 +1,7 @@
 ![ccc](https://user-images.githubusercontent.com/82267684/190083999-48d50982-6805-43db-9ed7-2fd5775c0285.gif)
 
+![prev](https://user-images.githubusercontent.com/82267684/190240122-35a66537-9f07-41cf-aa49-ef5158358866.gif)
+
 # ccc.nvim
 
 **C**reate **C**olor **C**ode in neovim.
@@ -24,7 +26,7 @@ This plugin provides one command and one mapping.
 # Default mappings
 
 - `<CR>`: Complete, and perform a replace or insert.
-    - If the cursor in under the previous color, select it.
+    - If the cursor is under the previous color, select it.
 - `q`: Cancel.
 - `i`: Toggle input mode. `RGB` -> `HSL` -> `RGB` -> ...
 - `o`: Toggle output mode. `HEX` -> `RGB` -> `HSL` -> `HEX` -> ...
