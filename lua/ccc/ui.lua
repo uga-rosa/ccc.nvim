@@ -21,6 +21,7 @@ local utils = require("ccc.utils")
 ---@field start_col integer 1-index
 ---@field end_col integer 1-index
 ---@field is_insert boolean
+---@field already_open boolean
 local UI = {}
 
 local opts = {
@@ -40,6 +41,10 @@ end
 
 ---@param insert boolean
 function UI:open(insert)
+    if self.already_open then
+        return
+    end
+    self.already_open = true
     self:init()
     self.is_insert = insert
     if not insert then
@@ -81,6 +86,7 @@ function UI:close()
         vim.cmd("startinsert")
     end
     api.nvim_win_set_cursor(0, { self.row, self.start_col - 1 })
+    self.already_open = false
 end
 
 function UI:quit()
