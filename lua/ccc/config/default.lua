@@ -3,7 +3,7 @@ local mapping = ccc.mapping
 
 return {
     default_input_mode = "RGB",
-    default_output_mode = "ColorCode",
+    default_output_mode = "HEX",
     bar_char = "■",
     point_char = "◇",
     bar_len = 30,

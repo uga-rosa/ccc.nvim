@@ -4,7 +4,7 @@
 
 **C**reate **C**olor **C**ode in neovim.
 
-Supported formats are RGB, HSL, and color code.
+Supported formats are RGB, HSL, and HEX.
 
 # Usage
 
@@ -23,7 +23,7 @@ This plugin provides one command and one mapping.
 - `<CR>`: Complete, and perform a replace or insert.
 - `q`: Cancel.
 - `i`: Toggle input mode. They are `RGB` and `HSL`.
-- `o`: Toggle output mode. They are `RGB`, `HSL`, and `ColorCode`.
+- `o`: Toggle output mode. They are `RGB`, `HSL`, and `HEX`.
 - `h/l`: Decrease/increase by 1.
 - `s/d`: Decrease/increase by 5.
 - `m/,`: Decrease/increase by 10.
@@ -41,7 +41,7 @@ local mapping = ccc.mapping
 
 ccc.setup({
     default_input_mode = "RGB",
-    default_output_mode = "ColorCode",
+    default_output_mode = "HEX",
     bar_char = "■",
     point_char = "◇",
     bar_len = 10,

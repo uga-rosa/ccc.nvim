@@ -98,7 +98,7 @@ end
 ---@param G? integer
 ---@param B? integer
 ---@return string
-function Color:colorcode(R, G, B)
+function Color:hex_str(R, G, B)
     if not (R and G and B) then
         if self.input_mode == "RGB" then
             R, G, B = self:get_rgb()
@@ -134,8 +134,8 @@ function Color:output(output_mode)
         return self:rgb_str()
     elseif output_mode == "HSL" then
         return self:hsl_str()
-    elseif output_mode == "ColorCode" then
-        return self:colorcode()
+    elseif output_mode == "HEX" then
+        return self:hex_str()
     end
     error("Invalid mode: " .. output_mode)
 end

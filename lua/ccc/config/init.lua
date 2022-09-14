@@ -17,10 +17,7 @@ function M.setup(opt)
         ["config.win_opts"] = { M.config.win_opts, "t" },
     })
     assert(vim.tbl_contains({ "RGB", "HSL" }, i_mode), "Invalid input mode: " .. i_mode)
-    assert(
-        vim.tbl_contains({ "RGB", "HSL", "ColorCode" }, o_mode),
-        "Invalid output mode: " .. o_mode
-    )
+    assert(vim.tbl_contains({ "RGB", "HSL", "HEX" }, o_mode), "Invalid output mode: " .. o_mode)
 end
 
 ---@param name string

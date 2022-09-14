@@ -8,7 +8,7 @@ local config = require("ccc.config")
 local utils = require("ccc.utils")
 
 ---@alias input_mode "RGB" | "HSL"
----@alias output_mode "RGB" | "HSL" | "ColorCode"
+---@alias output_mode "RGB" | "HSL" | "HEX"
 
 ---@class UI
 ---@field color Color
@@ -135,9 +135,9 @@ function UI:highlight_rgb()
         end_G = update_end(i == point_idx_G, start_G, #bar_char, #point_char)
         end_B = update_end(i == point_idx_B, start_B, #bar_char, #point_char)
 
-        local r_color = Color:colorcode(utils.round((i + 0.5) * 255 / bar_len), G, B)
-        local g_color = Color:colorcode(R, utils.round((i + 0.5) * 255 / bar_len), B)
-        local b_color = Color:colorcode(R, G, utils.round((i + 0.5) * 255 / bar_len))
+        local r_color = Color:hex_str(utils.round((i + 0.5) * 255 / bar_len), G, B)
+        local g_color = Color:hex_str(R, utils.round((i + 0.5) * 255 / bar_len), B)
+        local b_color = Color:hex_str(R, G, utils.round((i + 0.5) * 255 / bar_len))
         set_hl(0, "CccR" .. i, { fg = r_color })
         set_hl(0, "CccB" .. i, { fg = g_color })
         set_hl(0, "CccG" .. i, { fg = b_color })
@@ -164,9 +164,9 @@ function UI:highlight_hsl()
         end_S = update_end(i == point_idx_S, start_S, #bar_char, #point_char)
         end_L = update_end(i == point_idx_L, start_L, #bar_char, #point_char)
 
-        local h_color = Color:colorcode(utils.hsl2rgb((i + 0.5) * 360 / bar_len, S, L))
-        local s_color = Color:colorcode(utils.hsl2rgb(H, (i + 0.5) * 100 / bar_len, L))
-        local l_color = Color:colorcode(utils.hsl2rgb(H, S, (i + 0.5) * 100 / bar_len))
+        local h_color = Color:hex_str(utils.hsl2rgb((i + 0.5) * 360 / bar_len, S, L))
+        local s_color = Color:hex_str(utils.hsl2rgb(H, (i + 0.5) * 100 / bar_len, L))
+        local l_color = Color:hex_str(utils.hsl2rgb(H, S, (i + 0.5) * 100 / bar_len))
         set_hl(0, "CccH" .. i, { fg = h_color })
         set_hl(0, "CccS" .. i, { fg = s_color })
         set_hl(0, "CccL" .. i, { fg = l_color })
@@ -186,7 +186,7 @@ function UI:update()
     else
         self:highlight_hsl()
     end
-    local bg = self.color:colorcode()
+    local bg = self.color:hex_str()
     local fg = bg > "#800000" and "#000000" or "#ffffff"
     set_hl(0, "CccOutput", { fg = fg, bg = bg })
     local start = api.nvim_buf_get_lines(0, 3, 4, true)[1]:find("%S") - 1
@@ -287,8 +287,7 @@ function UI:set_percent(percent)
     self:update()
 end
 
-local colorcode_pattern =
-    "#([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])"
+local hex_pattern = "#" .. string.rep("([0-9a-fA-F][0-9a-fA-F])", 3)
 local rgb_pattern = "rgb%((%d+),%s*(%d+),%s*(%d+)%)"
 local hsl_pattern = "hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%%)"
 
@@ -296,7 +295,7 @@ function UI:pick()
     ---@type string
     local current_line = api.nvim_get_current_line()
     local cursor_col = api.nvim_win_get_cursor(0)[2] + 1
-    local s, e, cap1, cap2, cap3 = current_line:find(colorcode_pattern)
+    local s, e, cap1, cap2, cap3 = current_line:find(hex_pattern)
     if s and s <= cursor_col and cursor_col <= e then
         self.start_col = s
         self.end_col = e
@@ -334,7 +333,7 @@ function UI:output_mode_toggle()
     if self.output_mode == "RGB" then
         self.output_mode = "HSL"
     elseif self.output_mode == "HSL" then
-        self.output_mode = "ColorCode"
+        self.output_mode = "HEX"
     else
         self.output_mode = "RGB"
     end
