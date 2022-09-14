@@ -16,6 +16,7 @@ return {
     },
     default_color = "#000000",
     preserve = false,
+    save_on_quit = false,
     mappings = {
         ["q"] = mapping.quit,
         ["<CR>"] = mapping.complete,

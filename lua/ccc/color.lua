@@ -27,6 +27,15 @@ function Color.new(input_mode)
     return new
 end
 
+---@return Color
+function Color:copy()
+    local new = setmetatable({}, { __index = Color })
+    new.input_mode = self.input_mode
+    new:set_rgb(self:get_rgb())
+    new:set_hsl(self:get_hsl())
+    return new
+end
+
 ---@param input_mode input_mode
 ---@param value_mode input_mode
 ---@param v1 integer

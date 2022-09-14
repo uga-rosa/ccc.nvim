@@ -16,24 +16,27 @@ local utils = require("ccc.utils")
 ---@field output_mode output_mode
 ---@field bufnr integer
 ---@field win_id integer
+---@field win_height integer
+---@field win_width integer
 ---@field ns_id integer
 ---@field row integer 1-index
 ---@field start_col integer 1-index
 ---@field end_col integer 1-index
 ---@field is_insert boolean
 ---@field already_open boolean
+---@field prev_colors Color[]
 local UI = {}
-
-local opts = {
-    height = 4,
-}
 
 function UI:init()
     self.input_mode = self.input_mode or config.get("default_input_mode")
     self.output_mode = self.output_mode or config.get("default_output_mode")
     if self.color == nil or not config.get("preserve") then
         self.color = Color.new(self.input_mode)
+    else
+        self.color = self.color:copy()
     end
+    self.prev_colors = self.prev_colors or {}
+    self.win_height = 4
     self.ns_id = self.ns_id or api.nvim_create_namespace("ccc")
     local cursor_pos = api.nvim_win_get_cursor(0)
     self.row = cursor_pos[1]
@@ -100,12 +103,31 @@ function UI:close()
     self.already_open = false
 end
 
+function UI:show_prev_colors()
+    self.win_height = 5
+    self:_open()
+    ---@param color Color
+    local prev_colors = vim.tbl_map(function(color)
+        return color:output("HEX")
+    end, self.prev_colors)
+    api.nvim_buf_set_lines(self.bufnr, 4, 5, true, prev_colors)
+end
+
+function UI:hide_prev_colors()
+    self.win_height = 4
+    self:_open()
+end
+
 function UI:quit()
     self:close()
+    if config.get("save_on_quit") then
+        table.insert(self.prev_colors, 1, self.color)
+    end
 end
 
 function UI:complete()
     self:close()
+    table.insert(self.prev_colors, 1, self.color)
     if self.is_insert then
         self:insert()
     else
@@ -194,7 +216,7 @@ function UI:buffer()
             table.concat({ "R:", ("%3d"):format(R), utils.create_bar(R, 255, bar_len) }, " "),
             table.concat({ "G:", ("%3d"):format(G), utils.create_bar(G, 255, bar_len) }, " "),
             table.concat({ "B:", ("%3d"):format(B), utils.create_bar(B, 255, bar_len) }, " "),
-            string.rep(" ", opts.width - #output) .. output,
+            string.rep(" ", self.win_width - #output) .. output,
         }
     elseif self.input_mode == "HSL" then
         local H, S, L = self.color:get_hsl()
@@ -202,7 +224,7 @@ function UI:buffer()
             table.concat({ "H:", ("%3d"):format(H), utils.create_bar(H, 360, bar_len) }, " "),
             table.concat({ "S:", ("%3d"):format(S), utils.create_bar(S, 100, bar_len) }, " "),
             table.concat({ "L:", ("%3d"):format(L), utils.create_bar(L, 100, bar_len) }, " "),
-            string.rep(" ", opts.width - #output) .. output,
+            string.rep(" ", self.win_width - #output) .. output,
         }
     end
     return buffer
