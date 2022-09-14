@@ -239,7 +239,7 @@ function UI:set_percent(percent)
     else
         local H, S, L = self.color:get_hsl()
         if lnum == 1 then
-            H = utils.round(255 * percent / 100)
+            H = utils.round(360 * percent / 100)
         elseif lnum == 2 then
             S = percent
         elseif lnum == 3 then
