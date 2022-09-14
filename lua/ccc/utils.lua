@@ -1,3 +1,5 @@
+local config = require("ccc.config")
+
 local utils = {}
 
 function utils.feedkey(key)
@@ -128,7 +130,8 @@ end
 
 function utils.create_bar(value, max, bar_max)
     local ratio = utils.round(value / max * bar_max)
-    return string.rep("ﱢ", ratio) .. string.rep(" ", bar_max - ratio)
+    local bar_char = config.get("bar_char")
+    return string.rep(bar_char, ratio)
 end
 
 return utils

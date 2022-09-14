@@ -4,6 +4,7 @@ local mapping = ccc.mapping
 return {
     default_input_mode = "RGB",
     default_output_mode = "ColorCode",
+    bar_char = "■",
     win_opts = {
         relative = "cursor",
         row = 1,
