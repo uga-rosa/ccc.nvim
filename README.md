@@ -10,7 +10,7 @@ Supported formats are RGB, HSL, and color code.
 
 This plugin provides one command and one mapping.
 
-- `:CccStart`
+- `:CccPick`
     - Detects and replaces the color under the cursor.
     - If nothing is detected, it is inserted at a cursor position.
 
