@@ -24,7 +24,6 @@ local utils = require("ccc.utils")
 local UI = {}
 
 local opts = {
-    width = 17,
     height = 4,
 }
 
@@ -49,6 +48,7 @@ function UI:open(insert)
     if self.bufnr == nil then
         self.bufnr = api.nvim_create_buf(false, true)
     end
+    opts.width = 7 + config.get("bar_len")
     local win_opts = vim.tbl_extend("error", opts, config.get("win_opts"))
     for k, v in pairs(win_opts) do
         if type(v) == "function" then
@@ -108,12 +108,13 @@ end
 
 function UI:highlight_rgb()
     local R, G, B = self.color:get_rgb()
-    for i = 0, 9 do
+    local bar_len = config.get("bar_len")
+    for i = 0, bar_len - 1 do
         local start = i * 4 + 7
         local end_ = start + 4
-        local r_color = Color:colorcode(utils.round((i + 0.5) * 25.5), G, B)
-        local g_color = Color:colorcode(R, utils.round((i + 0.5) * 25.5), B)
-        local b_color = Color:colorcode(R, G, utils.round((i + 0.5) * 25.5))
+        local r_color = Color:colorcode(utils.round((i + 0.5) * 255 / bar_len), G, B)
+        local g_color = Color:colorcode(R, utils.round((i + 0.5) * 255 / bar_len), B)
+        local b_color = Color:colorcode(R, G, utils.round((i + 0.5) * 255 / bar_len))
         set_hl(0, "CccR" .. i, { fg = r_color })
         set_hl(0, "CccB" .. i, { fg = g_color })
         set_hl(0, "CccG" .. i, { fg = b_color })
@@ -125,12 +126,13 @@ end
 
 function UI:highlight_hsl()
     local H, S, L = self.color:get_hsl()
-    for i = 0, 9 do
+    local bar_len = config.get("bar_len")
+    for i = 0, bar_len - 1 do
         local start = i * 4 + 7
         local end_ = start + 4
-        local h_color = Color:colorcode(utils.hsl2rgb((i + 0.5) * 36, S, L))
-        local s_color = Color:colorcode(utils.hsl2rgb(H, (i + 0.5) * 10, L))
-        local l_color = Color:colorcode(utils.hsl2rgb(H, S, (i + 0.5) * 10))
+        local h_color = Color:colorcode(utils.hsl2rgb((i + 0.5) * 360 / bar_len, S, L))
+        local s_color = Color:colorcode(utils.hsl2rgb(H, (i + 0.5) * 100 / bar_len, L))
+        local l_color = Color:colorcode(utils.hsl2rgb(H, S, (i + 0.5) * 100 / bar_len))
         set_hl(0, "CccH" .. i, { fg = h_color })
         set_hl(0, "CccS" .. i, { fg = s_color })
         set_hl(0, "CccL" .. i, { fg = l_color })
@@ -157,22 +159,22 @@ end
 
 function UI:buffer()
     local buffer = {}
-    local width = 2 + 1 + 3 + 1 + 10
+    local bar_len = config.get("bar_len")
     if self.input_mode == "RGB" then
         local R, G, B = self.color:get_rgb()
         buffer = {
-            table.concat({ "R:", ("%3d"):format(R), utils.create_bar(R, 255, 10) }, " "),
-            table.concat({ "G:", ("%3d"):format(G), utils.create_bar(G, 255, 10) }, " "),
-            table.concat({ "B:", ("%3d"):format(B), utils.create_bar(B, 255, 10) }, " "),
-            ("%" .. width .. "s"):format(self:output()),
+            table.concat({ "R:", ("%3d"):format(R), utils.create_bar(R, 255, bar_len) }, " "),
+            table.concat({ "G:", ("%3d"):format(G), utils.create_bar(G, 255, bar_len) }, " "),
+            table.concat({ "B:", ("%3d"):format(B), utils.create_bar(B, 255, bar_len) }, " "),
+            ("%" .. opts.width .. "s"):format(self:output()),
         }
     elseif self.input_mode == "HSL" then
         local H, S, L = self.color:get_hsl()
         buffer = {
-            table.concat({ "H:", ("%3d"):format(H), utils.create_bar(H, 360, 10) }, " "),
-            table.concat({ "S:", ("%3d"):format(S), utils.create_bar(S, 100, 10) }, " "),
-            table.concat({ "L:", ("%3d"):format(L), utils.create_bar(L, 100, 10) }, " "),
-            ("%" .. width .. "s"):format(self:output()),
+            table.concat({ "H:", ("%3d"):format(H), utils.create_bar(H, 360, bar_len) }, " "),
+            table.concat({ "S:", ("%3d"):format(S), utils.create_bar(S, 100, bar_len) }, " "),
+            table.concat({ "L:", ("%3d"):format(L), utils.create_bar(L, 100, bar_len) }, " "),
+            ("%" .. opts.width .. "s"):format(self:output()),
         }
     end
     return buffer

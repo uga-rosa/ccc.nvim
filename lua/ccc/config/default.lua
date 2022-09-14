@@ -6,6 +6,7 @@ return {
     default_output_mode = "ColorCode",
     bar_char = "■",
     point_char = "◇",
+    bar_len = 10,
     win_opts = {
         relative = "cursor",
         row = 1,
