@@ -128,14 +128,18 @@ function utils.hsl2rgb(H, S, L)
     return utils.round(R), utils.round(G), utils.round(B)
 end
 
-function utils.create_bar(value, max, bar_max)
-    local ratio = utils.round(value / max * bar_max)
+function utils.ratio(value, max, bar_len)
+    return utils.round(value / max * bar_len)
+end
+
+function utils.create_bar(value, max, bar_len)
+    local ratio = utils.ratio(value, max, bar_len)
     local bar_char = config.get("bar_char")
     local point_char = config.get("point_char")
     if ratio == 0 then
-        return point_char .. string.rep(bar_char, bar_max - 1)
+        return point_char .. string.rep(bar_char, bar_len - 1)
     end
-    return string.rep(bar_char, ratio - 1) .. point_char .. string.rep(bar_char, bar_max - ratio)
+    return string.rep(bar_char, ratio - 1) .. point_char .. string.rep(bar_char, bar_len - ratio)
 end
 
 return utils

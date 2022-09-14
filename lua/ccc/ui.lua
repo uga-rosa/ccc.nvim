@@ -106,39 +106,69 @@ function UI:replace()
     api.nvim_set_current_line(new_line)
 end
 
+local function update_end(is_point, start, bar_char_len, point_char_len)
+    if is_point then
+        return start + point_char_len
+    else
+        return start + bar_char_len
+    end
+end
+
 function UI:highlight_rgb()
     local R, G, B = self.color:get_rgb()
+    local bar_char = config.get("bar_char")
+    local point_char = config.get("point_char")
     local bar_len = config.get("bar_len")
+    local point_idx_R = utils.ratio(R, 255, bar_len)
+    local point_idx_G = utils.ratio(G, 255, bar_len)
+    local point_idx_B = utils.ratio(B, 255, bar_len)
+    local start_R, start_G, start_B = 7, 7, 7
+    local end_R, end_G, end_B
     for i = 0, bar_len - 1 do
-        local start = i * 4 + 7
-        local end_ = start + 4
+        end_R = update_end(i == point_idx_R, start_R, #bar_char, #point_char)
+        end_G = update_end(i == point_idx_G, start_G, #bar_char, #point_char)
+        end_B = update_end(i == point_idx_B, start_B, #bar_char, #point_char)
+
         local r_color = Color:colorcode(utils.round((i + 0.5) * 255 / bar_len), G, B)
         local g_color = Color:colorcode(R, utils.round((i + 0.5) * 255 / bar_len), B)
         local b_color = Color:colorcode(R, G, utils.round((i + 0.5) * 255 / bar_len))
         set_hl(0, "CccR" .. i, { fg = r_color })
         set_hl(0, "CccB" .. i, { fg = g_color })
         set_hl(0, "CccG" .. i, { fg = b_color })
-        add_hl(0, self.ns_id, "CccR" .. i, 0, start, end_)
-        add_hl(0, self.ns_id, "CccB" .. i, 1, start, end_)
-        add_hl(0, self.ns_id, "CccG" .. i, 2, start, end_)
+        add_hl(0, self.ns_id, "CccR" .. i, 0, start_R, end_R)
+        add_hl(0, self.ns_id, "CccB" .. i, 1, start_G, end_G)
+        add_hl(0, self.ns_id, "CccG" .. i, 2, start_B, end_B)
+
+        start_R, start_G, start_B = end_R, end_G, end_B
     end
 end
 
 function UI:highlight_hsl()
     local H, S, L = self.color:get_hsl()
+    local bar_char = config.get("bar_char")
+    local point_char = config.get("point_char")
     local bar_len = config.get("bar_len")
+    local point_idx_H = utils.ratio(H, 360, bar_len)
+    local point_idx_S = utils.ratio(S, 100, bar_len)
+    local point_idx_L = utils.ratio(L, 100, bar_len)
+    local start_H, start_S, start_L = 7, 7, 7
+    local end_H, end_S, end_L
     for i = 0, bar_len - 1 do
-        local start = i * 4 + 7
-        local end_ = start + 4
+        end_H = update_end(i == point_idx_H, start_H, #bar_char, #point_char)
+        end_S = update_end(i == point_idx_S, start_S, #bar_char, #point_char)
+        end_L = update_end(i == point_idx_L, start_L, #bar_char, #point_char)
+
         local h_color = Color:colorcode(utils.hsl2rgb((i + 0.5) * 360 / bar_len, S, L))
         local s_color = Color:colorcode(utils.hsl2rgb(H, (i + 0.5) * 100 / bar_len, L))
         local l_color = Color:colorcode(utils.hsl2rgb(H, S, (i + 0.5) * 100 / bar_len))
         set_hl(0, "CccH" .. i, { fg = h_color })
         set_hl(0, "CccS" .. i, { fg = s_color })
         set_hl(0, "CccL" .. i, { fg = l_color })
-        add_hl(0, self.ns_id, "CccH" .. i, 0, start, end_)
-        add_hl(0, self.ns_id, "CccS" .. i, 1, start, end_)
-        add_hl(0, self.ns_id, "CccL" .. i, 2, start, end_)
+        add_hl(0, self.ns_id, "CccH" .. i, 0, start_H, end_H)
+        add_hl(0, self.ns_id, "CccS" .. i, 1, start_S, end_S)
+        add_hl(0, self.ns_id, "CccL" .. i, 2, start_L, end_L)
+
+        start_H, start_S, start_L = end_H, end_S, end_L
     end
 end
 
