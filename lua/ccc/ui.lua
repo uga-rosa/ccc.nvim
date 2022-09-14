@@ -157,7 +157,7 @@ function UI:complete()
         local idx = math.floor(#line_to_cursor / 8) + 1
         local color = self.prev_colors[idx]
         self.color = color
-        self:update()
+        self:hide_prev_colors()
         return
     end
     self:close()
