@@ -26,9 +26,13 @@ function M.setup(opt)
 end
 
 ---@param name string
----@return any
+---@return unknown
 function M.get(name)
-    return M.config[name] or error("Invalid option name: " .. name)
+    local result = M.config[name]
+    if result == nil then
+        error("Invalid option name: " .. name)
+    end
+    return M.config[name]
 end
 
 return M
