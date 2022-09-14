@@ -133,9 +133,9 @@ function utils.create_bar(value, max, bar_max)
     local bar_char = config.get("bar_char")
     local point_char = config.get("point_char")
     if ratio == 0 then
-        return point_char .. string.rep(bar_char, 9)
+        return point_char .. string.rep(bar_char, bar_max - 1)
     end
-    return string.rep(bar_char, ratio - 1) .. point_char .. string.rep(bar_char, 10 - ratio)
+    return string.rep(bar_char, ratio - 1) .. point_char .. string.rep(bar_char, bar_max - ratio)
 end
 
 return utils
