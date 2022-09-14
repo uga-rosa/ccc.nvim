@@ -1,3 +1,5 @@
+local api = vim.api
+
 local config = require("ccc.config")
 
 local utils = {}
@@ -6,9 +8,34 @@ local utils = {}
 ---@param plain? boolean
 function utils.feedkey(key, plain)
     if not plain then
-        key = vim.api.nvim_replace_termcodes(key, true, false, true)
+        key = api.nvim_replace_termcodes(key, true, false, true)
     end
-    vim.api.nvim_feedkeys(key, "n", false)
+    api.nvim_feedkeys(key, "n", false)
+end
+
+---@return integer
+function utils.cursor()
+    return api.nvim_win_get_cursor(0)
+end
+
+---@return integer
+function utils.row()
+    return api.nvim_win_get_cursor(0)[1]
+end
+
+---@return integer
+function utils.col()
+    return api.nvim_win_get_cursor(0)[2] + 1
+end
+
+---@param bufnr integer
+---@param start integer
+---@param end_ integer
+---@param lines string[]
+function utils.set_lines(bufnr, start, end_, lines)
+    vim.opt_local.modifiable = true
+    api.nvim_buf_set_lines(bufnr, start, end_, false, lines)
+    vim.opt_local.modifiable = false
 end
 
 ---@param ... integer

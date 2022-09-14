@@ -6,6 +6,7 @@ local add_hl = api.nvim_buf_add_highlight
 local Color = require("ccc.color")
 local config = require("ccc.config")
 local utils = require("ccc.utils")
+local sa = require("ccc.utils.safe_array")
 
 ---@alias input_mode "RGB" | "HSL"
 ---@alias output_mode "RGB" | "HSL" | "HEX"
@@ -38,7 +39,7 @@ function UI:init()
     self.prev_colors = self.prev_colors or {}
     self.win_height = 4
     self.ns_id = self.ns_id or api.nvim_create_namespace("ccc")
-    local cursor_pos = api.nvim_win_get_cursor(0)
+    local cursor_pos = utils.cursor()
     self.row = cursor_pos[1]
     self.start_col = cursor_pos[2] + 1
     self.end_col = cursor_pos[2]
@@ -104,18 +105,43 @@ function UI:close()
 end
 
 function UI:show_prev_colors()
+    self:_close()
     self.win_height = 5
     self:_open()
-    ---@param color Color
-    local prev_colors = vim.tbl_map(function(color)
-        return color:output("HEX")
-    end, self.prev_colors)
-    api.nvim_buf_set_lines(self.bufnr, 4, 5, true, prev_colors)
+
+    local line = sa.new(self.prev_colors)
+        :map(function(color)
+            return color:hex_str()
+        end)
+        :concat(" ")
+    utils.set_lines(0, 4, 5, { line })
+
+    local start, end_ = 0, 7
+    for i, color in ipairs(self.prev_colors) do
+        local bg = color:hex_str()
+        local fg = bg > "#800000" and "#000000" or "#ffffff"
+        set_hl(0, "CccPrev" .. i, { fg = fg, bg = bg })
+        add_hl(0, self.ns_id, "CccPrev" .. i, 4, start, end_)
+        start = end_ + 1
+        end_ = start + 7
+    end
+    api.nvim_win_set_cursor(0, { 5, 0 })
 end
 
 function UI:hide_prev_colors()
+    utils.set_lines(0, 0, 5, {})
+    self:_close()
     self.win_height = 4
     self:_open()
+    self:update()
+end
+
+function UI:toggle_prev_colors()
+    if self.win_height == 4 then
+        self:show_prev_colors()
+    else
+        self:hide_prev_colors()
+    end
 end
 
 function UI:quit()
@@ -126,6 +152,14 @@ function UI:quit()
 end
 
 function UI:complete()
+    if utils.row() == 5 then
+        local line_to_cursor = api.nvim_get_current_line():sub(1, utils.col())
+        local idx = math.floor(#line_to_cursor / 8) + 1
+        local color = self.prev_colors[idx]
+        self.color = color
+        self:update()
+        return
+    end
     self:close()
     table.insert(self.prev_colors, 1, self.color)
     if self.is_insert then
@@ -194,10 +228,8 @@ function UI:highlight()
 end
 
 function UI:update()
-    api.nvim_buf_clear_namespace(0, self.ns_id, 0, -1)
-    vim.opt_local.modifiable = true
-    api.nvim_buf_set_lines(self.bufnr, 0, 4, false, self:buffer())
-    vim.opt_local.modifiable = false
+    -- api.nvim_buf_clear_namespace(0, self.ns_id, 0, -1)
+    utils.set_lines(0, 0, 4, self:buffer())
     self:highlight()
     local bg = self.color:hex_str()
     local fg = bg > "#800000" and "#000000" or "#ffffff"
@@ -249,7 +281,7 @@ end
 
 ---@param delta integer
 function UI:delta(delta)
-    local lnum = api.nvim_win_get_cursor(0)[1]
+    local lnum = utils.row()
     if self.input_mode == "RGB" then
         local R, G, B = self.color:get_rgb()
         if lnum == 1 then
@@ -275,7 +307,7 @@ function UI:delta(delta)
 end
 
 function UI:set_percent(percent)
-    local lnum = api.nvim_win_get_cursor(0)[1]
+    local lnum = utils.row()
     if self.input_mode == "RGB" then
         local R, G, B = self.color:get_rgb()
         if lnum == 1 then
@@ -304,7 +336,7 @@ function UI:pick()
     ---@type string
     local current_line = api.nvim_get_current_line()
     local recognized, v1, v2, v3, start, end_ = utils.parse_color(current_line)
-    local cursor_col = api.nvim_win_get_cursor(0)[2] + 1
+    local cursor_col = utils.col()
     if recognized and start <= cursor_col and cursor_col <= end_ then
         ---@cast v1 integer
         self.start_col = start
@@ -313,7 +345,7 @@ function UI:pick()
     end
 end
 
-function UI:input_mode_toggle()
+function UI:toggle_input_mode()
     if self.input_mode == "RGB" then
         self.input_mode = "HSL"
         self.color:rgb2hsl()
@@ -324,7 +356,7 @@ function UI:input_mode_toggle()
     self:update()
 end
 
-function UI:output_mode_toggle()
+function UI:toggle_output_mode()
     if self.output_mode == "RGB" then
         self.output_mode = "HSL"
     elseif self.output_mode == "HSL" then

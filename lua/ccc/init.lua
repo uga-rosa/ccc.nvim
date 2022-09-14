@@ -39,12 +39,24 @@ function M.mapping.complete()
     UI:complete()
 end
 
-function M.mapping.input_mode_toggle()
-    UI:input_mode_toggle()
+function M.mapping.toggle_input_mode()
+    UI:toggle_input_mode()
 end
 
-function M.mapping.output_mode_toggle()
-    UI:output_mode_toggle()
+function M.mapping.toggle_output_mode()
+    UI:toggle_output_mode()
+end
+
+function M.mapping.show_prev_colors()
+    UI:show_prev_colors()
+end
+
+function M.mapping.hide_prev_colors()
+    UI:hide_prev_colors()
+end
+
+function M.mapping.toggle_prev_colors()
+    UI:toggle_prev_colors()
 end
 
 function M.mapping.increase1()

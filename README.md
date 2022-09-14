@@ -24,9 +24,12 @@ This plugin provides one command and one mapping.
 # Default mappings
 
 - `<CR>`: Complete, and perform a replace or insert.
+    - If the cursor in under the previous color, select it.
 - `q`: Cancel.
 - `i`: Toggle input mode. `RGB` -> `HSL` -> `RGB` -> ...
 - `o`: Toggle output mode. `HEX` -> `RGB` -> `HSL` -> `HEX` -> ...
+- `g`: Toggle previous colors.
+    - `W/B` is useful for moving colors; it is also mapped to `w/b`.
 - `h/l`: Decrease/increase by 1.
 - `s/d`: Decrease/increase by 5.
 - `m/,`: Decrease/increase by 10.
@@ -57,11 +60,13 @@ ccc.setup({
     },
     default_color = "#000000",
     preserve = false,
+    save_on_quit = false,
     mappings = {
         ["q"] = mapping.quit,
         ["<CR>"] = mapping.complete,
-        ["i"] = mapping.input_mode_toggle,
-        ["o"] = mapping.output_mode_toggle,
+        ["i"] = mapping.toggle_input_mode,
+        ["o"] = mapping.toggle_output_mode,
+        ["g"] = mapping.toggle_prev_colors,
         ["h"] = mapping.decrease1,
         ["l"] = mapping.increase1,
         ["s"] = mapping.decrease5,
@@ -97,6 +102,8 @@ ccc.setup({
         ["9"] = function()
             ccc.set_percent(90)
         end,
+        ["w"] = "W",
+        ["b"] = "B",
     },
 })
 ```
