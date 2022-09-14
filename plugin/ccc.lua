@@ -5,7 +5,7 @@ vim.g.loaded_ccc = true
 
 require("ccc").setup(true)
 
-vim.api.nvim_create_user_command("CccStart", function()
+vim.api.nvim_create_user_command("CccPick", function()
     require("ccc.ui"):open(false)
 end, {})
 vim.api.nvim_create_user_command("CccInsert", function()
