@@ -31,7 +31,9 @@ local opts = {
 function UI:init()
     self.input_mode = self.input_mode or config.get("default_input_mode")
     self.output_mode = self.output_mode or config.get("default_output_mode")
-    self.color = Color.new(self.input_mode)
+    if self.color == nil or not config.get("preserve") then
+        self.color = Color.new(self.input_mode)
+    end
     self.ns_id = self.ns_id or api.nvim_create_namespace("ccc")
     local cursor_pos = api.nvim_win_get_cursor(0)
     self.row = cursor_pos[1]

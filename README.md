@@ -56,6 +56,7 @@ ccc.setup({
         border = "rounded",
     },
     default_color = "#000000",
+    preserve = false,
     mappings = {
         ["q"] = mapping.quit,
         ["<CR>"] = mapping.complete,
