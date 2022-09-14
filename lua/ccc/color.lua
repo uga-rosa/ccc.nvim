@@ -79,12 +79,12 @@ function Color:set_hsl(H, S, L)
 end
 
 function Color:rgb2hsl()
-    self.H, self.S, self.L = utils.rgb2hsl(self.R, self.G, self.B)
+    self:set_hsl(utils.rgb2hsl(self:get_rgb()))
     self.input_mode = "HSL"
 end
 
 function Color:hsl2rgb()
-    self.R, self.G, self.B = utils.hsl2rgb(self.H, self.S, self.L)
+    self:set_rgb(utils.hsl2rgb(self:get_hsl()))
     self.input_mode = "RGB"
 end
 

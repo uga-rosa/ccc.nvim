@@ -13,34 +13,28 @@ end
 
 ---@param ... integer
 ---@return integer max value
----@return integer the index of max value
 function utils.max(...)
     local m = select(1, ...)
-    local idx = 1
     for i = 2, select("#", ...) do
         local x = select(i, ...)
         if m < x then
             m = x
-            idx = i
         end
     end
-    return m, idx
+    return m
 end
 
 ---@param ... integer
 ---@return integer min value
----@return integer the index of min value
 function utils.min(...)
     local m = select(1, ...)
-    local idx = 1
     for i = 2, select("#", ...) do
         local x = select(i, ...)
         if m > x then
             m = x
-            idx = i
         end
     end
-    return m, idx
+    return m
 end
 
 ---@param float number
@@ -58,22 +52,19 @@ end
 function utils.rgb2hsl(R, G, B)
     ---@type integer, integer, integer
     local H, S, L
-    local MAX, i_max = utils.max(R, G, B)
-    local MIN, _ = utils.min(R, G, B)
+    local MAX = utils.max(R, G, B)
+    local MIN = utils.min(R, G, B)
 
     local round = utils.round
     if R == G and R == B then
         H = 0
         S = 0
     else
-        if i_max == 1 then
-            -- R is max
+        if MAX == R then
             H = round((G - B) / (MAX - MIN) * 60)
-        elseif i_max == 2 then
-            -- G is max
+        elseif MAX == G then
             H = round((B - R) / (MAX - MIN) * 60 + 120)
         else
-            -- B is max
             H = round((R - G) / (MAX - MIN) * 60 + 240)
         end
         if H < 0 then
