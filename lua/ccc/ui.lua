@@ -48,14 +48,15 @@ end
 function UI:_open()
     if self.bufnr == nil then
         self.bufnr = api.nvim_create_buf(false, true)
+        api.nvim_buf_set_option(self.bufnr, "buftype", "nofile")
+        api.nvim_buf_set_option(self.bufnr, "modifiable", false)
+        api.nvim_buf_set_option(self.bufnr, "filetype", "ccc-ui")
     end
     self.win_width = 7 + config.get("bar_len")
     local win_opts = config.get("win_opts")
     win_opts.height = self.win_height
     win_opts.width = self.win_width
     self.win_id = api.nvim_open_win(self.bufnr, true, win_opts)
-    vim.opt_local.buftype = "nofile"
-    vim.opt_local.modifiable = false
 end
 
 ---@param insert boolean
