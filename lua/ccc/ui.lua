@@ -41,28 +41,31 @@ function UI:init()
     self.end_col = cursor_pos[2]
 end
 
+function UI:_open()
+    if self.bufnr == nil then
+        self.bufnr = api.nvim_create_buf(false, true)
+    end
+    self.win_width = 7 + config.get("bar_len")
+    local win_opts = config.get("win_opts")
+    win_opts.height = self.win_height
+    win_opts.width = self.win_width
+    self.win_id = api.nvim_open_win(self.bufnr, true, win_opts)
+    vim.opt_local.buftype = "nofile"
+    vim.opt_local.modifiable = false
+end
+
 ---@param insert boolean
 function UI:open(insert)
     if self.already_open then
         return
     end
     self.already_open = true
-    self:init()
     self.is_insert = insert
     if not insert then
         self:pick()
     end
-    if self.bufnr == nil then
-        self.bufnr = api.nvim_create_buf(false, true)
-    end
-    opts.width = 7 + config.get("bar_len")
-    local win_opts = vim.tbl_extend("error", opts, config.get("win_opts"))
-    for k, v in pairs(win_opts) do
-        if type(v) == "function" then
-            win_opts[k] = v()
-        end
-    end
-    self.win_id = api.nvim_open_win(self.bufnr, true, win_opts)
+    self:init()
+    self:_open()
     self:update()
 
     local mappings = config.get("mappings")
@@ -72,18 +75,24 @@ function UI:open(insert)
     if insert then
         utils.feedkey("<Esc>")
     end
-    vim.opt_local.buftype = "nowrite"
+end
+
+function UI:_close()
+    if self.win_id == nil then
+        return
+    end
+    api.nvim_win_close(self.win_id, true)
 end
 
 function UI:close()
-    if self.win_id == nil then
+    if not self.already_open then
         return
     end
     local mappings = config.get("mappings")
     for lhs, _ in pairs(mappings) do
         vim.keymap.del("n", lhs, { buffer = self.bufnr })
     end
-    api.nvim_win_close(self.win_id, true)
+    self:_close()
     if self.is_insert then
         vim.cmd("startinsert")
     end
@@ -164,7 +173,9 @@ end
 
 function UI:update()
     api.nvim_buf_clear_namespace(0, self.ns_id, 0, -1)
+    vim.opt_local.modifiable = true
     api.nvim_buf_set_lines(self.bufnr, 0, 4, false, self:buffer())
+    vim.opt_local.modifiable = false
     self:highlight()
     local bg = self.color:hex_str()
     local fg = bg > "#800000" and "#000000" or "#ffffff"
