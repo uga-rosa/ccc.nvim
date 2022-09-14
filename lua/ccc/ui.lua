@@ -292,12 +292,6 @@ local colorcode_pattern =
 local rgb_pattern = "rgb%((%d+),%s*(%d+),%s*(%d+)%)"
 local hsl_pattern = "hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%%)"
 
----@param hex string
----@return integer
-local function hex2num(hex)
-    return tonumber(hex, 16)
-end
-
 function UI:pick()
     ---@type string
     local current_line = api.nvim_get_current_line()
@@ -306,23 +300,34 @@ function UI:pick()
     if s and s <= cursor_col and cursor_col <= e then
         self.start_col = s
         self.end_col = e
-        self.color:set_rgb(hex2num(cap1), hex2num(cap2), hex2num(cap3))
+        local R, G, B = tonumber(cap1, 16), tonumber(cap2, 16), tonumber(cap3, 16)
+        if self.input_mode == "RGB" then
+            self.color:set_rgb(R, G, B)
+        else
+            self.color:set_hsl(utils.rgb2hsl(R, G, B))
+        end
     end
     s, e, cap1, cap2, cap3 = current_line:find(rgb_pattern)
     if s and s <= cursor_col and cursor_col <= e then
         self.start_col = s
         self.end_col = e
-        cap1, cap2, cap3 = tonumber(cap1), tonumber(cap2), tonumber(cap3)
-        ---@diagnostic disable-next-line
-        self.color:set_rgb(cap1, cap2, cap3)
+        local R, G, B = tonumber(cap1, 10), tonumber(cap2, 10), tonumber(cap3, 10)
+        if self.input_mode == "RGB" then
+            self.color:set_rgb(R, G, B)
+        else
+            self.color:set_hsl(utils.rgb2hsl(R, G, B))
+        end
     end
     s, e, cap1, cap2, cap3 = current_line:find(hsl_pattern)
     if s and s <= cursor_col and cursor_col <= e then
         self.start_col = s
         self.end_col = e
-        cap1, cap2, cap3 = tonumber(cap1), tonumber(cap2), tonumber(cap3)
-        ---@diagnostic disable-next-line
-        self.color:set_hsl(cap1, cap2, cap3)
+        local H, S, L = tonumber(cap1, 10), tonumber(cap2, 10), tonumber(cap3, 10)
+        if self.input_mode == "HSL" then
+            self.color:set_hsl(H, S, L)
+        else
+            self.color:set_rgb(utils.hsl2rgb(H, S, L))
+        end
     end
 end
 
