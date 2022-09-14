@@ -301,33 +301,21 @@ function UI:pick()
         self.start_col = s
         self.end_col = e
         local R, G, B = tonumber(cap1, 16), tonumber(cap2, 16), tonumber(cap3, 16)
-        if self.input_mode == "RGB" then
-            self.color:set_rgb(R, G, B)
-        else
-            self.color:set_hsl(utils.rgb2hsl(R, G, B))
-        end
+        self.color:set(self.input_mode, "RGB", R, G, B)
     end
     s, e, cap1, cap2, cap3 = current_line:find(rgb_pattern)
     if s and s <= cursor_col and cursor_col <= e then
         self.start_col = s
         self.end_col = e
         local R, G, B = tonumber(cap1, 10), tonumber(cap2, 10), tonumber(cap3, 10)
-        if self.input_mode == "RGB" then
-            self.color:set_rgb(R, G, B)
-        else
-            self.color:set_hsl(utils.rgb2hsl(R, G, B))
-        end
+        self.color:set(self.input_mode, "RGB", R, G, B)
     end
     s, e, cap1, cap2, cap3 = current_line:find(hsl_pattern)
     if s and s <= cursor_col and cursor_col <= e then
         self.start_col = s
         self.end_col = e
         local H, S, L = tonumber(cap1, 10), tonumber(cap2, 10), tonumber(cap3, 10)
-        if self.input_mode == "HSL" then
-            self.color:set_hsl(H, S, L)
-        else
-            self.color:set_rgb(utils.hsl2rgb(H, S, L))
-        end
+        self.color:set(self.input_mode, "HSL", H, S, L)
     end
 end
 

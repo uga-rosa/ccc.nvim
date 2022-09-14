@@ -24,6 +24,32 @@ function Color.new(input_mode)
     }, { __index = Color })
 end
 
+---@param input_mode input_mode
+---@param value_mode input_mode
+---@param v1 integer
+---@param v2 integer
+---@param v3 integer
+function Color:set(input_mode, value_mode, v1, v2, v3)
+    local R, G, B, H, S, L
+    if value_mode == "RGB" then
+        R, G, B = v1, v2, v3
+    else
+        H, S, L = v1, v2, v3
+    end
+
+    if input_mode == "RGB" then
+        if not (R and G and B) then
+            R, G, B = utils.hsl2rgb(H, S, L)
+        end
+        self:set_rgb(R, G, B)
+    else
+        if not (H and S and L) then
+            H, S, L = utils.rgb2hsl(R, G, B)
+        end
+        self:set_hsl(H, S, L)
+    end
+end
+
 ---@return integer R
 ---@return integer G
 ---@return integer B
