@@ -53,3 +53,9 @@ This plugin provides one command and one mapping.
 - `l/d/,`: Increase the value of the slider by 1/5/10.
 - `H/M/L`: Set the value of the slider to 0%/50%/100%.
 - `0-9`: Set to 0% - 90%.
+
+# Known bugs
+
+- The color of the border ramdomly changes on sliding.
+    - The only highlighting this plugin does is nvim_buf_add_highlight(), so I don't see how this could happen.
+    - Perhaps it is a bug of neovim, and the trigger is to do dynamic highlighting at high speed.
