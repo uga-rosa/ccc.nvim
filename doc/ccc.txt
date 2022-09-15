@@ -6,11 +6,9 @@ Contents                                                          *ccc-contents*
 
 Introduction						|ccc-introduction|
 Setup							|ccc-setup|
+Option							|ccc-option|
 Interface						|ccc-interface|
-- Command						|ccc-command|
-- Key mapping						|ccc-key-mapping|
 Action							|ccc-action|
-Setup							|ccc-setup|
 
 
 
@@ -18,7 +16,7 @@ Setup							|ccc-setup|
 Introduction                                                  *ccc-introduction*
 
 
-Use the slide bar, easy, to create any color you want!
+Use the sliders, easy, to create any color you want!
 
 Features:
 - RGB and HSL sliders for color adjustment.
@@ -29,56 +27,12 @@ Features:
 
 
 ==============================================================================
-Interface                                                        *ccc-interface*
-
-
-------------------------------------------------------------------------------
-commands                                                           *ccc-command*
-
-
-                                                                      *:CccPick*
-:CccPick ~
-	Detects and replaces the color under the cursor.
-	Detectable formats are color code (#000000), RGB (rgb(0,0,0)), and HSL
-	(hsl(0,0%,0%)).
-	If nothing is detected, it is inserted at a new cursor position.
-
-
-------------------------------------------------------------------------------
-key mappings                                                   *ccc-key-mapping*
-
-
-                                                            *<Plug>(ccc-insert)*
-<Plug>(ccc-insert) ~
-	Defined in insert mode.
-	Insert the color without detection.
-
-
-
-==============================================================================
-Action                                                              *ccc-action*
-
-
-<CR>		Complete, and perform a replace or insert.
-		If the cursor in under the previous color, select it.
-q		Cancel.
-i		Toggle input mode. 'RGB' -> 'HSL' -> 'RGB' -> ...
-o		Toggle output mode. 'HEX' -> 'RGB' -> 'HSL' -> 'HEX' -> ...
-g		Toggle previous colors.
-		'W/B' is useful for moving colors; it is also mapped to 'w/b'.
-h/l		Decrease/increase by 1.
-s/d		Decrease/increase by 5.
-m/,		Decrease/increase by 10.
-H/M/L		Set to 0%/50%/100%.
-0-9		Set to 0% - 90%.
-
-
-==============================================================================
 Setup                                                                *ccc-setup*
 
 
 If you do not want to change the default setting, there is no need to call
 setup (Empty setup is done automatically by plugin/ccc.lua).
+See |ccc-option| for the options that can be specified.
 
 
 >
@@ -86,67 +40,203 @@ setup (Empty setup is done automatically by plugin/ccc.lua).
 	local mapping = ccc.mapping
 	
 	ccc.setup({
-	    default_input_mode = "RGB",
-	    default_output_mode = "HEX",
-	    bar_char = "■",
-	    point_char = "◇",
-	    bar_len = 30,
-	    win_opts = {
-	        relative = "cursor",
-	        row = 1,
-	        col = 1,
-	        style = "minimal",
-	        border = "rounded",
-	    },
-	    default_color = "#000000",
-	    preserve = false,
-	    save_on_quit = false,
-	    mappings = {
-	        ["q"] = mapping.quit,
-	        ["<CR>"] = mapping.complete,
-	        ["i"] = mapping.toggle_input_mode,
-	        ["o"] = mapping.toggle_output_mode,
-	        ["g"] = mapping.toggle_prev_colors,
-	        ["h"] = mapping.decrease1,
-	        ["l"] = mapping.increase1,
-	        ["s"] = mapping.decrease5,
-	        ["d"] = mapping.increase5,
-	        ["m"] = mapping.decrease10,
-	        [","] = mapping.increase10,
-	        ["H"] = mapping.set0,
-	        ["M"] = mapping.set50,
-	        ["L"] = mapping.set100,
-	        ["0"] = mapping.set0,
-	        ["1"] = function()
-	            ccc.set_percent(10)
-	        end,
-	        ["2"] = function()
-	            ccc.set_percent(20)
-	        end,
-	        ["3"] = function()
-	            ccc.set_percent(30)
-	        end,
-	        ["4"] = function()
-	            ccc.set_percent(40)
-	        end,
-	        ["5"] = mapping.set50,
-	        ["6"] = function()
-	            ccc.set_percent(60)
-	        end,
-	        ["7"] = function()
-	            ccc.set_percent(70)
-	        end,
-	        ["8"] = function()
-	            ccc.set_percent(80)
-	        end,
-	        ["9"] = function()
-	            ccc.set_percent(90)
-	        end,
-	        ["w"] = "W",
-	        ["b"] = "B",
-	    },
+		-- Your favorite settings
 	})
 <
+
+
+
+==============================================================================
+Option                                                             *ccc-option*
+
+
+                                                 *ccc-option-default-input-mode*
+default_input_mode ~
+"RGB" | "HSL"
+Default: "RGB"
+	Default input method. It is used at first startup. Once activated, it
+	will keep the previous value instead of this one from the next time
+	on.
+
+
+                                                *ccc-option-default-output-mode*
+default_output_mode ~
+"HEX" | "RGB" | "HSL"
+Default: "HEX"
+	Default output method. It is used at first startup. Once activated, it
+	will keep the previous value instead of this one from the next time
+	on.
+
+
+                                                           *ccc-option-bar-char*
+bar_char ~
+string
+Default: "■"
+	The character used for the sliders.
+
+
+                                                         *ccc-option-point-char*
+point_char ~
+string
+Default: "◇"
+	The character used for the cursor point on the sliders.
+
+
+                                                            *ccc-option-bar-len*
+bar_len ~
+integer
+Default: 30
+	The length of the slider (not byte length). This value number of
+	bar_chars form a slider.
+
+
+                                                           *ccc-option-win-opts*
+win_opts ~
+table
+Default: {
+	relative = "cursor",
+	row = 1,
+	col = 1,
+	style = "minimal",
+	border = "rounded",
+}
+	The options passed to the |nvim_open_win|. 'width' and 'height' cannot
+	be specified.
+
+
+                                                      *ccc-option-default-color*
+default_color ~
+string (HEX, RGB, or HSL style)
+Default: "#000000"
+	The default color used when a color cannot be picked. See also
+	|ccc-option-preserve|.
+
+
+                                                           *ccc-option-preserve*
+preserve ~
+boolean
+Default: false
+	Whether to preserve the colors when the UI is closed. If this is true,
+	you can start where you left off last time.
+
+
+                                                       *ccc-option-save-on-quit*
+save_on_quit ~
+boolean
+Default: false
+	Whether to add colors to prev_colors when quit (|ccc-action-quit|).
+
+
+                                                           *ccc-option-mappings*
+mappings ~
+table
+Default: See |ccc-action|
+	The mappings are set in the UI of ccc. The table where lhs is key and
+	rhs is value.
+
+
+
+==============================================================================
+Interface                                                        *ccc-interface*
+
+
+------------------------------------------------------------------------------
+Command                                                            *ccc-command*
+
+
+                                                                      *:CccPick*
+:CccPick ~
+	Detects and replaces the color under the cursor. Detectable formats
+	are HEX (#000000), RGB (rgb(0,0,0)), and HSL (hsl(0,0%,0%)). If
+	nothing is detected, it is inserted at a new cursor position.
+
+
+------------------------------------------------------------------------------
+Key mapping                                                    *ccc-key-mapping*
+
+
+                                                            *<Plug>(ccc-insert)*
+<Plug>(ccc-insert) ~
+	Defined in insert mode. Insert the color without detection.
+
+
+
+==============================================================================
+Action                                                              *ccc-action*
+
+
+>
+	local ccc = require("ccc")
+	local mapping = ccc.mapping
+<
+
+
+                                                           *ccc-action-complete*
+complete ~
+mapping.complete()
+Default mapping: <CR>
+	Close the UI and perform a replace or insert.
+	If the cursor is under the previous color, select it.
+
+
+                                                               *ccc-action-quit*
+quit ~
+mapping.quit()
+Default mapping: q
+	Cancel and close the UI without replace or insert.
+
+
+                                                  *ccc-action-toggle-input-mode*
+toggle_input_mode ~
+mapping.toggle_input_mode()
+Default mapping: i
+	Toggle input mode.
+	RGB -> HSL -> RGB -> ...
+
+
+                                                 *ccc-action-toggle-output-mode*
+toggle_output_mode ~
+mapping.toggle_output_mode()
+Default mapping: o
+	Toggle output mode.
+	HEX -> RGB -> HSL -> HEX -> ...
+
+
+                                                 *ccc-action-toggle-prev-colors*
+toggle_prev_colors ~
+mapping.toggle_prev_colors()
+Default mapping: g
+	Toggle show and hide the previous colors pallet.
+	|W|/|B| are useful for moving colors; they are also mapped to w/b.
+
+
+                                                           *ccc-action-decrease*
+decrease ~
+mapping.decrease1
+mapping.decrease5
+mapping.decrease10
+Default mapping: h / s / m (1 / 5 / 10)
+	Decrease the value of the slider.
+
+
+                                                           *ccc-action-increase*
+increase ~
+mapping.increase1
+mapping.increase5
+mapping.increase10
+Default mapping: l / d / , (1 / 5 / 10)
+	Increase the value of the slider.
+
+
+                                                                *ccc-action-set*
+set ~
+mapping.set0
+mapping.set50
+mapping.set100
+ccc.set_percent(integer)
+Default mapping: H / M / L (0 / 50 / 100)
+		1 - 9 (10% - 90%)
+	Set the value of the slider as a percentage.
 
 
 
