@@ -193,4 +193,17 @@ function utils.search_idx(array, value, func)
     end
 end
 
+---@param int integer
+---@param min integer
+---@param max integer
+---@return integer
+function utils.fix_overflow(int, min, max)
+    if int < min then
+        return min
+    elseif int > max then
+        return max
+    end
+    return int
+end
+
 return utils

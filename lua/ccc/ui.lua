@@ -5,7 +5,6 @@ local add_hl = api.nvim_buf_add_highlight
 
 local Color = require("ccc.color")
 local config = require("ccc.config")
-local hex = require("ccc.output.hex")
 local utils = require("ccc.utils")
 local sa = require("ccc.utils.safe_array")
 
@@ -216,9 +215,9 @@ function UI:highlight()
         end_v2 = update_end(i == point_idx_v2, start_v2, #bar_char, #point_char)
         end_v3 = update_end(i == point_idx_v3, start_v3, #bar_char, #point_char)
 
-        local hex_v1 = hex.str(utils.round((i + 0.5) * max[1] / bar_len), v2, v3)
-        local hex_v2 = hex.str(v1, utils.round((i + 0.5) * max[2] / bar_len), v3)
-        local hex_v3 = hex.str(v1, v2, utils.round((i + 0.5) * max[3] / bar_len))
+        local hex_v1 = self.color:hex(utils.round((i + 0.5) * max[1] / bar_len), v2, v3)
+        local hex_v2 = self.color:hex(v1, utils.round((i + 0.5) * max[2] / bar_len), v3)
+        local hex_v3 = self.color:hex(v1, v2, utils.round((i + 0.5) * max[3] / bar_len))
         set_hl(0, "CccV1" .. i, { fg = hex_v1 })
         set_hl(0, "CccV2" .. i, { fg = hex_v2 })
         set_hl(0, "CccV3" .. i, { fg = hex_v3 })
@@ -229,7 +228,7 @@ function UI:highlight()
         start_v1, start_v2, start_v3 = end_v1, end_v2, end_v3
     end
 
-    local output_bg = hex.str(self.color:get_rgb())
+    local output_bg = self.color:hex()
     local output_fg = output_bg > "#800000" and "#000000" or "#ffffff"
     set_hl(0, "CccOutput", { fg = output_fg, bg = output_bg })
     local start_output = api.nvim_buf_get_lines(self.bufnr, 4, 5, true)[1]:find("%S") - 1
@@ -238,7 +237,7 @@ function UI:highlight()
     if self.win_height == 6 then
         local start_prev, end_prev = 0, 7
         for i, color in ipairs(self.prev_colors) do
-            local bg = hex.str(color:get_rgb())
+            local bg = color:hex()
             local fg = bg > "#800000" and "#000000" or "#ffffff"
             set_hl(0, "CccPrev" .. i, { fg = fg, bg = bg })
             add_hl(0, self.ns_id, "CccPrev" .. i, 5, start_prev, end_prev)
@@ -248,29 +247,16 @@ function UI:highlight()
     end
 end
 
----@param int integer
----@param min integer
----@param max integer
----@return integer
-local function fix_overflow(int, min, max)
-    if int < min then
-        return min
-    elseif int > max then
-        return max
-    end
-    return int
-end
-
 ---@param delta integer
 function UI:delta(delta)
     local v1, v2, v3 = self.color:get()
     local row = utils.row()
     if row == 2 then
-        v1 = fix_overflow(v1 + delta, 0, self.color.input.max[1])
+        v1 = utils.fix_overflow(v1 + delta, 0, self.color.input.max[1])
     elseif row == 3 then
-        v2 = fix_overflow(v2 + delta, 0, self.color.input.max[2])
+        v2 = utils.fix_overflow(v2 + delta, 0, self.color.input.max[2])
     elseif row == 4 then
-        v3 = fix_overflow(v3 + delta, 0, self.color.input.max[3])
+        v3 = utils.fix_overflow(v3 + delta, 0, self.color.input.max[3])
     end
     self.color:set(v1, v2, v3)
     self:update()

@@ -1,5 +1,6 @@
 local utils = require("ccc.utils")
 local config = require("ccc.config")
+local hex = require("ccc.output.hex")
 
 ---@class Color
 ---@field input ColorInput
@@ -125,6 +126,18 @@ end
 ---@return string
 function Color:str()
     return self.output.str(self.input:get_rgb())
+end
+
+---@param v1? integer
+---@param v2? integer
+---@param v3? integer
+---@return string
+function Color:hex(v1, v2, v3)
+    if not (v1 and v2 and v3) then
+        v1, v2, v3 = self.input:get()
+    end
+    local R, G, B = self.input.to_rgb(v1, v2, v3)
+    return hex.str(R, G, B)
 end
 
 return Color

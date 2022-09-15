@@ -1,3 +1,5 @@
+local utils = require("ccc.utils")
+
 ---@class ColorInput
 ---@field name string
 ---@field max integer[]
@@ -24,7 +26,11 @@ end
 ---@param G integer
 ---@param B integer
 function ColorInput:set_rgb(R, G, B)
-    self:set(self.from_rgb(R, G, B))
+    local v1, v2, v3 = self.from_rgb(R, G, B)
+    v1 = utils.fix_overflow(v1, 0, self.max[1])
+    v2 = utils.fix_overflow(v2, 0, self.max[2])
+    v2 = utils.fix_overflow(v2, 0, self.max[3])
+    self:set(v1, v2, v3)
 end
 
 ---@return integer v1
