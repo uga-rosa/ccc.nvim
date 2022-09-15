@@ -4,6 +4,7 @@ local mapping = ccc.mapping
 return {
     default_input_mode = "RGB",
     default_output_mode = "HEX",
+    default_color = "#000000",
     bar_char = "■",
     point_char = "◇",
     bar_len = 30,
@@ -14,9 +15,25 @@ return {
         style = "minimal",
         border = "rounded",
     },
-    default_color = "#000000",
     preserve = false,
     save_on_quit = false,
+    inputs = {
+        require("ccc.input.rgb"):new(),
+        require("ccc.input.hsl"):new(),
+    },
+    outputs = {
+        require("ccc.output.hex"),
+        require("ccc.output.css_rgb"),
+        require("ccc.output.css_hsl"),
+    },
+    pickers = {
+        require("ccc.picker.hex"),
+        require("ccc.picker.css_rgb"),
+        require("ccc.picker.css_hsl"),
+    },
+    hex_format = "#%02x%02x%02x",
+    rgb_format = "rgb(%d,%d,%d)",
+    hsl_format = "hsl(%d,%d%%,%d%%)",
     mappings = {
         ["q"] = mapping.quit,
         ["<CR>"] = mapping.complete,

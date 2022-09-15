@@ -1,0 +1,3 @@
+---@class ColorOutput
+---@field name string
+---@field str fun(R, G, B): string

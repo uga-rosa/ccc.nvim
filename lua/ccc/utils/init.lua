@@ -1,7 +1,5 @@
 local api = vim.api
 
-local config = require("ccc.config")
-
 local utils = {}
 
 ---@param key string
@@ -45,40 +43,41 @@ end
 ---@param end_ integer
 ---@param lines string[]
 function utils.set_lines(bufnr, start, end_, lines)
-    vim.opt_local.modifiable = true
+    api.nvim_buf_set_option(bufnr, "modifiable", true)
     api.nvim_buf_set_lines(bufnr, start, end_, false, lines)
-    vim.opt_local.modifiable = false
+    api.nvim_buf_set_option(bufnr, "modifiable", false)
 end
 
----@param ... integer
----@return integer max value
+---@param ... number
+---@return number max
 function utils.max(...)
-    local m = select(1, ...)
+    local max = select(1, ...)
     for i = 2, select("#", ...) do
         local x = select(i, ...)
-        if m < x then
-            m = x
+        if max < x then
+            max = x
         end
     end
-    return m
+    return max
 end
 
----@param ... integer
----@return integer min value
+---@param ... number
+---@return number min
 function utils.min(...)
-    local m = select(1, ...)
+    local min = select(1, ...)
     for i = 2, select("#", ...) do
         local x = select(i, ...)
-        if m > x then
-            m = x
+        if min < x then
+            min = x
         end
     end
-    return m
+    return min
 end
 
 ---@param float number
 ---@return integer
 function utils.round(float)
+    vim.validate({ float = { float, "n" } })
     return math.floor(float + 0.5)
 end
 
@@ -89,7 +88,12 @@ end
 ---@return integer S
 ---@return integer L
 function utils.rgb2hsl(R, G, B)
-    ---@type integer, integer, integer
+    vim.validate({
+        R = { R, "n" },
+        G = { G, "n" },
+        B = { B, "n" },
+    })
+
     local H, S, L
     local MAX = utils.max(R, G, B)
     local MIN = utils.min(R, G, B)
@@ -129,6 +133,12 @@ end
 ---@return integer G
 ---@return integer B
 function utils.hsl2rgb(H, S, L)
+    vim.validate({
+        H = { H, "n" },
+        S = { S, "n" },
+        L = { L, "n" },
+    })
+
     local R, G, B
     if H == 360 then
         H = 0
@@ -163,50 +173,24 @@ function utils.hsl2rgb(H, S, L)
     return utils.round(R), utils.round(G), utils.round(B)
 end
 
-function utils.ratio(value, max, bar_len)
-    return utils.round(value / max * bar_len)
-end
+---@param array any[]
+---@param value any
+---@param func? function
+---@return integer?
+function utils.search_idx(array, value, func)
+    vim.validate({
+        array = { array, "t" },
+        func = { func, "f", true },
+    })
+    func = vim.F.if_nil(func, function(x)
+        return x
+    end)
 
-function utils.create_bar(value, max, bar_len)
-    local ratio = utils.ratio(value, max, bar_len)
-    local bar_char = config.get("bar_char")
-    local point_char = config.get("point_char")
-    if ratio == 0 then
-        return point_char .. string.rep(bar_char, bar_len - 1)
+    for i, v in ipairs(array) do
+        if func(v) == value then
+            return i
+        end
     end
-    return string.rep(bar_char, ratio - 1) .. point_char .. string.rep(bar_char, bar_len - ratio)
-end
-
-local hex_pattern = "#" .. string.rep("([0-9a-fA-F][0-9a-fA-F])", 3)
-local rgb_pattern = "rgb%((%d+),%s*(%d+),%s*(%d+)%)"
-local hsl_pattern = "hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%%)"
-
----@param s string
----@return input_mode recognized
----@return integer R or H
----@return integer G or S
----@return integer B or L
----@return integer start
----@return integer end_
----@overload fun(s: string): fail: nil, err_msg: string
-function utils.parse_color(s)
-    local start, end_, cap1, cap2, cap3 = s:find(hex_pattern)
-    if start then
-        local R, G, B = tonumber(cap1, 16), tonumber(cap2, 16), tonumber(cap3, 16)
-        return "RGB", R, G, B, start, end_
-    end
-    start, end_, cap1, cap2, cap3 = s:find(rgb_pattern)
-    if start then
-        local R, G, B = tonumber(cap1, 10), tonumber(cap2, 10), tonumber(cap3, 10)
-        return "RGB", R, G, B, start, end_
-    end
-    start, end_, cap1, cap2, cap3 = s:find(hsl_pattern)
-    if start then
-        local H, S, L = tonumber(cap1, 10), tonumber(cap2, 10), tonumber(cap3, 10)
-        return "HSL", H, S, L, start, end_
-    end
-    ---@diagnostic disable-next-line
-    return nil, "Unable to recognize color patterns"
 end
 
 return utils

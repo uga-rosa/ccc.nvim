@@ -1,3 +1,5 @@
+local utils = require("ccc.utils")
+
 ---@class safe_array
 ---@field raw unknown[]
 ---@field len integer
@@ -52,6 +54,16 @@ function safe_array:concat(sep, i, j)
     i = vim.F.if_nil(i, 1)
     j = vim.F.if_nil(j, #self.raw)
     return table.concat(self.raw, sep, i, j)
+end
+
+---@return number
+function safe_array:max()
+    return utils.max(unpack(self:unpack()))
+end
+
+---@return number
+function safe_array:min()
+    return utils.min(unpack(self:unpack()))
 end
 
 ---@class Set table<any, boolean>
