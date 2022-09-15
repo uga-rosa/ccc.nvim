@@ -125,8 +125,10 @@ end
 
 ---@return string
 function Color:rgb_str()
-    local R, G, B = self:get_rgb()
-    if self.input_mode == "HSL" then
+    local R, G, B
+    if self.input_mode == "RGB" then
+        R, G, B = self:get_rgb()
+    else
         R, G, B = utils.hsl2rgb(self:get_hsl())
     end
     return ("rgb(%s,%s,%s)"):format(R, G, B)
@@ -134,9 +136,11 @@ end
 
 ---@return string
 function Color:hsl_str()
-    local H, S, L = self:get_hsl()
+    local H, S, L
     if self.input_mode == "RGB" then
         H, S, L = utils.rgb2hsl(self:get_rgb())
+    else
+        H, S, L = self:get_hsl()
     end
     return ("hsl(%s,%s%%,%s%%)"):format(H, S, L)
 end
