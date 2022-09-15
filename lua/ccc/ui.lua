@@ -25,7 +25,6 @@ local sa = require("ccc.utils.safe_array")
 ---@field end_col integer 1-index
 ---@field prev_pos integer[] (1,1)-index
 ---@field is_insert boolean
----@field already_open boolean
 ---@field prev_colors Color[]
 local UI = {}
 
@@ -50,6 +49,10 @@ function UI:_open()
         api.nvim_buf_set_option(self.bufnr, "buftype", "nofile")
         api.nvim_buf_set_option(self.bufnr, "modifiable", false)
         api.nvim_buf_set_option(self.bufnr, "filetype", "ccc-ui")
+        local mappings = config.get("mappings")
+        for lhs, rhs in pairs(mappings) do
+            vim.keymap.set("n", lhs, rhs, { nowait = true, buffer = self.bufnr })
+        end
     end
     self.win_width = 7 + config.get("bar_len")
     local win_opts = config.get("win_opts")
@@ -60,10 +63,9 @@ end
 
 ---@param insert boolean
 function UI:open(insert)
-    if self.already_open then
+    if api.nvim_win_is_valid(self.win_id or -1) then
         return
     end
-    self.already_open = true
     self.is_insert = insert
     self:init()
     if insert then
@@ -74,36 +76,23 @@ function UI:open(insert)
     self:_open()
     self:update()
 
-    local mappings = config.get("mappings")
-    for lhs, rhs in pairs(mappings) do
-        vim.keymap.set("n", lhs, rhs, { nowait = true, buffer = self.bufnr })
-    end
     if insert then
         utils.feedkey("<Esc>")
     end
 end
 
 function UI:_close()
-    if self.win_id == nil then
-        return
-    end
     api.nvim_win_close(self.win_id, true)
 end
 
 function UI:close()
-    if not self.already_open then
+    if not api.nvim_win_is_valid(self.win_id) then
         return
-    end
-    local mappings = config.get("mappings")
-    for lhs, _ in pairs(mappings) do
-        vim.keymap.del("n", lhs, { buffer = self.bufnr })
     end
     self:_close()
     if self.is_insert then
         vim.cmd("startinsert")
     end
-    utils.cursor_set({ self.row, self.start_col })
-    self.already_open = false
 end
 
 function UI:show_prev_colors()
