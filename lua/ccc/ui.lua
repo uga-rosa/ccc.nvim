@@ -36,11 +36,11 @@ function UI:init()
     else
         self.color = self.color:copy()
     end
-    self.prev_colors = self.prev_colors or {}
-    self.win_height = 4
+    self.win_height = 5
     self.ns_id = self.ns_id or api.nvim_create_namespace("ccc")
     self.row = utils.row()
     self.start_col = utils.col()
+    self.prev_colors = self.prev_colors or {}
 end
 
 function UI:_open()
@@ -79,6 +79,7 @@ function UI:open(insert)
     if insert then
         utils.feedkey("<Esc>")
     end
+    utils.cursor_set({ 2, 1 })
 end
 
 function UI:_close()
@@ -97,7 +98,7 @@ end
 
 function UI:show_prev_colors()
     self:_close()
-    self.win_height = 5
+    self.win_height = 6
     self:_open()
 
     local line = sa.new(self.prev_colors)
@@ -105,23 +106,23 @@ function UI:show_prev_colors()
             return color:hex_str()
         end)
         :concat(" ")
-    utils.set_lines(0, 4, 5, { line })
+    utils.set_lines(0, 5, 6, { line })
 
     self.prev_pos = utils.cursor()
-    utils.cursor_set({ 5, 1 })
+    utils.cursor_set({ 6, 1 })
     self:highlight()
 end
 
 function UI:hide_prev_colors()
-    utils.set_lines(0, 4, 5, {})
+    utils.set_lines(0, 5, 6, {})
     self:_close()
-    self.win_height = 4
+    self.win_height = 5
     self:_open()
     utils.cursor_set(self.prev_pos)
 end
 
 function UI:toggle_prev_colors()
-    if self.win_height == 4 then
+    if self.win_height == 5 then
         self:show_prev_colors()
     else
         self:hide_prev_colors()
@@ -136,7 +137,7 @@ function UI:quit()
 end
 
 function UI:complete()
-    if utils.row() == 5 then
+    if utils.row() == 6 then
         local line_to_cursor = api.nvim_get_current_line():sub(1, utils.col())
         local idx = math.floor(#line_to_cursor / 8) + 1
         local color = self.prev_colors[idx]
@@ -169,7 +170,7 @@ function UI:replace()
 end
 
 function UI:update()
-    utils.set_lines(0, 0, 4, self:buffer())
+    utils.set_lines(0, 0, 5, self:buffer())
     self:highlight()
 end
 
@@ -214,9 +215,9 @@ function UI:highlight()
         set_hl(0, "CccV1" .. i, { fg = hex_v1 })
         set_hl(0, "CccV2" .. i, { fg = hex_v2 })
         set_hl(0, "CccV3" .. i, { fg = hex_v3 })
-        add_hl(0, self.ns_id, "CccV1" .. i, 0, start_v1, end_v1)
-        add_hl(0, self.ns_id, "CccV2" .. i, 1, start_v2, end_v2)
-        add_hl(0, self.ns_id, "CccV3" .. i, 2, start_v3, end_v3)
+        add_hl(0, self.ns_id, "CccV1" .. i, 1, start_v1, end_v1)
+        add_hl(0, self.ns_id, "CccV2" .. i, 2, start_v2, end_v2)
+        add_hl(0, self.ns_id, "CccV3" .. i, 3, start_v3, end_v3)
 
         start_v1, start_v2, start_v3 = end_v1, end_v2, end_v3
     end
@@ -224,8 +225,8 @@ function UI:highlight()
     local output_bg = self.color:hex_str()
     local output_fg = output_bg > "#800000" and "#000000" or "#ffffff"
     set_hl(0, "CccOutput", { fg = output_fg, bg = output_bg })
-    local start_output = api.nvim_buf_get_lines(0, 3, 4, true)[1]:find("%S") - 1
-    add_hl(0, self.ns_id, "CccOutput", 3, start_output, -1)
+    local start_output = api.nvim_buf_get_lines(0, 4, 5, true)[1]:find("%S") - 1
+    add_hl(0, self.ns_id, "CccOutput", 4, start_output, -1)
 
     if self.row == 5 then
         local start_prev, end_prev = 0, 7
@@ -233,7 +234,7 @@ function UI:highlight()
             local bg = color:hex_str()
             local fg = bg > "#800000" and "#000000" or "#ffffff"
             set_hl(0, "CccPrev" .. i, { fg = fg, bg = bg })
-            add_hl(0, self.ns_id, "CccPrev" .. i, 4, start_prev, end_prev)
+            add_hl(0, self.ns_id, "CccPrev" .. i, 5, start_prev, end_prev)
             start_prev = end_prev + 1
             end_prev = start_prev + 7
         end
@@ -247,6 +248,7 @@ function UI:buffer()
     if self.input_mode == "RGB" then
         local R, G, B = self.color:get_rgb()
         buffer = {
+            self.input_mode,
             table.concat({ "R:", ("%3d"):format(R), utils.create_bar(R, 255, bar_len) }, " "),
             table.concat({ "G:", ("%3d"):format(G), utils.create_bar(G, 255, bar_len) }, " "),
             table.concat({ "B:", ("%3d"):format(B), utils.create_bar(B, 255, bar_len) }, " "),
@@ -255,6 +257,7 @@ function UI:buffer()
     elseif self.input_mode == "HSL" then
         local H, S, L = self.color:get_hsl()
         buffer = {
+            self.input_mode,
             table.concat({ "H:", ("%3d"):format(H), utils.create_bar(H, 360, bar_len) }, " "),
             table.concat({ "S:", ("%3d"):format(S), utils.create_bar(S, 100, bar_len) }, " "),
             table.concat({ "L:", ("%3d"):format(L), utils.create_bar(L, 100, bar_len) }, " "),
