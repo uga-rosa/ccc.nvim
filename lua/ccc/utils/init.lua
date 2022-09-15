@@ -13,19 +13,31 @@ function utils.feedkey(key, plain)
     api.nvim_feedkeys(key, "n", false)
 end
 
----@return integer
+---(1,1)-index
+---@return integer[]
 function utils.cursor()
-    return api.nvim_win_get_cursor(0)
+    local pos = api.nvim_win_get_cursor(0)
+    pos[2] = pos[2] + 1
+    return pos
 end
 
+---(1,1)-index
+---@param pos integer[]
+function utils.cursor_set(pos)
+    pos[2] = pos[2] - 1
+    api.nvim_win_set_cursor(0, pos)
+end
+
+---1-index
 ---@return integer
 function utils.row()
-    return api.nvim_win_get_cursor(0)[1]
+    return utils.cursor()[1]
 end
 
+---1-index
 ---@return integer
 function utils.col()
-    return api.nvim_win_get_cursor(0)[2] + 1
+    return utils.cursor()[2]
 end
 
 ---@param bufnr integer

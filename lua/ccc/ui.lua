@@ -23,6 +23,7 @@ local sa = require("ccc.utils.safe_array")
 ---@field row integer 1-index
 ---@field start_col integer 1-index
 ---@field end_col integer 1-index
+---@field prev_pos integer[] (1,1)-index
 ---@field is_insert boolean
 ---@field already_open boolean
 ---@field prev_colors Color[]
@@ -39,10 +40,8 @@ function UI:init()
     self.prev_colors = self.prev_colors or {}
     self.win_height = 4
     self.ns_id = self.ns_id or api.nvim_create_namespace("ccc")
-    local cursor_pos = utils.cursor()
-    self.row = cursor_pos[1]
-    self.start_col = cursor_pos[2] + 1
-    self.end_col = cursor_pos[2]
+    self.row = utils.row()
+    self.start_col = utils.col()
 end
 
 function UI:_open()
@@ -67,7 +66,9 @@ function UI:open(insert)
     self.already_open = true
     self.is_insert = insert
     self:init()
-    if not insert then
+    if insert then
+        self.end_col = self.start_col - 1
+    else
         self:pick()
     end
     self:_open()
@@ -101,7 +102,7 @@ function UI:close()
     if self.is_insert then
         vim.cmd("startinsert")
     end
-    api.nvim_win_set_cursor(0, { self.row, self.start_col - 1 })
+    utils.cursor_set({ self.row, self.start_col })
     self.already_open = false
 end
 
@@ -117,24 +118,17 @@ function UI:show_prev_colors()
         :concat(" ")
     utils.set_lines(0, 4, 5, { line })
 
-    local start, end_ = 0, 7
-    for i, color in ipairs(self.prev_colors) do
-        local bg = color:hex_str()
-        local fg = bg > "#800000" and "#000000" or "#ffffff"
-        set_hl(0, "CccPrev" .. i, { fg = fg, bg = bg })
-        add_hl(0, self.ns_id, "CccPrev" .. i, 4, start, end_)
-        start = end_ + 1
-        end_ = start + 7
-    end
-    api.nvim_win_set_cursor(0, { 5, 0 })
+    self.prev_pos = utils.cursor()
+    utils.cursor_set({ 5, 1 })
+    self:highlight()
 end
 
 function UI:hide_prev_colors()
-    utils.set_lines(0, 0, 5, {})
+    utils.set_lines(0, 4, 5, {})
     self:_close()
     self.win_height = 4
     self:_open()
-    self:update()
+    utils.cursor_set(self.prev_pos)
 end
 
 function UI:toggle_prev_colors()
@@ -185,6 +179,11 @@ function UI:replace()
     api.nvim_set_current_line(new_line)
 end
 
+function UI:update()
+    utils.set_lines(0, 0, 4, self:buffer())
+    self:highlight()
+end
+
 local function update_end(is_point, start, bar_char_len, point_char_len)
     if is_point then
         return start + point_char_len
@@ -194,6 +193,7 @@ local function update_end(is_point, start, bar_char_len, point_char_len)
 end
 
 function UI:highlight()
+    api.nvim_buf_clear_namespace(0, self.ns_id, 0, -1)
     local v1, v2, v3, max1, max2, max3
     if self.input_mode == "RGB" then
         v1, v2, v3 = self.color:get_rgb()
@@ -231,17 +231,24 @@ function UI:highlight()
 
         start_v1, start_v2, start_v3 = end_v1, end_v2, end_v3
     end
-end
 
-function UI:update()
-    -- api.nvim_buf_clear_namespace(0, self.ns_id, 0, -1)
-    utils.set_lines(0, 0, 4, self:buffer())
-    self:highlight()
-    local bg = self.color:hex_str()
-    local fg = bg > "#800000" and "#000000" or "#ffffff"
-    set_hl(0, "CccOutput", { fg = fg, bg = bg })
-    local start = api.nvim_buf_get_lines(0, 3, 4, true)[1]:find("%S") - 1
-    add_hl(0, self.ns_id, "CccOutput", 3, start, -1)
+    local output_bg = self.color:hex_str()
+    local output_fg = output_bg > "#800000" and "#000000" or "#ffffff"
+    set_hl(0, "CccOutput", { fg = output_fg, bg = output_bg })
+    local start_output = api.nvim_buf_get_lines(0, 3, 4, true)[1]:find("%S") - 1
+    add_hl(0, self.ns_id, "CccOutput", 3, start_output, -1)
+
+    if self.row == 5 then
+        local start_prev, end_prev = 0, 7
+        for i, color in ipairs(self.prev_colors) do
+            local bg = color:hex_str()
+            local fg = bg > "#800000" and "#000000" or "#ffffff"
+            set_hl(0, "CccPrev" .. i, { fg = fg, bg = bg })
+            add_hl(0, self.ns_id, "CccPrev" .. i, 4, start_prev, end_prev)
+            start_prev = end_prev + 1
+            end_prev = start_prev + 7
+        end
+    end
 end
 
 function UI:buffer()
@@ -287,24 +294,24 @@ end
 
 ---@param delta integer
 function UI:delta(delta)
-    local lnum = utils.row()
+    local row = utils.row()
     if self.input_mode == "RGB" then
         local R, G, B = self.color:get_rgb()
-        if lnum == 1 then
+        if row == 1 then
             R = fix_overflow(R + delta, 0, 255)
-        elseif lnum == 2 then
+        elseif row == 2 then
             G = fix_overflow(G + delta, 0, 255)
-        elseif lnum == 3 then
+        elseif row == 3 then
             B = fix_overflow(B + delta, 0, 255)
         end
         self.color:set_rgb(R, G, B)
     else
         local H, S, L = self.color:get_hsl()
-        if lnum == 1 then
+        if row == 1 then
             H = fix_overflow(H + delta, 0, 360)
-        elseif lnum == 2 then
+        elseif row == 2 then
             S = fix_overflow(S + delta, 0, 100)
-        elseif lnum == 3 then
+        elseif row == 3 then
             L = fix_overflow(L + delta, 0, 100)
         end
         self.color:set_hsl(H, S, L)
@@ -313,24 +320,24 @@ function UI:delta(delta)
 end
 
 function UI:set_percent(percent)
-    local lnum = utils.row()
+    local row = utils.row()
     if self.input_mode == "RGB" then
         local R, G, B = self.color:get_rgb()
-        if lnum == 1 then
+        if row == 1 then
             R = utils.round(255 * percent / 100)
-        elseif lnum == 2 then
+        elseif row == 2 then
             G = utils.round(255 * percent / 100)
-        elseif lnum == 3 then
+        elseif row == 3 then
             B = utils.round(255 * percent / 100)
         end
         self.color:set_rgb(R, G, B)
     else
         local H, S, L = self.color:get_hsl()
-        if lnum == 1 then
+        if row == 1 then
             H = utils.round(360 * percent / 100)
-        elseif lnum == 2 then
+        elseif row == 2 then
             S = percent
-        elseif lnum == 3 then
+        elseif row == 3 then
             L = percent
         end
         self.color:set_hsl(H, S, L)
@@ -348,6 +355,8 @@ function UI:pick()
         self.start_col = start
         self.end_col = end_
         self.color:set(self.input_mode, recognized, v1, v2, v3)
+    else
+        self.end_col = self.start_col - 1
     end
 end
 
