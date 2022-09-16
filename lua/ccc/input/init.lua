@@ -1,13 +1,14 @@
 ---@class ColorInput
 ---@field name string
----@field value integer[]
----@field max integer[]
----@field min integer[]
----@field delta integer[] #Minimum slider movement.
+---@field value number[]
+---@field max number[]
+---@field min number[]
+---@field delta number[] #Minimum slider movement.
 ---@field bar_name string[] #Align all display widths.
 ---@field format fun(v: number): string #String returned must be 6 byte.
----@field from_rgb fun(RGB: integer[]): value: integer[]
----@field to_rgb fun(value: integer[]): RGB: integer[]
+---@field from_rgb fun(RGB: integer[]): value: number[]
+---@field to_rgb fun(value: number[]): RGB: integer[]
+---@field callback fun(self: ColorInput, new_value: number, index: integer): value: integer[]
 local ColorInput = {}
 
 function ColorInput.format(v)
@@ -16,6 +17,12 @@ end
 
 function ColorInput:new()
     return setmetatable({}, { __index = self })
+end
+
+---@param index integer
+---@param new_value number
+function ColorInput:callback(index, new_value)
+    self.value[index] = new_value
 end
 
 ---@param value integer[]

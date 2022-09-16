@@ -258,28 +258,27 @@ end
 
 ---@param d integer
 function UI:delta(d)
-    local i = utils.row() - 1
-    if i < 1 or #self.color.input.value < i then
+    local index = utils.row() - 1
+    if index < 1 or #self.color.input.value < index then
         return
     end
+    local value = self.color.input.value[index]
     local input = self.color.input
-    local value = self.color:get()
-    local delta = input.delta[i] * d
-    value[i] = utils.fix_overflow(value[i] + delta, input.min[i], input.max[i])
-    self.color:set(value)
+    local delta = input.delta[index] * d
+    local new_value = utils.fix_overflow(value + delta, input.min[index], input.max[index])
+    self.color.input:callback(index, new_value)
     self:update()
 end
 
 function UI:set_percent(percent)
-    local i = utils.row() - 1
-    if i < 1 or #self.color.input.value < i then
+    local index = utils.row() - 1
+    if index < 1 or #self.color.input.value < index then
         return
     end
-    local value = self.color:get()
-    local max = self.color.input.max[i]
-    local min = self.color.input.min[i]
-    value[i] = utils.round((max - min) * percent / 100) + min
-    self.color:set(value)
+    local max = self.color.input.max[index]
+    local min = self.color.input.min[index]
+    local new_value = utils.round((max - min) * percent / 100) + min
+    self.color.input:callback(index, new_value)
     self:update()
 end
 
