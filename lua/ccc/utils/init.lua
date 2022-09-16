@@ -96,32 +96,31 @@ function utils.rgb2hsl(RGB)
     local MAX = utils.max(R, G, B)
     local MIN = utils.min(R, G, B)
 
-    local round = utils.round
     if R == G and R == B then
         H = 0
         S = 0
     else
         if MAX == R then
-            H = round((G - B) / (MAX - MIN) * 60)
+            H = (G - B) / (MAX - MIN) * 60
         elseif MAX == G then
-            H = round((B - R) / (MAX - MIN) * 60 + 120)
+            H = (B - R) / (MAX - MIN) * 60 + 120
         else
-            H = round((R - G) / (MAX - MIN) * 60 + 240)
+            H = (R - G) / (MAX - MIN) * 60 + 240
         end
         if H < 0 then
             H = H + 360
         end
     end
 
-    L = round((MAX + MIN) / 2 * 100 / 255)
+    L = (MAX + MIN) / 2 * 100 / 255
 
-    if L <= 50 then
-        S = S or round((MAX - MIN) / (MAX + MIN) * 100)
+    if not S and L <= 50 then
+        S = (MAX - MIN) / (MAX + MIN) * 100
     else
-        S = S or round((MAX - MIN) / (510 - (MAX + MIN)) * 100)
+        S = (MAX - MIN) / (510 - (MAX + MIN)) * 100
     end
 
-    return { H, S, L }
+    return vim.tbl_map(utils.round, { H, S, L })
 end
 
 ---@param HSL integer[]

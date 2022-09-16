@@ -48,15 +48,31 @@ function M.mapping.toggle_output_mode()
 end
 
 function M.mapping.show_prev_colors()
-    UI:show_prev_colors()
+    UI.prev_colors:show()
 end
 
 function M.mapping.hide_prev_colors()
-    UI:hide_prev_colors()
+    UI.prev_colors:hide()
 end
 
 function M.mapping.toggle_prev_colors()
-    UI:toggle_prev_colors()
+    UI.prev_colors:toggle()
+end
+
+function M.mapping.goto_prev()
+    UI.prev_colors:goto_prev()
+end
+
+function M.mapping.goto_next()
+    UI.prev_colors:goto_next()
+end
+
+function M.mapping.goto_head()
+    UI.prev_colors:goto_head()
+end
+
+function M.mapping.goto_tail()
+    UI.prev_colors:goto_tail()
 end
 
 function M.mapping.increase1()

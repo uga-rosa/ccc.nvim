@@ -5,6 +5,8 @@ local utils = require("ccc.utils")
 local HslInput = setmetatable({
     name = "HSL",
     max = { 360, 100, 100 },
+    min = { 0, 0, 0 },
+    delta = { 1, 1, 1 },
     bar_name = { "H", "S", "L" },
 }, { __index = ColorInput })
 

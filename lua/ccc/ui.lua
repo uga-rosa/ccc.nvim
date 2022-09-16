@@ -6,7 +6,7 @@ local add_hl = api.nvim_buf_add_highlight
 local Color = require("ccc.color")
 local config = require("ccc.config")
 local utils = require("ccc.utils")
-local sa = require("ccc.utils.safe_array")
+local prev_colors = require("ccc.prev_colors")
 
 ---@class UI
 ---@field color Color
@@ -19,10 +19,8 @@ local sa = require("ccc.utils.safe_array")
 ---@field row integer 1-index
 ---@field start_col integer 1-index
 ---@field end_col integer 1-index
----@field prev_pos integer[] (1,1)-index
 ---@field is_insert boolean
----@field prev_colors Color[]
----@field is_showed boolean
+---@field prev_colors PrevColors
 local UI = {}
 
 function UI:init()
@@ -50,7 +48,7 @@ function UI:init()
     end
     self.row = utils.row()
     self.start_col = utils.col()
-    self.prev_colors = self.prev_colors or {}
+    self.prev_colors = self.prev_colors or prev_colors.new(self)
 end
 
 function UI:_open()
@@ -104,15 +102,13 @@ end
 function UI:quit()
     self:close()
     if config.get("save_on_quit") then
-        table.insert(self.prev_colors, 1, self.color)
+        self.prev_colors:add(self.color)
     end
 end
 
 function UI:complete()
-    if self.is_showed and self.win_height == utils.col() then
-        local line_to_cursor = api.nvim_get_current_line():sub(1, utils.col())
-        local idx = math.floor(#line_to_cursor / 8) + 1
-        local color = self.prev_colors[idx]
+    if self.prev_colors.is_showed and utils.row() == self.win_height then
+        local color = self.prev_colors:get()
         if color.input.name ~= self.input_mode then
             local RGB = color:get_rgb()
             color:set_input(self.input_mode)
@@ -122,12 +118,12 @@ function UI:complete()
             color:set_output(self.output_mode)
         end
         self.color = color
-        self:hide_prev_colors()
+        self.prev_colors:hide()
         self:update()
         return
     end
     self:close()
-    table.insert(self.prev_colors, 1, self.color)
+    self.prev_colors:add(self.color)
     if self.is_insert then
         utils.feedkey(self.color:str(), true)
     else
@@ -140,7 +136,8 @@ function UI:complete()
 end
 
 function UI:update()
-    utils.set_lines(self.bufnr, 0, self.is_showed and -2 or -1, self:buffer())
+    local end_ = self.prev_colors.is_showed and -2 or -1
+    utils.set_lines(self.bufnr, 0, end_, self:buffer())
     self:highlight()
 end
 
@@ -152,12 +149,24 @@ local function update_end(is_point, start, bar_char_len, point_char_len)
     end
 end
 
-local function ratio(value, max, bar_len)
+---@param value number
+---@param min number
+---@param max number
+---@param bar_len integer
+---@return integer
+local function ratio(value, min, max, bar_len)
+    value = value - min
+    max = max - min
     return utils.round(value / max * bar_len)
 end
 
-local function create_bar(value, max, bar_len)
-    local ratio_ = ratio(value, max, bar_len)
+---@param value number
+---@param min number
+---@param max number
+---@param bar_len integer
+---@return string
+local function create_bar(value, min, max, bar_len)
+    local ratio_ = ratio(value, min, max, bar_len)
     local bar_char = config.get("bar_char")
     local point_char = config.get("point_char")
     if ratio_ == 0 then
@@ -172,16 +181,17 @@ function UI:buffer()
 
     local buffer = { self.input_mode }
     local width
+    local input = self.color.input
     for i, v in ipairs(self.color:get()) do
-        local row = {
-            self.color.input.bar_name[i],
-            ":",
-            ("%3d"):format(v),
-            create_bar(v, self.color.input.max[i], bar_len),
-        }
-        local line = table.concat(row, " ")
+        local line = input.bar_name[i]
+            .. " : "
+            .. input.format(v)
+            .. " "
+            .. create_bar(v, input.min[i], input.max[i], bar_len)
         table.insert(buffer, line)
-        width = api.nvim_strwidth(line)
+        if i == 1 then
+            width = api.nvim_strwidth(line)
+        end
     end
     self.win_width = width
     local line = string.rep(" ", width - #color) .. color
@@ -198,19 +208,19 @@ function UI:highlight()
     local bar_len = config.get("bar_len")
     for i, v in ipairs(value) do
         local max = self.color.input.max[i]
-        local point_idx = ratio(v, max, bar_len)
-        -- 7 is the length of ' : 000 '
-        local start = sa.new(self.color.input.bar_name)
-            :map(function(name)
-                return api.nvim_strwidth(name)
-            end)
-            :max() + 7
+        local min = self.color.input.min[i]
+        local point_idx = ratio(v, min, max, bar_len)
+        local bar_name_len = api.nvim_strwidth(self.color.input.bar_name[1])
+        -- See ColorInput.format()
+        local value_len = 6
+        -- 3 means ' : ', 1 means ' '
+        local start = bar_name_len + 3 + value_len + 1
         local end_
         for j = 0, bar_len - 1 do
             end_ = update_end(j == point_idx, start, #bar_char, #point_char)
 
             local _value = { unpack(value) }
-            _value[i] = utils.round((j + 0.5) * max / bar_len)
+            _value[i] = utils.round((j + 0.5) / bar_len * (max - min))
             local hex = self.color:hex(_value)
             local color_name = "CccBar" .. i .. "_" .. j
             set_hl(self.ns_id, color_name, { fg = hex })
@@ -228,13 +238,13 @@ function UI:highlight()
         :find("%S") - 1
     add_hl(self.bufnr, self.ns_id, "CccOutput", output_row, start_output, -1)
 
-    local pre_row = output_row + 1
-    if self.win_height == pre_row + 1 then
+    if self.prev_colors.is_showed then
         local start_prev, end_prev = 0, 7
-        for i, color in ipairs(self.prev_colors) do
-            local bg = color:hex()
-            local fg = bg > "#800000" and "#000000" or "#ffffff"
-            set_hl(self.ns_id, "CccPrev" .. i, { fg = fg, bg = bg })
+        for i, color in ipairs(self.prev_colors.colors) do
+            local pre_row = output_row + 1
+            local pre_bg = color:hex()
+            local pre_fg = pre_bg > "#800000" and "#000000" or "#ffffff"
+            set_hl(self.ns_id, "CccPrev" .. i, { fg = pre_fg, bg = pre_bg })
             add_hl(self.bufnr, self.ns_id, "CccPrev" .. i, pre_row, start_prev, end_prev)
             start_prev = end_prev + 1
             end_prev = start_prev + 7
@@ -242,11 +252,13 @@ function UI:highlight()
     end
 end
 
----@param delta integer
-function UI:delta(delta)
+---@param d integer
+function UI:delta(d)
+    local input = self.color.input
     local value = self.color:get()
-    local idx = utils.row() - 1
-    value[idx] = utils.fix_overflow(value[idx] + delta, 0, self.color.input.max[idx])
+    local i = utils.row() - 1
+    local delta = input.delta[i] * d
+    value[i] = utils.fix_overflow(value[i] + delta, input.min[i], input.max[i])
     self.color:set(value)
     self:update()
 end
@@ -283,41 +295,6 @@ function UI:toggle_output_mode()
     self.color:toggle_output()
     self.output_mode = self.color.output.name
     self:update()
-end
-
-function UI:show_prev_colors()
-    self:_close()
-    self.win_height = self.win_height + 1
-    self:_open()
-
-    local line = sa.new(self.prev_colors)
-        :map(function(color)
-            return color:str()
-        end)
-        :concat(" ")
-    utils.set_lines(self.bufnr, self.win_height - 1, self.win_height, { line })
-
-    self.prev_pos = utils.cursor()
-    utils.cursor_set({ self.win_height, 1 })
-    self:highlight()
-    self.is_showed = true
-end
-
-function UI:hide_prev_colors()
-    utils.set_lines(self.bufnr, self.win_height - 1, self.win_height, {})
-    self:_close()
-    self.win_height = self.win_height - 1
-    self:_open()
-    utils.cursor_set(self.prev_pos)
-    self.is_showed = false
-end
-
-function UI:toggle_prev_colors()
-    if self.is_showed then
-        self:hide_prev_colors()
-    else
-        self:show_prev_colors()
-    end
 end
 
 return UI

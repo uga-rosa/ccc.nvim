@@ -37,6 +37,10 @@ return {
         ["i"] = mapping.toggle_input_mode,
         ["o"] = mapping.toggle_output_mode,
         ["g"] = mapping.toggle_prev_colors,
+        ["w"] = mapping.goto_next,
+        ["b"] = mapping.goto_prev,
+        ["W"] = mapping.goto_tail,
+        ["B"] = mapping.goto_head,
         ["h"] = mapping.decrease1,
         ["l"] = mapping.increase1,
         ["s"] = mapping.decrease5,
@@ -72,7 +76,5 @@ return {
         ["9"] = function()
             ccc.set_percent(90)
         end,
-        ["w"] = "W",
-        ["b"] = "B",
     },
 }

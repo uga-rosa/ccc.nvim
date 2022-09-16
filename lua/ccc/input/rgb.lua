@@ -4,6 +4,8 @@ local ColorInput = require("ccc.input")
 local RgbInput = setmetatable({
     name = "RGB",
     max = { 255, 255, 255 },
+    min = { 0, 0, 0 },
+    delta = { 1, 1, 1 },
     bar_name = { "R", "G", "B" },
 }, { __index = ColorInput })
 
