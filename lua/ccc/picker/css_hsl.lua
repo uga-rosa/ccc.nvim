@@ -1,4 +1,4 @@
-local utils = require("ccc.utils")
+local convert = require("ccc.utils.convert")
 local sa = require("ccc.utils.safe_array")
 
 ---@class CssHslPicker: ColorPicker
@@ -18,7 +18,7 @@ function CssHslPicker:parse_color(s)
         return
     end
     local HSL = sa.new({ cap1, cap2, cap3 }):map(tonumber):unpack()
-    local RGB = utils.hsl2rgb(HSL)
+    local RGB = convert.hsl2rgb(HSL)
     return start, end_, RGB
 end
 

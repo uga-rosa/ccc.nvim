@@ -1,5 +1,5 @@
 local ColorInput = require("ccc.input")
-local utils = require("ccc.utils")
+local convert = require("ccc.utils.convert")
 
 ---@class HslInput: ColorInput
 local HslInput = setmetatable({
@@ -13,13 +13,13 @@ local HslInput = setmetatable({
 ---@param RGB integer[]
 ---@return integer[] HSL
 function HslInput.from_rgb(RGB)
-    return utils.rgb2hsl(RGB)
+    return convert.rgb2hsl(RGB)
 end
 
 ---@param HSL integer[]
 ---@return integer[] RGB
 function HslInput.to_rgb(HSL)
-    return utils.hsl2rgb(HSL)
+    return convert.hsl2rgb(HSL)
 end
 
 return HslInput

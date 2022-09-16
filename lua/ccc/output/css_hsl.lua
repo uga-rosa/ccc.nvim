@@ -1,4 +1,4 @@
-local utils = require("ccc.utils")
+local convert = require("ccc.utils.convert")
 
 ---@class CssHslOutput: ColorOutput
 local CssHslOutput = {
@@ -10,7 +10,7 @@ local CssHslOutput = {
 ---@return string
 function CssHslOutput.str(RGB)
     ---@type string
-    return CssHslOutput.pattern:format(unpack(utils.rgb2hsl(RGB)))
+    return CssHslOutput.pattern:format(unpack(convert.rgb2hsl(RGB)))
 end
 
 return CssHslOutput
