@@ -99,6 +99,13 @@ function UI:close()
     end
 end
 
+function UI:refresh()
+    if self.win_id and api.nvim_win_is_valid(self.win_id) then
+        self:_close()
+        self:_open()
+    end
+end
+
 function UI:quit()
     self:close()
     if config.get("save_on_quit") then
@@ -130,8 +137,12 @@ end
 
 function UI:update()
     local end_ = self.prev_colors.is_showed and -2 or -1
+    local prev_width = self.win_width
     utils.set_lines(self.bufnr, 0, end_, self:buffer())
     self:highlight()
+    if self.win_width ~= prev_width then
+        self:refresh()
+    end
 end
 
 local function update_end(is_point, start, bar_char_len, point_char_len)
@@ -284,9 +295,8 @@ function UI:toggle_input_mode()
     self.color:toggle_input()
     self.input_mode = self.color.input.name
     if self.win_height ~= 2 + #self.color.input.value then
-        self:_close()
         self.win_height = 2 + #self.color.input.value
-        self:_open()
+        self:refresh()
     end
     self:update()
 end

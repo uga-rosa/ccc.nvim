@@ -52,9 +52,8 @@ end
 function PrevColors:show()
     self.is_showed = true
     local ui = self.ui
-    ui:_close()
     ui.win_height = ui.win_height + 1
-    ui:_open()
+    ui:refresh()
 
     local line = sa.new(self.colors)
         :map(function(color)
@@ -76,9 +75,8 @@ function PrevColors:hide()
     self.is_showed = false
     local ui = self.ui
     utils.set_lines(ui.bufnr, ui.win_height - 1, ui.win_height, {})
-    ui:_close()
     ui.win_height = ui.win_height - 1
-    ui:_open()
+    ui:refresh()
     utils.cursor_set(self.prev_pos)
 end
 

@@ -17,13 +17,15 @@ end
 ---@param RGB integer[]
 ---@return number[] XYZ
 function XyzInput.from_rgb(RGB)
-    return convert.linear2xyz(convert.rgb2linear(RGB))
+    local Linear = convert.rgb2linear(RGB)
+    return convert.linear2xyz(Linear)
 end
 
 ---@param XYZ number[]
 ---@return integer[] RGB
 function XyzInput.to_rgb(XYZ)
-    local RGB = convert.linear2rgb(convert.xyz2linear(XYZ))
+    local Linear = convert.xyz2linear(XYZ)
+    local RGB = convert.linear2rgb(Linear)
     for _, v in ipairs(RGB) do
         if v < 0 or 255 < v then
             return { 0, 0, 0 }
