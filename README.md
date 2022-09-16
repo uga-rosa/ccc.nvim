@@ -37,8 +37,8 @@ This plugin provides one command and one mapping.
 
 - `:CccPick`
 	- Detects and replaces the color under the cursor.
-	- Detectable formats are HEX (#000000), RGB (rgb(0,0,0)), and HSL (hsl(0,0%,0%)).
-	- If nothing is detected, it is inserted at a new cursor position.
+    - Detectable formats are defined in `ccc-option-pickers` (See [doc](./doc/ccc.txt)).
+    - If nothing is detected, it is inserted at a new cursor position.
 
 - `<Plug>(ccc-insert)`
     - Defined in insert mode.

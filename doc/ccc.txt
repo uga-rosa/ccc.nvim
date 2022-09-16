@@ -179,8 +179,8 @@ Command                                                            *ccc-command*
                                                                       *:CccPick*
 :CccPick ~
 	Detects and replaces the color under the cursor. Detectable formats
-	are HEX (#000000), RGB (rgb(0,0,0)), and HSL (hsl(0,0%,0%)). If
-	nothing is detected, it is inserted at a new cursor position.
+	are defined in |ccc-option-pickers|. If nothing is detected, it is
+	inserted at a new cursor position.
 
 
 ------------------------------------------------------------------------------
