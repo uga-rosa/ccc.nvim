@@ -33,7 +33,7 @@ end
 
 ---@return Color
 function PrevColors:select()
-    local color = self:get()
+    local color = self:get():copy()
     if color.input.name ~= self.ui.input_mode then
         local RGB = color:get_rgb()
         color:set_input(self.ui.input_mode)
@@ -43,7 +43,7 @@ function PrevColors:select()
         color:set_output(self.ui.output_mode)
     end
     self:hide()
-    return color:copy()
+    return color
 end
 
 function PrevColors:show()

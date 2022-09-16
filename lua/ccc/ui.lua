@@ -25,7 +25,7 @@ local UI = {}
 
 function UI:init()
     if self.color == nil or not config.get("preserve") then
-        self.color = Color.new()
+        self.color = Color.new(self.input_mode, self.output_mode)
     else
         self.color = self.color:copy()
     end
@@ -49,6 +49,13 @@ function UI:init()
     self.row = utils.row()
     self.start_col = utils.col()
     self.prev_colors = self.prev_colors or prev_colors.new(self)
+end
+
+function UI:set_default_color()
+    local default_color = config.get("default_color")
+    local start, _, RGB = self.color:pick(default_color)
+    assert(start, "Invalid color format: " .. default_color)
+    self.color:set_rgb(RGB)
 end
 
 function UI:_open()
@@ -76,13 +83,6 @@ function UI:open(insert)
     self:update()
     self:_open()
     utils.cursor_set({ 2, 1 })
-end
-
-function UI:set_default_color()
-    local default_color = config.get("default_color")
-    local start, _, RGB = self.color:pick(default_color)
-    assert(start, "Invalid color format: " .. default_color)
-    self.color:set_rgb(RGB)
 end
 
 function UI:_close()
