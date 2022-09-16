@@ -163,4 +163,45 @@ function convert.xyz2linear(XYZ)
     return product(xyz2linear, XYZ)
 end
 
+---@param XYZ number[]
+---@return number[] Lab
+function convert.xyz2lab(XYZ)
+    local X, Y, Z = unpack(XYZ)
+    local Xn, Yn, Zn = 0.9505, 1, 1.089
+    local function f(t)
+        if t > (6 / 29) ^ 3 then
+            return 116 * t ^ (1 / 3) - 16
+        else
+            return (29 / 3) ^ 3 * t
+        end
+    end
+    return {
+        f(Y / Yn),
+        (500 / 116) * (f(X / Xn) - f(Y / Yn)),
+        (200 / 116) * (f(Y / Yn) - f(Z / Zn)),
+    }
+end
+
+---@param Lab number[]
+---@return number[] XYZ
+function convert.lab2xyz(Lab)
+    local L, a, b = unpack(Lab)
+    local Xn, Yn, Zn = 0.9505, 1, 1.089
+    local fy = (L + 16) / 116
+    local fx = fy + (a / 500)
+    local fz = fy - (b / 200)
+    local function t(f)
+        if f > 6 / 29 then
+            return f ^ 3
+        else
+            return (116 * f - 16) * (3 / 29) ^ 3
+        end
+    end
+    return {
+        t(fx) * Xn,
+        t(fy) * Yn,
+        t(fz) * Zn,
+    }
+end
+
 return convert

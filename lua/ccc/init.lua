@@ -6,6 +6,7 @@ local M = {
         rgb = require("ccc.input.rgb"),
         hsl = require("ccc.input.hsl"),
         cmyk = require("ccc.input.cmyk"),
+        lab = require("ccc.input.lab"),
         hsluv = require("ccc.input.hsluv"),
         xyz = require("ccc.input.xyz"),
     },
