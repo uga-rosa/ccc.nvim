@@ -122,6 +122,7 @@ Default: {
 	The presets currently available are as follows:
 		- RGB: require("ccc.input.rgb")
 		- HSL: require("ccc.input.hsl")
+		- CMYK: require("ccc.input.cmyk")
 		- HSLuv: require("ccc.input.hsluv")
 
 
