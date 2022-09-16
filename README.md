@@ -112,7 +112,7 @@ local mapping = ccc.mapping
     - `mapping.increase1()`
     - `mapping.increase5()`
     - `mapping.increase10()`
-    - `mapping.delta(intger)`
+    - `mapping.delta(integer)`
 
 - decrease
     - Default mapping: `h` / `s` / `m` (1 / 5 / 10)
@@ -121,7 +121,7 @@ local mapping = ccc.mapping
     - `mapping.decrease1()`
     - `mapping.decrease5()`
     - `mapping.decrease10()`
-    - `mapping.delta(intger)`
+    - `mapping.delta(integer)`
 
 - set
     - Default mapping: `H` / `M` / `L` (0 / 50 / 100), `1` - `9` (10% - 90%)
