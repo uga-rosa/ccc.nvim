@@ -121,9 +121,9 @@ Default: {
 	toggles in this order. The first one is the default used at the first
 	startup. Once activated, it will keep the previous input mode.
 	The presets currently available are as follows:
-		- RGB: ccc.inputs.rgb
-		- HSL: ccc.inputs.hsl
-		- CMYK: ccc.inputs.cmyk
+		- RGB:   ccc.inputs.rgb
+		- HSL:   ccc.inputs.hsl
+		- CMYK:  ccc.inputs.cmyk
 		- HSLuv: ccc.inputs.hsluv
 
 
@@ -139,9 +139,9 @@ Default: {
 	toggles in this order. The first one is the default used at the first
 	startup. Once activated, it will keep the previous output mode.
 	The presets currently available are as follows:
-		- HEX: ccc.outpus.hex
-		- CssRGB: ccc.outpus.css_rgb
-		- CssHSL: ccc.outpus.css_hsl
+		- HEX:    ccc.outputs.hex
+		- CssRGB: ccc.outputs.css_rgb
+		- CssHSL: ccc.outputs.css_hsl
 
 
                                                             *ccc-option-pickers*
@@ -154,7 +154,7 @@ Default: {
 }
 	List of formats that can be detected by |:CccPick| to be activated.
 	The presets currently available are as follows:
-		- HEX: ccc.pickers.hex
+		- HEX:    ccc.pickers.hex
 		- CssRGB: ccc.pickers.css_rgb
 		- CssHSL: ccc.pickers.css_hsl
 
