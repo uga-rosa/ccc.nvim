@@ -21,6 +21,9 @@ function Color.new(input_mode, output_mode)
         _outputs = config.get("outputs"),
         _pickers = config.get("pickers"),
     }, { __index = Color })
+    for i, input in ipairs(self._inputs) do
+        self._inputs[i] = input:new()
+    end
 
     self:set_input(input_mode)
     self:set_output(output_mode)

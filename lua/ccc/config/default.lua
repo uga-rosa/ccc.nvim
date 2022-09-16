@@ -18,8 +18,8 @@ return {
     preserve = false,
     save_on_quit = false,
     inputs = {
-        require("ccc.input.rgb"):new(),
-        require("ccc.input.hsl"):new(),
+        require("ccc.input.rgb"),
+        require("ccc.input.hsl"),
     },
     outputs = {
         require("ccc.output.hex"),

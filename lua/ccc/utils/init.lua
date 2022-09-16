@@ -67,7 +67,7 @@ function utils.min(...)
     local min = select(1, ...)
     for i = 2, select("#", ...) do
         local x = select(i, ...)
-        if min < x then
+        if min > x then
             min = x
         end
     end

@@ -44,7 +44,11 @@ end
 ---@return integer G
 ---@return integer B
 function ColorInput:get_rgb()
-    return self.to_rgb(self:get())
+    local R, G, B = self.to_rgb(self:get())
+    R = utils.fix_overflow(R, 0, 255)
+    G = utils.fix_overflow(G, 0, 255)
+    B = utils.fix_overflow(B, 0, 255)
+    return R, G, B
 end
 
 return ColorInput
