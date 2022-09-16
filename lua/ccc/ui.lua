@@ -108,8 +108,11 @@ end
 
 function UI:complete()
     if self.prev_colors.is_showed and utils.row() == self.win_height then
-        self.color = self.prev_colors:select()
-        self:update()
+        local color = self.prev_colors:select()
+        if color then
+            self.color = color
+            self:update()
+        end
         return
     end
     self:close()

@@ -31,8 +31,11 @@ function PrevColors:get()
     return self.selected_color
 end
 
----@return Color
+---@return Color?
 function PrevColors:select()
+    if not self:get() then
+        return
+    end
     local color = self:get():copy()
     if color.input.name ~= self.ui.input_mode then
         local RGB = color:get_rgb()
@@ -50,7 +53,7 @@ function PrevColors:show()
     self.is_showed = true
     local ui = self.ui
     ui:_close()
-    ui.win_height = self.ui.win_height + 1
+    ui.win_height = ui.win_height + 1
     ui:_open()
 
     local line = sa.new(self.colors)
@@ -61,7 +64,11 @@ function PrevColors:show()
     utils.set_lines(ui.bufnr, ui.win_height - 1, ui.win_height, { line })
 
     self.prev_pos = utils.cursor()
-    utils.cursor_set({ ui.win_height, 1 })
+    if self:get() then
+        self:_goto()
+    else
+        utils.cursor_set({ ui.win_height, 1 })
+    end
     ui:highlight()
 end
 
@@ -89,7 +96,7 @@ function PrevColors:_goto()
 end
 
 function PrevColors:goto_next()
-    if self.index == #self.colors then
+    if self.index >= #self.colors then
         return
     end
     self.index = self.index + 1
@@ -97,7 +104,7 @@ function PrevColors:goto_next()
 end
 
 function PrevColors:goto_prev()
-    if self.index == 1 then
+    if self.index <= 1 then
         return
     end
     self.index = self.index - 1
@@ -105,7 +112,7 @@ function PrevColors:goto_prev()
 end
 
 function PrevColors:goto_tail()
-    if self.index == #self.colors then
+    if self.index >= #self.colors then
         return
     end
     self.index = #self.colors
@@ -113,7 +120,7 @@ function PrevColors:goto_tail()
 end
 
 function PrevColors:goto_head()
-    if self.index == 1 then
+    if self.index <= 1 then
         return
     end
     self.index = 1
