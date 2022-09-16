@@ -123,6 +123,7 @@ function UI:complete()
         end
         self.color = color
         self:hide_prev_colors()
+        self:update()
         return
     end
     self:close()
