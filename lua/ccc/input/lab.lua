@@ -1,5 +1,6 @@
 local ColorInput = require("ccc.input")
 local convert = require("ccc.utils.convert")
+local utils = require("ccc.utils")
 
 ---@class LabInput: ColorInput
 local LabInput = setmetatable({
@@ -25,11 +26,7 @@ function LabInput.to_rgb(Lab)
     local Linear = convert.xyz2linear(XYZ)
     local RGB = convert.linear2rgb(Linear)
     return vim.tbl_map(function(x)
-        if x < 0 or 255 < x then
-            return 0
-        else
-            return x
-        end
+        return utils.fix_overflow(x, 0, 255)
     end, RGB)
 end
 
