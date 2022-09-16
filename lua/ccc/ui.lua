@@ -278,6 +278,11 @@ end
 function UI:toggle_input_mode()
     self.color:toggle_input()
     self.input_mode = self.color.input.name
+    if self.win_height ~= 2 + #self.color.input.value then
+        self:_close()
+        self.win_height = 2 + #self.color.input.value
+        self:_open()
+    end
     self:update()
 end
 
