@@ -2,8 +2,6 @@ local ccc = require("ccc")
 local mapping = ccc.mapping
 
 return {
-    default_input_mode = "RGB",
-    default_output_mode = "HEX",
     default_color = "#000000",
     bar_char = "■",
     point_char = "◇",
@@ -41,12 +39,12 @@ return {
         ["b"] = mapping.goto_prev,
         ["W"] = mapping.goto_tail,
         ["B"] = mapping.goto_head,
-        ["h"] = mapping.decrease1,
         ["l"] = mapping.increase1,
-        ["s"] = mapping.decrease5,
         ["d"] = mapping.increase5,
-        ["m"] = mapping.decrease10,
         [","] = mapping.increase10,
+        ["h"] = mapping.decrease1,
+        ["s"] = mapping.decrease5,
+        ["m"] = mapping.decrease10,
         ["H"] = mapping.set0,
         ["M"] = mapping.set50,
         ["L"] = mapping.set100,
