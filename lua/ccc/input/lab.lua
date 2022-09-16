@@ -1,6 +1,5 @@
 local ColorInput = require("ccc.input")
 local convert = require("ccc.utils.convert")
-local utils = require("ccc.utils")
 
 ---@class LabInput: ColorInput
 local LabInput = setmetatable({
@@ -14,20 +13,13 @@ local LabInput = setmetatable({
 ---@param RGB integer[]
 ---@return integer[] Lab
 function LabInput.from_rgb(RGB)
-    local Linear = convert.rgb2linear(RGB)
-    local XYZ = convert.linear2xyz(Linear)
-    return convert.xyz2lab(XYZ)
+    return convert.rgb2lab(RGB)
 end
 
 ---@param Lab integer[]
 ---@return integer[] RGB
 function LabInput.to_rgb(Lab)
-    local XYZ = convert.lab2xyz(Lab)
-    local Linear = convert.xyz2linear(XYZ)
-    local RGB = convert.linear2rgb(Linear)
-    return vim.tbl_map(function(x)
-        return utils.fix_overflow(x, 0, 255)
-    end, RGB)
+    return convert.lab2rgb(Lab)
 end
 
 return LabInput

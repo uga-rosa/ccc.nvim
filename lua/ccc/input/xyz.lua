@@ -1,5 +1,5 @@
-local convert = require("ccc.utils.convert")
 local ColorInput = require("ccc.input")
+local convert = require("ccc.utils.convert")
 
 ---@class XyzInput: ColorInput
 local XyzInput = setmetatable({
@@ -17,21 +17,13 @@ end
 ---@param RGB integer[]
 ---@return number[] XYZ
 function XyzInput.from_rgb(RGB)
-    local Linear = convert.rgb2linear(RGB)
-    return convert.linear2xyz(Linear)
+    return convert.rgb2xyz(RGB)
 end
 
 ---@param XYZ number[]
 ---@return integer[] RGB
 function XyzInput.to_rgb(XYZ)
-    local Linear = convert.xyz2linear(XYZ)
-    local RGB = convert.linear2rgb(Linear)
-    for _, v in ipairs(RGB) do
-        if v < 0 or 255 < v then
-            return { 0, 0, 0 }
-        end
-    end
-    return RGB
+    return convert.xyz2rgb(XYZ)
 end
 
 return XyzInput

@@ -89,6 +89,42 @@ function convert.hsl2rgb(HSL)
     return RGB
 end
 
+---@param x number
+---@return number
+local function div255(x)
+    return x / 255
+end
+
+---@param RGB integer[]
+---@return number[] CMYK
+function convert.rgb2cmyk(RGB)
+    local R_, G_, B_ = unpack(vim.tbl_map(div255, RGB))
+    local K = 1 - utils.max(R_, G_, B_)
+    if K == 1 then
+        return { 0, 0, 0, 1 }
+    end
+    return {
+        (1 - R_ - K) / (1 - K),
+        (1 - G_ - K) / (1 - K),
+        (1 - B_ - K) / (1 - K),
+        K,
+    }
+end
+
+---@param CMYK integer[]
+---@return integer[] RGB
+function convert.cmyk2rgb(CMYK)
+    local C, M, Y, K = unpack(CMYK)
+    if K == 1 then
+        return { 0, 0, 0 }
+    end
+    return {
+        utils.round(255 * (1 - C) * (1 - K)),
+        utils.round(255 * (1 - M) * (1 - K)),
+        utils.round(255 * (1 - Y) * (1 - K)),
+    }
+end
+
 ---@param RGB integer[]
 ---@return number[] Linear
 function convert.rgb2linear(RGB)
@@ -96,9 +132,8 @@ function convert.rgb2linear(RGB)
         x = x / 255
         if x <= 0.04045 then
             return x / 12.92
-        else
-            return ((x + 0.055) / 1.055) ^ 2.4
         end
+        return ((x + 0.055) / 1.055) ^ 2.4
     end, RGB)
 end
 
@@ -163,6 +198,26 @@ function convert.xyz2linear(XYZ)
     return product(xyz2linear, XYZ)
 end
 
+---@param RGB integer[]
+---@return number[] XYZ
+function convert.rgb2xyz(RGB)
+    local Linear = convert.rgb2linear(RGB)
+    return convert.linear2xyz(Linear)
+end
+
+---@param XYZ number[]
+---@return integer[] RGB
+function convert.xyz2rgb(XYZ)
+    local Linear = convert.xyz2linear(XYZ)
+    local RGB = convert.linear2rgb(Linear)
+    for _, v in ipairs(RGB) do
+        if v < 0 or 255 < v then
+            return { 0, 0, 0 }
+        end
+    end
+    return RGB
+end
+
 ---@param XYZ number[]
 ---@return number[] Lab
 function convert.xyz2lab(XYZ)
@@ -171,9 +226,8 @@ function convert.xyz2lab(XYZ)
     local function f(t)
         if t > (6 / 29) ^ 3 then
             return 116 * t ^ (1 / 3) - 16
-        else
-            return (29 / 3) ^ 3 * t
         end
+        return (29 / 3) ^ 3 * t
     end
     return {
         f(Y / Yn),
@@ -193,15 +247,33 @@ function convert.lab2xyz(Lab)
     local function t(f)
         if f > 6 / 29 then
             return f ^ 3
-        else
-            return (116 * f - 16) * (3 / 29) ^ 3
         end
+        return (116 * f - 16) * (3 / 29) ^ 3
     end
     return {
         t(fx) * Xn,
         t(fy) * Yn,
         t(fz) * Zn,
     }
+end
+
+---@param RGB integer[]
+---@return integer[] Lab
+function convert.rgb2lab(RGB)
+    local Linear = convert.rgb2linear(RGB)
+    local XYZ = convert.linear2xyz(Linear)
+    return convert.xyz2lab(XYZ)
+end
+
+---@param Lab integer[]
+---@return integer[] RGB
+function convert.lab2rgb(Lab)
+    local XYZ = convert.lab2xyz(Lab)
+    local Linear = convert.xyz2linear(XYZ)
+    local RGB = convert.linear2rgb(Linear)
+    return vim.tbl_map(function(x)
+        return utils.fix_overflow(x, 0, 255)
+    end, RGB)
 end
 
 return convert
