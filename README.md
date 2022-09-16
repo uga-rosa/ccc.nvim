@@ -13,9 +13,9 @@
 Super powerful color picker plugin.
 
 - Features
-    - You can use RGB, HSL, and other color system sliders for color adjustment.
+    - You can use RGB, HSL, CMYK, and other color space sliders for color adjustment.
     - Dynamic highlighting of sliders.
-    - Record and restore previously used colors.
+    - Restore previously used colors.
     - Selectable output formats.
 
 # Setup

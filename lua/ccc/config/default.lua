@@ -18,6 +18,7 @@ return {
     inputs = {
         require("ccc.input.rgb"),
         require("ccc.input.hsl"),
+        require("ccc.input.cmyk"),
     },
     outputs = {
         require("ccc.output.hex"),
