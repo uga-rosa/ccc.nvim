@@ -122,10 +122,11 @@ Default: {
 	The presets currently available are as follows:
 		- RGB: require("ccc.input.rgb")
 		- HSL: require("ccc.input.hsl")
+		- HSLuv: require("ccc.input.hsluv")
 
 
                                                             *ccc-option-outputs*
-inputs ~
+output ~
 table
 Default: {
 	require("ccc.output.hex"),
