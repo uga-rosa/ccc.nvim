@@ -10,10 +10,14 @@ local CmykInput = setmetatable({
     bar_name = { "C", "M", "Y", "K" },
 }, { __index = ColorInput })
 
+---@param v number
+---@return string
 function CmykInput.format(v)
     return ("%5d%%"):format(v)
 end
 
+---@param x number
+---@return number
 local function div255(x)
     return x / 2.55
 end
