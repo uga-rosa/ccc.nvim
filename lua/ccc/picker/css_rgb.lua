@@ -1,3 +1,5 @@
+local sa = require("ccc.utils.safe_array")
+
 ---@class CssRgbPicker: ColorPicker
 local CssRgbPicker = {
     pattern = "rgb%((%d+),%s*(%d+),%s*(%d+)%)",
@@ -6,9 +8,7 @@ local CssRgbPicker = {
 ---@param s string
 ---@return integer start
 ---@return integer end_
----@return integer R
----@return integer G
----@return integer B
+---@return integer[] RGB
 ---@overload fun(self: CssRgbPicker, s: string): nil
 function CssRgbPicker:parse_color(s)
     local start, end_, cap1, cap2, cap3 = s:find(self.pattern)
@@ -16,8 +16,8 @@ function CssRgbPicker:parse_color(s)
         ---@diagnostic disable-next-line
         return nil
     end
-    local R, G, B = tonumber(cap1, 10), tonumber(cap2, 10), tonumber(cap3, 10)
-    return start, end_, R, G, B
+    local RGB = sa.new({ cap1, cap2, cap3 }):map(tonumber):unpack()
+    return start, end_, RGB
 end
 
 return CssRgbPicker

@@ -1,18 +1,14 @@
-local config = require("ccc.config")
-
 ---@class HexOutput: ColorOutput
 local HexOutput = {
     name = "HEX",
+    pattern = "#%02x%02x%02x"
 }
 
----@param R integer
----@param G integer
----@param B integer
+---@param RGB integer[]
 ---@return string
-function HexOutput.str(R, G, B)
+function HexOutput.str(RGB)
     ---@type string
-    local hex_format = config.get("hex_format")
-    return hex_format:format(R, G, B)
+    return HexOutput.pattern:format(unpack(RGB))
 end
 
 return HexOutput

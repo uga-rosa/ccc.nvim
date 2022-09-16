@@ -7,24 +7,16 @@ local RgbInput = setmetatable({
     bar_name = { "R", "G", "B" },
 }, { __index = ColorInput })
 
----@param R integer
----@param G integer
----@param B integer
----@return integer R
----@return integer G
----@return integer B
-function RgbInput.from_rgb(R, G, B)
-    return R, G, B
+---@param RGB integer[]
+---@return integer[] RGB
+function RgbInput.from_rgb(RGB)
+    return RGB
 end
 
----@param R integer
----@param G integer
----@param B integer
----@return integer R
----@return integer G
----@return integer B
-function RgbInput.to_rgb(R, G, B)
-    return R, G, B
+---@param RGB integer[]
+---@return integer[] RGB
+function RgbInput.to_rgb(RGB)
+    return RGB
 end
 
 return RgbInput

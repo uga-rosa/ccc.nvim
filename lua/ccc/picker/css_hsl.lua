@@ -1,4 +1,5 @@
 local utils = require("ccc.utils")
+local sa = require("ccc.utils.safe_array")
 
 ---@class CssHslPicker: ColorPicker
 local CssHslPicker = {
@@ -8,9 +9,7 @@ local CssHslPicker = {
 ---@param s string
 ---@return integer start
 ---@return integer end_
----@return integer R
----@return integer G
----@return integer B
+---@return integer[] RGB
 ---@overload fun(self: CssHslPicker, s: string): nil
 function CssHslPicker:parse_color(s)
     local start, end_, cap1, cap2, cap3 = s:find(self.pattern)
@@ -18,8 +17,9 @@ function CssHslPicker:parse_color(s)
         ---@diagnostic disable-next-line
         return
     end
-    local R, G, B = utils.hsl2rgb(tonumber(cap1, 10), tonumber(cap2, 10), tonumber(cap3, 10))
-    return start, end_, R, G, B
+    local HSL = sa.new({ cap1, cap2, cap3 }):map(tonumber):unpack()
+    local RGB = utils.hsl2rgb(HSL)
+    return start, end_, RGB
 end
 
 return CssHslPicker

@@ -1,18 +1,14 @@
-local config = require("ccc.config")
-
 ---@class CssRgbOutput: ColorOutput
 local CssRgbOutput = {
     name = "CssRGB",
+    pattern = "rgb(%d,%d,%d)",
 }
 
----@param R integer
----@param G integer
----@param B integer
+---@param RGB integer[]
 ---@return string
-function CssRgbOutput.str(R, G, B)
+function CssRgbOutput.str(RGB)
     ---@type string
-    local rgb_format = config.get("rgb_format")
-    return rgb_format:format(R, G, B)
+    return CssRgbOutput.pattern:format(unpack(RGB))
 end
 
 return CssRgbOutput

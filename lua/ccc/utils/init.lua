@@ -81,13 +81,10 @@ function utils.round(float)
     return math.floor(float + 0.5)
 end
 
----@param R integer
----@param G integer
----@param B integer
----@return integer H
----@return integer S
----@return integer L
-function utils.rgb2hsl(R, G, B)
+---@param RGB integer[]
+---@return integer[] HSL
+function utils.rgb2hsl(RGB)
+    local R, G, B = unpack(RGB)
     vim.validate({
         R = { R, "n" },
         G = { G, "n" },
@@ -95,6 +92,7 @@ function utils.rgb2hsl(R, G, B)
     })
 
     local H, S, L
+
     local MAX = utils.max(R, G, B)
     local MIN = utils.min(R, G, B)
 
@@ -123,23 +121,21 @@ function utils.rgb2hsl(R, G, B)
         S = S or round((MAX - MIN) / (510 - (MAX + MIN)) * 100)
     end
 
-    return H, S, L
+    return { H, S, L }
 end
 
----@param H integer
----@param S integer
----@param L integer
----@return integer R
----@return integer G
----@return integer B
-function utils.hsl2rgb(H, S, L)
+---@param HSL integer[]
+---@return integer[] RGB
+function utils.hsl2rgb(HSL)
+    local H, S, L = unpack(HSL)
     vim.validate({
         H = { H, "n" },
         S = { S, "n" },
         L = { L, "n" },
     })
 
-    local R, G, B
+    local RGB
+
     if H == 360 then
         H = 0
     end
@@ -157,20 +153,21 @@ function utils.hsl2rgb(H, S, L)
     end
 
     if H < 60 then
-        R, G, B = MAX, f(H), MIN
+        RGB = { MAX, f(H), MIN }
     elseif H < 120 then
-        R, G, B = f(120 - H), MAX, MIN
+        RGB = { f(120 - H), MAX, MIN }
     elseif H < 180 then
-        R, G, B = MIN, MAX, f(H - 120)
+        RGB = { MIN, MAX, f(H - 120) }
     elseif H < 240 then
-        R, G, B = MIN, f(240 - H), MAX
+        RGB = { MIN, f(240 - H), MAX }
     elseif H < 300 then
-        R, G, B = f(H - 240), MIN, MAX
+        RGB = { f(H - 240), MIN, MAX }
     else
-        R, G, B = MAX, MIN, f(360 - H)
+        RGB = { MAX, MIN, f(360 - H) }
     end
 
-    return utils.round(R), utils.round(G), utils.round(B)
+    RGB = vim.tbl_map(utils.round, RGB)
+    return RGB
 end
 
 ---@param array any[]

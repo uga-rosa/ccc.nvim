@@ -1,3 +1,5 @@
+local sa = require("ccc.utils.safe_array")
+
 ---@class HexPicker: ColorPicker
 local HexPicker = {
     pattern = "#(%x%x)(%x%x)(%x%x)",
@@ -6,9 +8,7 @@ local HexPicker = {
 ---@param s string
 ---@return integer start
 ---@return integer end_
----@return integer R
----@return integer G
----@return integer B
+---@return integer[] RGB
 ---@overload fun(self: HexPicker, s: string): nil
 function HexPicker:parse_color(s)
     local start, end_, cap1, cap2, cap3 = s:find(self.pattern)
@@ -16,8 +16,12 @@ function HexPicker:parse_color(s)
         ---@diagnostic disable-next-line
         return nil
     end
-    local R, G, B = tonumber(cap1, 16), tonumber(cap2, 16), tonumber(cap3, 16)
-    return start, end_, R, G, B
+    local RGB = sa.new({ cap1, cap2, cap3 })
+        :map(function(c)
+            return tonumber(c, 16)
+        end)
+        :unpack()
+    return start, end_, RGB
 end
 
 return HexPicker

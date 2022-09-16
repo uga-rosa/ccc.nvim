@@ -60,30 +60,22 @@ function Color:copy()
     return new
 end
 
----@param v1 integer
----@param v2 integer
----@param v3 integer
-function Color:set(v1, v2, v3)
-    self.input:set(v1, v2, v3)
+---@param value integer[]
+function Color:set(value)
+    self.input:set(value)
 end
 
----@return integer v1
----@return integer v2
----@return integer v3
+---@return integer[] value
 function Color:get()
     return self.input:get()
 end
 
----@param R integer
----@param G integer
----@param B integer
-function Color:set_rgb(R, G, B)
-    self.input:set_rgb(R, G, B)
+---@param RGB integer[]
+function Color:set_rgb(RGB)
+    self.input:set_rgb(RGB)
 end
 
----@return integer R
----@return integer G
----@return integer G
+---@return integer[] RGB
 function Color:get_rgb()
     return self.input:get_rgb()
 end
@@ -91,15 +83,13 @@ end
 ---@param s string
 ---@return integer start
 ---@return integer end_
----@return integer R
----@return integer G
----@return integer B
+---@return integer[] RGB
 ---@overload fun(self: Color, s: string): nil
 function Color:pick(s)
     for _, picker in ipairs(self._pickers) do
-        local start, end_, R, G, B = picker:parse_color(s)
+        local start, end_, RGB = picker:parse_color(s)
         if start then
-            return start, end_, R, G, B
+            return start, end_, RGB
         end
     end
     ---@diagnostic disable-next-line
@@ -107,14 +97,14 @@ function Color:pick(s)
 end
 
 function Color:toggle_input()
-    local R, G, B = self.input:get_rgb()
+    local RGB = self.input:get_rgb()
     if self.input_idx == #self._inputs then
         self.input_idx = 1
     else
         self.input_idx = self.input_idx + 1
     end
     self.input = self._inputs[self.input_idx]
-    self.input:set_rgb(R, G, B)
+    self.input:set_rgb(RGB)
 end
 
 function Color:toggle_output()
@@ -131,16 +121,14 @@ function Color:str()
     return self.output.str(self.input:get_rgb())
 end
 
----@param v1? integer
----@param v2? integer
----@param v3? integer
+---@param value? integer[]
 ---@return string
-function Color:hex(v1, v2, v3)
-    if not (v1 and v2 and v3) then
-        v1, v2, v3 = self.input:get()
+function Color:hex(value)
+    if not value then
+        value = self.input:get()
     end
-    local R, G, B = self.input.to_rgb(v1, v2, v3)
-    return hex.str(R, G, B)
+    local RGB = self.input.to_rgb(value)
+    return hex.str(RGB)
 end
 
 return Color

@@ -1,19 +1,16 @@
-local config = require("ccc.config")
 local utils = require("ccc.utils")
 
 ---@class CssHslOutput: ColorOutput
 local CssHslOutput = {
     name = "CssHSL",
+    pattern = "hsl(%d,%d%%,%d%%)",
 }
 
----@param R integer
----@param G integer
----@param B integer
+---@param RGB integer[]
 ---@return string
-function CssHslOutput.str(R, G, B)
+function CssHslOutput.str(RGB)
     ---@type string
-    local hsl_format = config.get("hsl_format")
-    return hsl_format:format(utils.rgb2hsl(R, G, B))
+    return CssHslOutput.pattern:format(unpack(utils.rgb2hsl(RGB)))
 end
 
 return CssHslOutput

@@ -31,9 +31,6 @@ return {
         require("ccc.picker.css_rgb"),
         require("ccc.picker.css_hsl"),
     },
-    hex_format = "#%02x%02x%02x",
-    rgb_format = "rgb(%d,%d,%d)",
-    hsl_format = "hsl(%d,%d%%,%d%%)",
     mappings = {
         ["q"] = mapping.quit,
         ["<CR>"] = mapping.complete,
