@@ -31,9 +31,9 @@ function CmykInput.from_rgb(RGB)
     if K == 100 then
         return { 0, 0, 0, 100 }
     end
-    C = (100 - R_ - K) / (100 - K)
-    M = (100 - G_ - K) / (100 - K)
-    Y = (100 - B_ - K) / (100 - K)
+    C = (100 - R_ - K) / (100 - K) * 100
+    M = (100 - G_ - K) / (100 - K) * 100
+    Y = (100 - B_ - K) / (100 - K) * 100
     return { C, M, Y, K }
 end
 
