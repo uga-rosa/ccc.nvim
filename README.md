@@ -6,11 +6,13 @@
 
 **C**reate **C**olor **C**ode in neovim.
 
+Super powerful color picker plugin.
+
 - Features
-    - RGB and HSL sliders for color adjustment.
+    - You can use RGB, HSL, and other color system sliders for color adjustment.
     - Dynamic highlighting of sliders.
     - Record and restore previously used colors.
-    - 3 output formats (HEX, RGB, HSL).
+    - Selectable output formats.
 
 # Setup
 
@@ -40,22 +42,87 @@ This plugin provides one command and one mapping.
 
 # Action
 
-- `<CR>`: Close the UI and perform a replace or insert.
-    - If the cursor is under the previous color, select it.
-- `q`: Cancel and close the UI without replace or insert.
-- `i`: Toggle input mode.
-    - `RGB` -> `HSL` -> `RGB` -> ...
-- `o`: Toggle output mode.
-    - `HEX` -> `RGB` -> `HSL` -> `HEX` -> ...
-- `g`: Toggle show and hide the previous colors pallet.
-    - `W/B` are useful for moving colors; they are also mapped to `w/b`.
-- `h/s/m`: Decrease the value of the slider by 1/5/10.
-- `l/d/,`: Increase the value of the slider by 1/5/10.
-- `H/M/L`: Set the value of the slider to 0%/50%/100%.
-- `0-9`: Set to 0% - 90%.
+All functions are implemented as lua functions.
+To customize, use `ccc-option-mappings`.
 
-# Known bugs
+```lua
+local ccc = require("ccc")
+local mapping = ccc.mapping
+```
 
-- The color of the border ramdomly changes on sliding.
-    - The only highlighting this plugin does is nvim_buf_add_highlight(), so I don't see how this could happen.
-    - Perhaps it is a bug of neovim, and the trigger is to do dynamic highlighting at high speed.
+- complete
+    - Default mapping: `<CR>`
+	- Close the UI and perform a replace or insert.
+	- If open the previous colors pallet, select the color under the cursor.
+    - `mapping.complete()`
+
+- quit
+    - Default mapping: `q`
+    - Cancel and close the UI without replace or insert. Don't use `:q`.
+    - `mapping.quit()`
+
+- toggle_input_mode
+    - Default mapping: `i`
+    - Toggle input mode. See `ccc-option-inputs` in [doc](./doc/ccc.txt).
+    - `mapping.toggle_input_mode()`
+
+- toggle_output_mode
+    - Default mapping: `o`
+    - Toggle output mode. See `ccc-option-outputs` in [doc](./doc/ccc.txt).
+    - `mapping.toggle_output_mode()`
+
+- toggle_prev_colors
+    - Default mapping: `g`
+    - Toggle show and hide the previous colors pallet.
+    - `mapping.toggle_prev_colors()`
+    - Use the following to move colors.
+    - `goto_next`
+    - `goto_prev`
+    - `goto_tail`
+    - `goto_head`
+
+- goto_next
+    - Default mapping: `w`
+    - Go to next (right) color.
+    - `mapping.goto_next()`
+
+- goto_prev
+    - Default mapping: `b`
+    - Go to previous (left) color.
+    - `mapping.goto_next()`
+
+- goto_tail
+    - Default mapping: `W`
+    - Go to the last color.
+    - `mapping.goto_next()`
+
+- goto_head
+    - Default mapping: `B`
+    - Go to the first color.
+    - `mapping.goto_next()`
+
+- increase
+    - Default mapping: `l` / `d` / `,` (1 / 5 / 10)
+    - Increase the value times delta of the slider.
+    - The delta is defined each color system, e.g. RGB is 1.
+    - `mapping.increase1()`
+    - `mapping.increase5()`
+    - `mapping.increase10()`
+    - `mapping.delta(intger)`
+
+- decrease
+    - Default mapping: `l` / `d` / `,` (1 / 5 / 10)
+    - Increase the value times delta of the slider.
+    - The delta is defined each color system, e.g. RGB is 1.
+    - `mapping.increase1()`
+    - `mapping.increase5()`
+    - `mapping.increase10()`
+    - `mapping.delta(intger)`
+
+- set
+    - Default mapping: `H` / `M` / `L` (0 / 50 / 100), `1` - `9` (10% - 90%)
+    - Set the value of the slider as a percentage.
+    - `mapping.set0()`
+    - `mapping.set50()`
+    - `mapping.set100()`
+    - `ccc.set_percent(integer)`

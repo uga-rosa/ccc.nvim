@@ -19,10 +19,10 @@ Introduction                                                  *ccc-introduction*
 Use the sliders, easy, to create any color you want!
 
 Features:
-- RGB and HSL sliders for color adjustment.
+- You can use RGB, HSL, and other color system sliders for color adjustment.
 - Dynamic highlighting of sliders.
 - Record and restore previously used colors.
-- 3 output formats (HEX, RGB, HSL).
+- Selectable output formats.
 
 
 
@@ -50,22 +50,12 @@ See |ccc-option| for the options that can be specified.
 Option                                                             *ccc-option*
 
 
-                                                 *ccc-option-default-input-mode*
-default_input_mode ~
-"RGB" | "HSL"
-Default: "RGB"
-	Default input method. It is used at first startup. Once activated, it
-	will keep the previous value instead of this one from the next time
-	on.
-
-
-                                                *ccc-option-default-output-mode*
-default_output_mode ~
-"HEX" | "RGB" | "HSL"
-Default: "HEX"
-	Default output method. It is used at first startup. Once activated, it
-	will keep the previous value instead of this one from the next time
-	on.
+                                                      *ccc-option-default-color*
+default_color ~
+string
+Default: "#000000"
+	The default color used when a color cannot be picked. See also
+	|ccc-option-preserve|.
 
 
                                                            *ccc-option-bar-char*
@@ -104,14 +94,6 @@ Default: {
 	be specified.
 
 
-                                                      *ccc-option-default-color*
-default_color ~
-string (HEX, RGB, or HSL style)
-Default: "#000000"
-	The default color used when a color cannot be picked. See also
-	|ccc-option-preserve|.
-
-
                                                            *ccc-option-preserve*
 preserve ~
 boolean
@@ -125,6 +107,53 @@ save_on_quit ~
 boolean
 Default: false
 	Whether to add colors to prev_colors when quit (|ccc-action-quit|).
+
+
+                                                             *ccc-option-inputs*
+inputs ~
+table
+Default: {
+	require("ccc.input.rgb"),
+	require("ccc.input.hsl"),
+}
+	List of color system to be activated. |ccc-action-toggle-input-mode|
+	toggles in this order. The first one is the default used at the first
+	startup. Once activated, it will keep the previous input mode.
+	The presets currently available are as follows:
+		- RGB: require("ccc.input.rgb")
+		- HSL: require("ccc.input.hsl")
+
+
+                                                            *ccc-option-outputs*
+inputs ~
+table
+Default: {
+	require("ccc.output.hex"),
+	require("ccc.output.css_rgb"),
+	require("ccc.output.css_hsl"),
+}
+	List of output format to be activated. |ccc-action-toggle-output-mode|
+	toggles in this order. The first one is the default used at the first
+	startup. Once activated, it will keep the previous output mode.
+	The presets currently available are as follows:
+		- HEX: require("ccc.output.hex")
+		- CssRGB: require("ccc.output.css_rgb")
+		- CssHSL: require("ccc.output.css_hsl")
+
+
+                                                            *ccc-option-pickers*
+inputs ~
+table
+Default: {
+	require("ccc.picker.hex"),
+	require("ccc.picker.css_rgb"),
+	require("ccc.picker.css_hsl"),
+}
+	List of formats that can be detected by |:CccPick| to be activated.
+	The presets currently available are as follows:
+		- HEX: require("ccc.picker.hex")
+		- CssRGB: require("ccc.picker.css_rgb")
+		- CssHSL: require("ccc.picker.css_hsl")
 
 
                                                            *ccc-option-mappings*
@@ -165,6 +194,9 @@ Key mapping                                                    *ccc-key-mapping*
 Action                                                              *ccc-action*
 
 
+All functions are implemented as lua functions.
+To customize, use |ccc-option-mappings|.
+
 >
 	local ccc = require("ccc")
 	local mapping = ccc.mapping
@@ -176,30 +208,28 @@ complete ~
 mapping.complete()
 Default mapping: <CR>
 	Close the UI and perform a replace or insert.
-	If the cursor is under the previous color, select it.
+	If open the previous colors pallet, select the color under the cursor.
 
 
                                                                *ccc-action-quit*
 quit ~
 mapping.quit()
 Default mapping: q
-	Cancel and close the UI without replace or insert.
+	Cancel and close the UI without replace or insert. Don't use |:q|.
 
 
                                                   *ccc-action-toggle-input-mode*
 toggle_input_mode ~
 mapping.toggle_input_mode()
 Default mapping: i
-	Toggle input mode.
-	RGB -> HSL -> RGB -> ...
+	Toggle input mode. See |ccc-option-inputs|.
 
 
                                                  *ccc-action-toggle-output-mode*
 toggle_output_mode ~
 mapping.toggle_output_mode()
 Default mapping: o
-	Toggle output mode.
-	HEX -> RGB -> HSL -> HEX -> ...
+	Toggle output mode. See |ccc-option-outputs|.
 
 
                                                  *ccc-action-toggle-prev-colors*
@@ -207,35 +237,87 @@ toggle_prev_colors ~
 mapping.toggle_prev_colors()
 Default mapping: g
 	Toggle show and hide the previous colors pallet.
-	|W|/|B| are useful for moving colors; they are also mapped to w/b.
+	Use the following to move colors.
+		- |ccc-action-goto-next|
+		- |ccc-action-goto-prev|
+		- |ccc-action-goto-tail|
+		- |ccc-action-goto-head|
 
 
-                                                           *ccc-action-decrease*
-decrease ~
-mapping.decrease1
-mapping.decrease5
-mapping.decrease10
-Default mapping: h / s / m (1 / 5 / 10)
-	Decrease the value of the slider.
+                                                   *ccc-action-show-prev-colors*
+toggle_prev_colors ~
+mapping.show_prev_colors()
+Default mapping is nothing.
+	Show the previous colors pallet.
 
 
-                                                           *ccc-action-increase*
+                                                   *ccc-action-hide-prev-colors*
+toggle_prev_colors ~
+mapping.hide_prev_colors()
+Default mapping is nothing.
+	Hide the previous colors pallet.
+
+
+                                                          *ccc-action-goto-next*
+goto_next ~
+mapping.goto_next()
+Default mapping: w
+	Go to next (right) color.
+
+
+                                                          *ccc-action-goto-prev*
+goto_prev ~
+mapping.goto_prev()
+Default mapping: b
+	Go to previous (left) color.
+
+
+                                                          *ccc-action-goto-tail*
+goto_tail ~
+mapping.goto_tail()
+Default mapping: W
+	Go to the last color.
+
+
+                                                          *ccc-action-goto-head*
+goto_head ~
+mapping.goto_head()
+Default mapping: B
+	Go to the first color.
+
+
+                                      *ccc-action-increase* *ccc-action-increase1*
+                                    *ccc-action-increase5* *ccc-action-increase10*
 increase ~
-mapping.increase1
-mapping.increase5
-mapping.increase10
+mapping.increase1()
+mapping.increase5()
+mapping.increase10()
+mapping.delta(intger)
 Default mapping: l / d / , (1 / 5 / 10)
-	Increase the value of the slider.
+	Increase the value times delta of the slider.
+	The delta is defined each color system, e.g. RGB is 1.
 
 
-                                                                *ccc-action-set*
+                                      *ccc-action-decrease* *ccc-action-decrease1*
+                                    *ccc-action-decrease5* *ccc-action-decrease10*
+decrease ~
+mapping.decrease1()
+mapping.decrease5()
+mapping.decrease10()
+mapping.delta(intger)
+Default mapping: h / s / m (1 / 5 / 10)
+	Decrease the value times delta of the slider.
+	The delta is defined each color system, e.g. RGB is 1.
+
+
+                                                *ccc-action-set* *ccc-action-set0*
+	                                    *ccc-action-set50* *ccc-action-set100*
 set ~
-mapping.set0
-mapping.set50
-mapping.set100
+mapping.set0()
+mapping.set50()
+mapping.set100()
 ccc.set_percent(integer)
-Default mapping: H / M / L (0 / 50 / 100)
-		1 - 9 (10% - 90%)
+Default mapping: H / M / L (0 / 50 / 100), 1 - 9 (10% - 90%)
 	Set the value of the slider as a percentage.
 
 
