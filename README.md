@@ -115,12 +115,12 @@ local mapping = ccc.mapping
     - `mapping.delta(intger)`
 
 - decrease
-    - Default mapping: `l` / `d` / `,` (1 / 5 / 10)
-    - Increase the value times delta of the slider.
+    - Default mapping: `h` / `s` / `m` (1 / 5 / 10)
+    - Decrease the value times delta of the slider.
     - The delta is defined each color system, e.g. RGB is 1.
-    - `mapping.increase1()`
-    - `mapping.increase5()`
-    - `mapping.increase10()`
+    - `mapping.decrease1()`
+    - `mapping.decrease5()`
+    - `mapping.decrease10()`
     - `mapping.delta(intger)`
 
 - set
