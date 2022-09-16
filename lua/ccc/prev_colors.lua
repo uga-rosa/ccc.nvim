@@ -31,6 +31,21 @@ function PrevColors:get()
     return self.selected_color
 end
 
+---@return Color
+function PrevColors:select()
+    local color = self:get()
+    if color.input.name ~= self.ui.input_mode then
+        local RGB = color:get_rgb()
+        color:set_input(self.ui.input_mode)
+        color:set_rgb(RGB)
+    end
+    if color.output.name ~= self.ui.output_mode then
+        color:set_output(self.ui.output_mode)
+    end
+    self:hide()
+    return color:copy()
+end
+
 function PrevColors:show()
     self.is_showed = true
     local ui = self.ui

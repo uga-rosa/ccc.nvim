@@ -24,13 +24,13 @@ local prev_colors = require("ccc.prev_colors")
 local UI = {}
 
 function UI:init()
-    self.input_mode = self.input_mode or config.get("default_input_mode")
-    self.output_mode = self.output_mode or config.get("default_output_mode")
     if self.color == nil or not config.get("preserve") then
-        self.color = Color.new(self.input_mode, self.output_mode)
+        self.color = Color.new()
     else
         self.color = self.color:copy()
     end
+    self.input_mode = self.input_mode or self.color.input.name
+    self.output_mode = self.output_mode or self.color.output.name
     self:set_default_color()
     self.win_height = 2 + #self.color.input.value
     if self.bufnr == nil then
@@ -108,17 +108,7 @@ end
 
 function UI:complete()
     if self.prev_colors.is_showed and utils.row() == self.win_height then
-        local color = self.prev_colors:get()
-        if color.input.name ~= self.input_mode then
-            local RGB = color:get_rgb()
-            color:set_input(self.input_mode)
-            color:set_rgb(RGB)
-        end
-        if color.output.name ~= self.output_mode then
-            color:set_output(self.output_mode)
-        end
-        self.color = color
-        self.prev_colors:hide()
+        self.color = self.prev_colors:select()
         self:update()
         return
     end

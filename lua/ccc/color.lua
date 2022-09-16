@@ -12,10 +12,8 @@ local hex = require("ccc.output.hex")
 ---@field _pickers ColorPicker[]
 local Color = {}
 
----@param input_mode string
----@param output_mode string
 ---@return Color
-function Color.new(input_mode, output_mode)
+function Color.new()
     local self = setmetatable({
         _inputs = config.get("inputs"),
         _outputs = config.get("outputs"),
@@ -25,8 +23,10 @@ function Color.new(input_mode, output_mode)
         self._inputs[i] = input:new()
     end
 
-    self:set_input(input_mode)
-    self:set_output(output_mode)
+    self.input_idx = 1
+    self.output_idx = 1
+    self.input = self._inputs[1]
+    self.output = self._outputs[1]
 
     return self
 end
@@ -35,6 +35,7 @@ local function get_name(x)
     return x.name
 end
 
+---@param input_mode string
 function Color:set_input(input_mode)
     self.input_idx = assert(
         utils.search_idx(self._inputs, input_mode, get_name),
@@ -43,6 +44,7 @@ function Color:set_input(input_mode)
     self.input = self._inputs[self.input_idx]
 end
 
+---@param output_mode string
 function Color:set_output(output_mode)
     self.output_idx = assert(
         utils.search_idx(self._outputs, output_mode, get_name),
