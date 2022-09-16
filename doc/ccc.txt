@@ -115,6 +115,7 @@ table
 Default: {
 	require("ccc.input.rgb"),
 	require("ccc.input.hsl"),
+	require("ccc.input.cmyk"),
 }
 	List of color system to be activated. |ccc-action-toggle-input-mode|
 	toggles in this order. The first one is the default used at the first
@@ -127,7 +128,7 @@ Default: {
 
 
                                                             *ccc-option-outputs*
-output ~
+outputs ~
 table
 Default: {
 	require("ccc.output.hex"),
@@ -144,7 +145,7 @@ Default: {
 
 
                                                             *ccc-option-pickers*
-inputs ~
+pickers ~
 table
 Default: {
 	require("ccc.picker.hex"),
