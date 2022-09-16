@@ -1,6 +1,10 @@
-![ccc](https://user-images.githubusercontent.com/82267684/190083999-48d50982-6805-43db-9ed7-2fd5775c0285.gif)
+## Selectable input/output mode
 
-![prev](https://user-images.githubusercontent.com/82267684/190240122-35a66537-9f07-41cf-aa49-ef5158358866.gif)
+![ccc](https://user-images.githubusercontent.com/82267684/190639755-6b1f3ea3-35f9-461a-be37-2df30146a9bc.gif)
+
+## Restore previously used colors
+
+![prev](https://user-images.githubusercontent.com/82267684/190639758-a974b892-6266-480d-96d3-2348d84e6369.gif)
 
 # ccc.nvim
 
