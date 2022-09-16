@@ -7,6 +7,7 @@ local M = {
         hsl = require("ccc.input.hsl"),
         cmyk = require("ccc.input.cmyk"),
         hsluv = require("ccc.input.hsluv"),
+        xyz = require("ccc.input.xyz"),
     },
     outputs = {
         hex = require("ccc.output.hex"),

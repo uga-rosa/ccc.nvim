@@ -89,4 +89,78 @@ function convert.hsl2rgb(HSL)
     return RGB
 end
 
+---@param RGB integer[]
+---@return number[] Linear
+function convert.rgb2linear(RGB)
+    return vim.tbl_map(function(x)
+        x = x / 255
+        if x <= 0.04045 then
+            return x / 12.92
+        else
+            return ((x + 0.055) / 1.055) ^ 2.4
+        end
+    end, RGB)
+end
+
+function convert.linear2rgb(Linear)
+    return vim.tbl_map(function(x)
+        if x <= 0.0031308 then
+            x = 12.92 * x
+        else
+            x = 1.055 * x ^ (1 / 2.4) - 0.055
+        end
+        return utils.round(x * 255)
+    end, Linear)
+end
+
+---@alias matrix number[][]
+---@alias vector number[]
+
+---@param a vector
+---@param b vector
+---@return number
+local function dot(a, b)
+    assert(#a == #b)
+    local result = 0
+    for i = 1, #a do
+        result = result + a[i] * b[i]
+    end
+    return result
+end
+
+---@param m matrix
+---@param v vector
+---@return vector
+local function product(m, v)
+    local row = #m
+    local result = {}
+    for i = 1, row do
+        result[i] = dot(m[i], v)
+    end
+    return result
+end
+
+local linear2xyz = {
+    { 0.41239079926595, 0.35758433938387, 0.18048078840183 },
+    { 0.21263900587151, 0.71516867876775, 0.072192315360733 },
+    { 0.019330818715591, 0.11919477979462, 0.95053215224966 },
+}
+local xyz2linear = {
+    { 3.240969941904521, -1.537383177570093, -0.498610760293 },
+    { -0.96924363628087, 1.87596750150772, 0.041555057407175 },
+    { 0.055630079696993, -0.20397695888897, 1.056971514242878 },
+}
+
+---@param Linear number[]
+---@return number[] XYZ
+function convert.linear2xyz(Linear)
+    return product(linear2xyz, Linear)
+end
+
+---@param XYZ number[]
+---@return number[] Linear
+function convert.xyz2linear(XYZ)
+    return product(xyz2linear, XYZ)
+end
+
 return convert

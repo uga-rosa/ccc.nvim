@@ -125,6 +125,7 @@ Default: {
 		- HSL:   ccc.inputs.hsl
 		- CMYK:  ccc.inputs.cmyk
 		- HSLuv: ccc.inputs.hsluv
+		- XYZ:   ccc.inputs.xyz
 
 
                                                             *ccc-option-outputs*
