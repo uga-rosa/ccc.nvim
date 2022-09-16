@@ -8,9 +8,6 @@ local config = require("ccc.config")
 local utils = require("ccc.utils")
 local sa = require("ccc.utils.safe_array")
 
----@alias input_mode "RGB" | "HSL"
----@alias output_mode "RGB" | "HSL" | "HEX"
-
 ---@class UI
 ---@field color Color
 ---@field pickers ColorPicker[]
