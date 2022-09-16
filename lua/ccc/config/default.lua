@@ -16,19 +16,19 @@ return {
     preserve = false,
     save_on_quit = false,
     inputs = {
-        require("ccc.input.rgb"),
-        require("ccc.input.hsl"),
-        require("ccc.input.cmyk"),
+        ccc.inputs.rgb,
+        ccc.inputs.hsl,
+        ccc.inputs.cmyk,
     },
     outputs = {
-        require("ccc.output.hex"),
-        require("ccc.output.css_rgb"),
-        require("ccc.output.css_hsl"),
+        ccc.outputs.hex,
+        ccc.outputs.css_rgb,
+        ccc.outputs.css_hsl,
     },
     pickers = {
-        require("ccc.picker.hex"),
-        require("ccc.picker.css_rgb"),
-        require("ccc.picker.css_hsl"),
+        ccc.pickers.hex,
+        ccc.pickers.css_rgb,
+        ccc.pickers.css_hsl,
     },
     mappings = {
         ["q"] = mapping.quit,

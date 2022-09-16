@@ -2,6 +2,22 @@ local UI = require("ccc.ui")
 local config = require("ccc.config")
 
 local M = {
+    inputs = {
+        rgb = require("ccc.input.rgb"),
+        hsl = require("ccc.input.hsl"),
+        cmyk = require("ccc.input.cmyk"),
+        hsluv = require("ccc.input.hsluv"),
+    },
+    outputs = {
+        hex = require("ccc.output.hex"),
+        css_rgb = require("ccc.output.css_rgb"),
+        css_hsl = require("ccc.output.css_hsl"),
+    },
+    pickers = {
+        hex = require("ccc.picker.hex"),
+        css_rgb = require("ccc.picker.css_rgb"),
+        css_hsl = require("ccc.picker.css_hsl"),
+    },
     mapping = {},
 }
 

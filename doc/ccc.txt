@@ -113,50 +113,50 @@ Default: false
 inputs ~
 table
 Default: {
-	require("ccc.input.rgb"),
-	require("ccc.input.hsl"),
-	require("ccc.input.cmyk"),
+	ccc.inputs.rgb,
+	ccc.inputs.hsl,
+	ccc.inputs.cmyk,
 }
 	List of color system to be activated. |ccc-action-toggle-input-mode|
 	toggles in this order. The first one is the default used at the first
 	startup. Once activated, it will keep the previous input mode.
 	The presets currently available are as follows:
-		- RGB: require("ccc.input.rgb")
-		- HSL: require("ccc.input.hsl")
-		- CMYK: require("ccc.input.cmyk")
-		- HSLuv: require("ccc.input.hsluv")
+		- RGB: ccc.inputs.rgb
+		- HSL: ccc.inputs.hsl
+		- CMYK: ccc.inputs.cmyk
+		- HSLuv: ccc.inputs.hsluv
 
 
                                                             *ccc-option-outputs*
 outputs ~
 table
 Default: {
-	require("ccc.output.hex"),
-	require("ccc.output.css_rgb"),
-	require("ccc.output.css_hsl"),
+	ccc.outputs.hex,
+	ccc.outputs.css_rgb,
+	ccc.outputs.css_hsl,
 }
 	List of output format to be activated. |ccc-action-toggle-output-mode|
 	toggles in this order. The first one is the default used at the first
 	startup. Once activated, it will keep the previous output mode.
 	The presets currently available are as follows:
-		- HEX: require("ccc.output.hex")
-		- CssRGB: require("ccc.output.css_rgb")
-		- CssHSL: require("ccc.output.css_hsl")
+		- HEX: ccc.outpus.hex
+		- CssRGB: ccc.outpus.css_rgb
+		- CssHSL: ccc.outpus.css_hsl
 
 
                                                             *ccc-option-pickers*
 pickers ~
 table
 Default: {
-	require("ccc.picker.hex"),
-	require("ccc.picker.css_rgb"),
-	require("ccc.picker.css_hsl"),
+	ccc.pickers.hex,
+	ccc.pickers.css_rgb,
+	ccc.pickers.css_hsl,
 }
 	List of formats that can be detected by |:CccPick| to be activated.
 	The presets currently available are as follows:
-		- HEX: require("ccc.picker.hex")
-		- CssRGB: require("ccc.picker.css_rgb")
-		- CssHSL: require("ccc.picker.css_hsl")
+		- HEX: ccc.pickers.hex
+		- CssRGB: ccc.pickers.css_rgb
+		- CssHSL: ccc.pickers.css_hsl
 
 
                                                            *ccc-option-mappings*
