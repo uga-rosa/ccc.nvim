@@ -6,6 +6,13 @@
 
 ![prev](https://user-images.githubusercontent.com/82267684/190639758-a974b892-6266-480d-96d3-2348d84e6369.gif)
 
+## Use multiple color spaces simultaneously
+
+- Advanced setting
+- See wiki
+
+![multi](https://user-images.githubusercontent.com/82267684/190832932-a0751236-b77a-470c-a1f2-20e1ef054c02.gif)
+
 # ccc.nvim
 
 **C**reate **C**olor **C**ode in neovim.
@@ -13,7 +20,7 @@
 Super powerful color picker plugin.
 
 - Features
-    - You can use RGB, HSL, CMYK, and other color space sliders for color adjustment.
+    - RGB, HSL, CMYK, and other color space sliders for color adjustment.
     - Dynamic highlighting of sliders.
     - Restore previously used colors.
     - Selectable output formats.
