@@ -63,7 +63,7 @@ function Color:copy()
     local new = Color.new()
     new.input_idx = self.input_idx
     new.input = new._inputs[new.input_idx]
-    new:set(self:get())
+    new:set_rgb(self:get_rgb())
     new.output_idx = self.output_idx
     new.output = new._outputs[new.output_idx]
     return new

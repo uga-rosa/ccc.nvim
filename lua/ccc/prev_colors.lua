@@ -25,6 +25,7 @@ end
 function PrevColors:add(color)
     table.insert(self.colors, 1, color)
     self.selected_color = color
+    self.index = 1
 end
 
 function PrevColors:get()
