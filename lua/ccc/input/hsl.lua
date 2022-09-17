@@ -11,9 +11,10 @@ local HslInput = setmetatable({
 }, { __index = ColorInput })
 
 ---@param n number
+---@param i integer
 ---@return string
-function HslInput.format(n)
-    if n < 1 then
+function HslInput.format(n, i)
+    if i > 1 then
         n = n * 100
     end
     return ("%6d"):format(n)

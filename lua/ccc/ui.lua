@@ -206,7 +206,7 @@ function UI:buffer()
     for i, v in ipairs(self.color:get()) do
         local line = input.bar_name[i]
             .. " : "
-            .. input.format(v)
+            .. input.format(v, i)
             .. " "
             .. create_bar(v, input.min[i], input.max[i], bar_len)
         table.insert(buffer, line)
