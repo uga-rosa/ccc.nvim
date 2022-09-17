@@ -8,7 +8,7 @@ local CssRgbPicker = {
 ---@param s string
 ---@return integer start
 ---@return integer end_
----@return integer[] RGB
+---@return number[] RGB
 ---@overload fun(self: CssRgbPicker, s: string): nil
 function CssRgbPicker.parse_color(s)
     local start, end_, cap1, cap2, cap3 = s:find(CssRgbPicker.pattern)
@@ -16,7 +16,11 @@ function CssRgbPicker.parse_color(s)
         ---@diagnostic disable-next-line
         return nil
     end
-    local RGB = sa.new({ cap1, cap2, cap3 }):map(tonumber):unpack()
+    local RGB = sa.new({ cap1, cap2, cap3 })
+        :map(function(n)
+            return tonumber(n) / 255
+        end)
+        :unpack()
     return start, end_, RGB
 end
 

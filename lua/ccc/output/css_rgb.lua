@@ -1,3 +1,5 @@
+local convert = require("ccc.utils.convert")
+
 ---@class CssRgbOutput: ColorOutput
 local CssRgbOutput = {
     name = "CssRGB",
@@ -7,8 +9,7 @@ local CssRgbOutput = {
 ---@param RGB number[]
 ---@return string
 function CssRgbOutput.str(RGB)
-    ---@type string
-    return CssRgbOutput.pattern:format(unpack(RGB))
+    return CssRgbOutput.pattern:format(convert.rgb_format(RGB))
 end
 
 return CssRgbOutput

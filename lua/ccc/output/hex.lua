@@ -1,3 +1,5 @@
+local convert = require("ccc.utils.convert")
+
 ---@class HexOutput: ColorOutput
 local HexOutput = {
     name = "HEX",
@@ -7,7 +9,7 @@ local HexOutput = {
 ---@param RGB number[]
 ---@return string
 function HexOutput.str(RGB)
-    return HexOutput.pattern:format(unpack(RGB))
+    return HexOutput.pattern:format(convert.rgb_format(RGB))
 end
 
 return HexOutput

@@ -4,21 +4,26 @@ local hsluv = require("ccc.utils.hsluv")
 local convert = {}
 
 ---@param RGB number[]
+---@return integer R #0-255
+---@return integer G #0-255
+---@return integer B #0-255
+function convert.rgb_format(RGB)
+    RGB = vim.tbl_map(function(n)
+        return utils.round(n * 255)
+    end, RGB)
+    return unpack(RGB)
+end
+
+---@param RGB number[]
 ---@return number[] HSLuv
 function convert.rgb2hsluv(RGB)
-    RGB = vim.tbl_map(function(x)
-        return x / 255
-    end, RGB)
     return hsluv.rgb_to_hsluv(RGB)
 end
 
 ---@param HSLuv number[]
 ---@return number[] RGB
 function convert.hsluv2rgb(HSLuv)
-    RGB = hsluv.hsluv_to_rgb(HSLuv)
-    return vim.tbl_map(function(x)
-        return x * 255
-    end, RGB)
+    return hsluv.hsluv_to_rgb(HSLuv)
 end
 
 ---@param RGB integer[]
@@ -36,7 +41,9 @@ function convert.rgb2hsl(RGB)
     local MAX = utils.max(R, G, B)
     local MIN = utils.min(R, G, B)
 
-    if R == G and R == B then
+    L = (MAX + MIN) / 2
+
+    if MAX == MIN then
         H = 0
         S = 0
     else
@@ -47,18 +54,12 @@ function convert.rgb2hsl(RGB)
         else
             H = (R - G) / (MAX - MIN) * 60 + 240
         end
-        if H < 0 then
-            H = H + 360
-        end
-    end
+        H = H % 360
 
-    L = (MAX + MIN) / 2 * 100 / 255
-
-    if S == nil then
-        if L <= 50 then
-            S = (MAX - MIN) / (MAX + MIN) * 100
+        if L < 0.5 then
+            S = (MAX - MIN) / (MAX + MIN)
         else
-            S = (MAX - MIN) / (510 - (MAX + MIN)) * 100
+            S = (MAX - MIN) / (2 - (MAX + MIN))
         end
     end
 
@@ -77,17 +78,12 @@ function convert.hsl2rgb(HSL)
 
     local RGB
 
-    if H == 360 then
-        H = 0
-    end
+    H = H % 360
 
-    local L_ = L
-    if L >= 50 then
-        L_ = 100 - L
-    end
+    local L_ = L < 0.5 and L or 1 - L
 
-    local MAX = 2.55 * (L + L_ * S / 100)
-    local MIN = 2.55 * (L - L_ * S / 100)
+    local MAX = (L + L_ * S)
+    local MIN = (L - L_ * S)
 
     local function f(x)
         return x / 60 * (MAX - MIN) + MIN
@@ -110,24 +106,18 @@ function convert.hsl2rgb(HSL)
     return RGB
 end
 
----@param x number
----@return number
-local function div255(x)
-    return x / 255
-end
-
 ---@param RGB number[]
 ---@return number[] CMYK
 function convert.rgb2cmyk(RGB)
-    local R_, G_, B_ = unpack(vim.tbl_map(div255, RGB))
-    local K = 1 - utils.max(R_, G_, B_)
+    local R, G, B = unpack(RGB)
+    local K = 1 - utils.max(R, G, B)
     if K == 1 then
         return { 0, 0, 0, 1 }
     end
     return {
-        (1 - R_ - K) / (1 - K),
-        (1 - G_ - K) / (1 - K),
-        (1 - B_ - K) / (1 - K),
+        (1 - R - K) / (1 - K),
+        (1 - G - K) / (1 - K),
+        (1 - B - K) / (1 - K),
         K,
     }
 end
@@ -140,9 +130,9 @@ function convert.cmyk2rgb(CMYK)
         return { 0, 0, 0 }
     end
     return {
-        255 * (1 - C) * (1 - K),
-        255 * (1 - M) * (1 - K),
-        255 * (1 - Y) * (1 - K),
+        (1 - C) * (1 - K),
+        (1 - M) * (1 - K),
+        (1 - Y) * (1 - K),
     }
 end
 
@@ -150,7 +140,6 @@ end
 ---@return number[] Linear
 function convert.rgb2linear(RGB)
     return vim.tbl_map(function(x)
-        x = x / 255
         if x <= 0.04045 then
             return x / 12.92
         end
@@ -163,11 +152,10 @@ end
 function convert.linear2rgb(Linear)
     return vim.tbl_map(function(x)
         if x <= 0.0031308 then
-            x = 12.92 * x
+            return 12.92 * x
         else
-            x = 1.055 * x ^ (1 / 2.4) - 0.055
+            return 1.055 * x ^ (1 / 2.4) - 0.055
         end
-        return x * 255
     end, Linear)
 end
 
@@ -233,12 +221,9 @@ end
 function convert.xyz2rgb(XYZ)
     local Linear = convert.xyz2linear(XYZ)
     local RGB = convert.linear2rgb(Linear)
-    for _, v in ipairs(RGB) do
-        if v < 0 or 255 < v then
-            return { 0, 0, 0 }
-        end
-    end
-    return RGB
+    return vim.tbl_map(function(n)
+        return utils.fix_overflow(n, 0, 1)
+    end, RGB)
 end
 
 ---@param XYZ number[]
@@ -295,7 +280,7 @@ function convert.lab2rgb(Lab)
     local Linear = convert.xyz2linear(XYZ)
     local RGB = convert.linear2rgb(Linear)
     return vim.tbl_map(function(x)
-        return utils.fix_overflow(x, 0, 255)
+        return utils.fix_overflow(x, 0, 1)
     end, RGB)
 end
 

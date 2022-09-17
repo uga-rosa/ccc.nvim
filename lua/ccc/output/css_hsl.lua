@@ -9,7 +9,6 @@ local CssHslOutput = {
 ---@param RGB number[]
 ---@return string
 function CssHslOutput.str(RGB)
-    ---@type string
     return CssHslOutput.pattern:format(unpack(convert.rgb2hsl(RGB)))
 end
 

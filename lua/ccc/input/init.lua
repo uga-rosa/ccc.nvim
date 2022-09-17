@@ -5,14 +5,16 @@
 ---@field min number[]
 ---@field delta number[] #Minimum slider movement.
 ---@field bar_name string[] #Align all display widths.
----@field format fun(v: number): string #String returned must be 6 byte.
+---@field format fun(n: number): string #String returned must be 6 byte.
 ---@field from_rgb fun(RGB: number[]): value: number[]
 ---@field to_rgb fun(value: number[]): RGB: integer[]
 ---@field callback fun(self: ColorInput, new_value: number, index: integer): value: integer[]
 local ColorInput = {}
 
-function ColorInput.format(v)
-    return ("%6d"):format(v):sub(1, 6)
+---@param n number
+---@return string
+function ColorInput.format(n)
+    return ("%6d"):format(n):sub(1, 6)
 end
 
 function ColorInput:new()

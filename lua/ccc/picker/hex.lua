@@ -18,7 +18,7 @@ function HexPicker.parse_color(s)
     end
     local RGB = sa.new({ cap1, cap2, cap3 })
         :map(function(c)
-            return tonumber(c, 16)
+            return tonumber(c, 16) / 255
         end)
         :unpack()
     return start, end_, RGB
