@@ -5,7 +5,7 @@ local HexShortOutput = {
     name = "HEXshort",
 }
 
----@param RGB integer[]
+---@param RGB number[]
 ---@return string
 function HexShortOutput.str(RGB)
     local hex = sa.new(RGB)

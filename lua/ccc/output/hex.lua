@@ -4,7 +4,7 @@ local HexOutput = {
     pattern = "#%02x%02x%02x",
 }
 
----@param RGB integer[]
+---@param RGB number[]
 ---@return string
 function HexOutput.str(RGB)
     return HexOutput.pattern:format(unpack(RGB))

@@ -9,14 +9,14 @@ local RgbInput = setmetatable({
     bar_name = { "R", "G", "B" },
 }, { __index = ColorInput })
 
----@param RGB integer[]
----@return integer[] RGB
+---@param RGB number[]
+---@return number[] RGB
 function RgbInput.from_rgb(RGB)
     return RGB
 end
 
----@param RGB integer[]
----@return integer[] RGB
+---@param RGB number[]
+---@return number[] RGB
 function RgbInput.to_rgb(RGB)
     return RGB
 end

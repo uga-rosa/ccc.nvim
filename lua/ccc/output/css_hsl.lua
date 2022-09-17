@@ -6,7 +6,7 @@ local CssHslOutput = {
     pattern = "hsl(%d,%d%%,%d%%)",
 }
 
----@param RGB integer[]
+---@param RGB number[]
 ---@return string
 function CssHslOutput.str(RGB)
     ---@type string

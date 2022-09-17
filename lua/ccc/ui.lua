@@ -276,7 +276,7 @@ function UI:set_percent(percent)
     end
     local max = self.color.input.max[index]
     local min = self.color.input.min[index]
-    local new_value = utils.round((max - min) * percent / 100) + min
+    local new_value = (max - min) * percent / 100 + min
     self.color.input:callback(index, new_value)
     self:update()
 end

@@ -1,6 +1,5 @@
 local ColorInput = require("ccc.input")
 local hsluv = require("ccc.utils.hsluv")
-local utils = require("ccc.utils")
 local sa = require("ccc.utils.safe_array")
 
 ---@class HSLuvInput: ColorInput
@@ -12,18 +11,18 @@ local HSLuvInput = setmetatable({
     bar_name = { "H", "S", "L" },
 }, { __index = ColorInput })
 
----@param RGB integer[]
----@return integer[] HSL
+---@param RGB number[]
+---@return number[] HSL
 function HSLuvInput.from_rgb(RGB)
     return hsluv.rgb_to_hsluv(RGB)
 end
 
----@param HSL integer[]
----@return integer[] RGB
+---@param HSL number[]
+---@return number[] RGB
 function HSLuvInput.to_rgb(HSL)
     return sa.new(hsluv.hsluv_to_rgb(HSL))
         :map(function(v)
-            return utils.round(v * 255)
+            return v * 255
         end)
         :unpack()
 end

@@ -9,7 +9,7 @@ local CssHslPicker = {
 ---@param s string
 ---@return integer start
 ---@return integer end_
----@return integer[] RGB
+---@return number[] RGB
 ---@overload fun(self: CssHslPicker, s: string): nil
 function CssHslPicker.parse_color(s)
     local start, end_, cap1, cap2, cap3 = s:find(CssHslPicker.pattern)

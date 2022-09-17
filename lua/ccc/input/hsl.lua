@@ -10,14 +10,14 @@ local HslInput = setmetatable({
     bar_name = { "H", "S", "L" },
 }, { __index = ColorInput })
 
----@param RGB integer[]
----@return integer[] HSL
+---@param RGB number[]
+---@return number[] HSL
 function HslInput.from_rgb(RGB)
     return convert.rgb2hsl(RGB)
 end
 
----@param HSL integer[]
----@return integer[] RGB
+---@param HSL number[]
+---@return number[] RGB
 function HslInput.to_rgb(HSL)
     return convert.hsl2rgb(HSL)
 end

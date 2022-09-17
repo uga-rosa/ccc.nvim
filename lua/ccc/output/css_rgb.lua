@@ -4,7 +4,7 @@ local CssRgbOutput = {
     pattern = "rgb(%d,%d,%d)",
 }
 
----@param RGB integer[]
+---@param RGB number[]
 ---@return string
 function CssRgbOutput.str(RGB)
     ---@type string

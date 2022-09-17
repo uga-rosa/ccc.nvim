@@ -71,22 +71,22 @@ function Color:copy()
     return new
 end
 
----@param value integer[]
+---@param value number[]
 function Color:set(value)
     self.input:set(value)
 end
 
----@return integer[] value
+---@return number[] value
 function Color:get()
     return self.input:get()
 end
 
----@param RGB integer[]
+---@param RGB number[]
 function Color:set_rgb(RGB)
     self.input:set_rgb(RGB)
 end
 
----@return integer[] RGB
+---@return number[] RGB
 function Color:get_rgb()
     return self.input:get_rgb()
 end
@@ -94,7 +94,7 @@ end
 ---@param s string
 ---@return integer start
 ---@return integer end_
----@return integer[] RGB
+---@return number[] RGB
 ---@overload fun(self: Color, s: string): nil
 function Color:pick(s)
     for _, picker in ipairs(self._pickers) do

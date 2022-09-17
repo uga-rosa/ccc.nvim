@@ -14,14 +14,14 @@ function XyzInput.format(n)
     return ("%5.1f%%"):format(n * 100)
 end
 
----@param RGB integer[]
+---@param RGB number[]
 ---@return number[] XYZ
 function XyzInput.from_rgb(RGB)
     return convert.rgb2xyz(RGB)
 end
 
 ---@param XYZ number[]
----@return integer[] RGB
+---@return number[] RGB
 function XyzInput.to_rgb(XYZ)
     return convert.xyz2rgb(XYZ)
 end

@@ -40,11 +40,11 @@ function convert.rgb2hsl(RGB)
         S = (MAX - MIN) / (510 - (MAX + MIN)) * 100
     end
 
-    return vim.tbl_map(utils.round, { H, S, L })
+    return { H, S, L }
 end
 
 ---@param HSL integer[]
----@return integer[] RGB
+---@return number[] RGB
 function convert.hsl2rgb(HSL)
     local H, S, L = unpack(HSL)
     vim.validate({
@@ -85,7 +85,6 @@ function convert.hsl2rgb(HSL)
         RGB = { MAX, MIN, f(360 - H) }
     end
 
-    RGB = vim.tbl_map(utils.round, RGB)
     return RGB
 end
 
@@ -95,7 +94,7 @@ local function div255(x)
     return x / 255
 end
 
----@param RGB integer[]
+---@param RGB number[]
 ---@return number[] CMYK
 function convert.rgb2cmyk(RGB)
     local R_, G_, B_ = unpack(vim.tbl_map(div255, RGB))
@@ -111,21 +110,21 @@ function convert.rgb2cmyk(RGB)
     }
 end
 
----@param CMYK integer[]
----@return integer[] RGB
+---@param CMYK number[]
+---@return number[] RGB
 function convert.cmyk2rgb(CMYK)
     local C, M, Y, K = unpack(CMYK)
     if K == 1 then
         return { 0, 0, 0 }
     end
     return {
-        utils.round(255 * (1 - C) * (1 - K)),
-        utils.round(255 * (1 - M) * (1 - K)),
-        utils.round(255 * (1 - Y) * (1 - K)),
+        255 * (1 - C) * (1 - K),
+        255 * (1 - M) * (1 - K),
+        255 * (1 - Y) * (1 - K),
     }
 end
 
----@param RGB integer[]
+---@param RGB number[]
 ---@return number[] Linear
 function convert.rgb2linear(RGB)
     return vim.tbl_map(function(x)
@@ -137,6 +136,8 @@ function convert.rgb2linear(RGB)
     end, RGB)
 end
 
+---@param Linear number[]
+---@return number[]
 function convert.linear2rgb(Linear)
     return vim.tbl_map(function(x)
         if x <= 0.0031308 then
@@ -144,7 +145,7 @@ function convert.linear2rgb(Linear)
         else
             x = 1.055 * x ^ (1 / 2.4) - 0.055
         end
-        return utils.round(x * 255)
+        return x * 255
     end, Linear)
 end
 
@@ -198,7 +199,7 @@ function convert.xyz2linear(XYZ)
     return product(xyz2linear, XYZ)
 end
 
----@param RGB integer[]
+---@param RGB number[]
 ---@return number[] XYZ
 function convert.rgb2xyz(RGB)
     local Linear = convert.rgb2linear(RGB)
@@ -206,7 +207,7 @@ function convert.rgb2xyz(RGB)
 end
 
 ---@param XYZ number[]
----@return integer[] RGB
+---@return number[] RGB
 function convert.xyz2rgb(XYZ)
     local Linear = convert.xyz2linear(XYZ)
     local RGB = convert.linear2rgb(Linear)
@@ -257,16 +258,16 @@ function convert.lab2xyz(Lab)
     }
 end
 
----@param RGB integer[]
----@return integer[] Lab
+---@param RGB number[]
+---@return number[] Lab
 function convert.rgb2lab(RGB)
     local Linear = convert.rgb2linear(RGB)
     local XYZ = convert.linear2xyz(Linear)
     return convert.xyz2lab(XYZ)
 end
 
----@param Lab integer[]
----@return integer[] RGB
+---@param Lab number[]
+---@return number[] RGB
 function convert.lab2rgb(Lab)
     local XYZ = convert.lab2xyz(Lab)
     local Linear = convert.xyz2linear(XYZ)
