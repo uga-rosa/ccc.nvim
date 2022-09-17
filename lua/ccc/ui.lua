@@ -184,11 +184,16 @@ end
 
 ---@param length integer
 ---@param lhs string
+---@param mid string
 ---@param rhs string
-local function fill_in_blank(length, lhs, rhs)
+local function fill_in_blank(length, lhs, mid, rhs)
     local len_lhs = api.nvim_strwidth(lhs)
+    local len_mid = api.nvim_strwidth(mid)
     local len_rhs = api.nvim_strwidth(rhs)
-    return lhs .. string.rep(" ", length - len_lhs - len_rhs) .. rhs
+    local num_blank = length - len_lhs - len_mid - len_rhs
+    local left_blank = 2
+    local right_blank = num_blank - left_blank
+    return lhs .. string.rep(" ", left_blank) .. mid .. string.rep(" ", right_blank) .. rhs
 end
 
 function UI:buffer()
@@ -210,7 +215,7 @@ function UI:buffer()
         end
     end
     self.win_width = width
-    local line = fill_in_blank(self.win_width, self.before_color, color)
+    local line = fill_in_blank(self.win_width, self.before_color, "=>", color)
     table.insert(buffer, line)
     return buffer
 end
