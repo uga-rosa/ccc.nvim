@@ -58,7 +58,7 @@ function PrevColors:show()
 
     local line = sa.new(self.colors)
         :map(function(color)
-            return color:str()
+            return color:hex()
         end)
         :concat(" ")
     utils.set_lines(ui.bufnr, ui.win_height - 1, ui.win_height, { line })
