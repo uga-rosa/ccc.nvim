@@ -14,6 +14,11 @@ local HSLuvInput = setmetatable({
 ---@param RGB number[]
 ---@return number[] HSL
 function HSLuvInput.from_rgb(RGB)
+    RGB = sa.new(RGB)
+        :map(function(x)
+            return x / 255
+        end)
+        :unpack()
     return hsluv.rgb_to_hsluv(RGB)
 end
 
