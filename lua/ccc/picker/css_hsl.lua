@@ -1,5 +1,4 @@
 local convert = require("ccc.utils.convert")
-local sa = require("ccc.utils.safe_array")
 
 ---@class CssHslPicker: ColorPicker
 local CssHslPicker = {
@@ -17,7 +16,7 @@ function CssHslPicker.parse_color(s)
         ---@diagnostic disable-next-line
         return
     end
-    local HSL = sa.new({ cap1, cap2, cap3 }):map(tonumber):unpack()
+    local HSL = vim.tbl_map(tonumber, { cap1, cap2, cap3 })
     local RGB = convert.hsl2rgb(HSL)
     return start, end_, RGB
 end

@@ -9,7 +9,6 @@ local hex = require("ccc.output.hex")
 ---@field output_idx integer
 ---@field _inputs ColorInput[]
 ---@field _outputs ColorOutput[]
----@field _pickers ColorPicker[]
 local Color = {}
 
 ---@param input_mode? string
@@ -19,7 +18,6 @@ function Color.new(input_mode, output_mode)
     local self = setmetatable({
         _inputs = config.get("inputs"),
         _outputs = config.get("outputs"),
-        _pickers = config.get("pickers"),
     }, { __index = Color })
     for i, input in ipairs(self._inputs) do
         self._inputs[i] = input:new()
@@ -89,22 +87,6 @@ end
 ---@return number[] RGB
 function Color:get_rgb()
     return self.input:get_rgb()
-end
-
----@param s string
----@return integer start
----@return integer end_
----@return number[] RGB
----@overload fun(self: Color, s: string): nil
-function Color:pick(s)
-    for _, picker in ipairs(self._pickers) do
-        local start, end_, RGB = picker.parse_color(s)
-        if start then
-            return start, end_, RGB
-        end
-    end
-    ---@diagnostic disable-next-line
-    return nil
 end
 
 function Color:toggle_input()

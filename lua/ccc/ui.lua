@@ -11,6 +11,7 @@ local prev_colors = require("ccc.prev_colors")
 ---@class UI
 ---@field color Color
 ---@field pickers ColorPicker[]
+---@field before_color string # HEX
 ---@field bufnr integer
 ---@field win_id integer
 ---@field win_height integer
@@ -53,9 +54,11 @@ end
 
 function UI:set_default_color()
     local default_color = config.get("default_color")
-    local start, _, RGB = self.color:pick(default_color)
+    local start, _, RGB = self:_pick(default_color)
     assert(start, "Invalid color format: " .. default_color)
+    ---@cast RGB number[]
     self.color:set_rgb(RGB)
+    self.before_color = self.color:hex()
 end
 
 function UI:_open()
@@ -179,6 +182,15 @@ local function create_bar(value, min, max, bar_len)
     return string.rep(bar_char, ratio_ - 1) .. point_char .. string.rep(bar_char, bar_len - ratio_)
 end
 
+---@param length integer
+---@param lhs string
+---@param rhs string
+local function fill_in_blank(length, lhs, rhs)
+    local len_lhs = api.nvim_strwidth(lhs)
+    local len_rhs = api.nvim_strwidth(rhs)
+    return lhs .. string.rep(" ", length - len_lhs - len_rhs) .. rhs
+end
+
 function UI:buffer()
     local bar_len = config.get("bar_len")
     local color = self.color:str()
@@ -198,7 +210,7 @@ function UI:buffer()
         end
     end
     self.win_width = width
-    local line = string.rep(" ", width - #color) .. color
+    local line = fill_in_blank(self.win_width, self.before_color, color)
     table.insert(buffer, line)
     return buffer
 end
@@ -234,11 +246,16 @@ function UI:highlight()
     end
 
     local output_row = #value + 1
+
+    local before_bg = self.before_color
+    local before_fg = before_bg > "#800000" and "#000000" or "#ffffff"
+    set_hl(self.ns_id, "CccBefore", { fg = before_fg, bg = before_bg })
+    add_hl(self.bufnr, self.ns_id, "CccBefore", output_row, 0, 7)
+
     local output_bg = self.color:hex()
     local output_fg = output_bg > "#800000" and "#000000" or "#ffffff"
     set_hl(self.ns_id, "CccOutput", { fg = output_fg, bg = output_bg })
-    local start_output = api.nvim_buf_get_lines(self.bufnr, output_row, output_row + 1, true)[1]
-        :find("%S") - 1
+    local start_output = self.win_width - #self.color:str()
     add_hl(self.bufnr, self.ns_id, "CccOutput", output_row, start_output, -1)
 
     if self.prev_colors.is_showed then
@@ -281,15 +298,33 @@ function UI:set_percent(percent)
     self:update()
 end
 
+---comment
+---@param s string
+---@return integer? start
+---@return integer? end_
+---@return number[]? RGB
+function UI:_pick(s)
+    for _, picker in ipairs(config.get("pickers")) do
+        local start, end_, RGB = picker.parse_color(s)
+        if start then
+            return start, end_, RGB
+        end
+    end
+    return nil
+end
+
 function UI:pick()
     ---@type string
     local current_line = api.nvim_get_current_line()
-    local start, end_, RGB = self.color:pick(current_line)
+    local start, end_, RGB = self:_pick(current_line)
     local cursor_col = utils.col()
     if start and start <= cursor_col and cursor_col <= end_ then
+        ---@cast end_ integer
+        ---@cast RGB number[]
         self.start_col = start
         self.end_col = end_
         self.color:set_rgb(RGB)
+        self.before_color = self.color:hex()
     else
         self.end_col = self.start_col - 1
     end
