@@ -13,7 +13,7 @@ local CmykInput = setmetatable({
 ---@param n number
 ---@return string
 function CmykInput.format(n)
-    return ("%5.1f%%"):format(n * 100)
+    return ("%5.1f%%"):format(math.floor(n * 200) / 2)
 end
 
 ---@param RGB number[]
