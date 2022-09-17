@@ -32,6 +32,7 @@ return {
         ccc.pickers.css_rgb,
         ccc.pickers.css_hsl,
     },
+    output_line = ccc.output_line,
     mappings = {
         ["q"] = mapping.quit,
         ["<CR>"] = mapping.complete,

@@ -166,6 +166,14 @@ Default: {
 		- CssHSL: ccc.pickers.css_hsl
 
 
+                                                        *ccc-option-output-line*
+output_line ~
+function
+Default: ccc.output_line
+	This function is used to create a row below the slider that displays
+	the colors before and after the change. See source code for details.
+
+
                                                            *ccc-option-mappings*
 mappings ~
 table

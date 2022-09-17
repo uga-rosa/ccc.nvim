@@ -20,6 +20,7 @@ function M.setup(opt)
         ["config.inputs"] = { M.config.inputs, "t" },
         ["config.outputs"] = { M.config.outputs, "t" },
         ["config.pickers"] = { M.config.pickers, "t" },
+        ["config.output_line"] = { M.config.output_line, "f" },
         ["config.mappings"] = { M.config.mappings, "t" },
     })
 end

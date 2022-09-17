@@ -32,7 +32,8 @@ local ready = false
 ---@overload fun(from_plugin: boolean)
 function M.setup(opt)
     if opt == true then
-        if ready == true then
+        -- call from ./plugin/ccc.lua
+        if ready then
             return
         end
         opt = {}
@@ -40,6 +41,26 @@ function M.setup(opt)
     vim.validate({ opt = { opt, "t" } })
     config.setup(opt)
     ready = true
+end
+
+---@param b_color Color
+---@param a_color Color
+---@param width integer
+---@return string line
+---@return integer b_start_col
+---@return integer b_end_col
+---@return integer a_start_col
+---@return integer a_end_col
+function M.output_line(b_color, a_color, width)
+    local b_hex = b_color:hex()
+    local a_str = a_color:str()
+    local line = b_hex .. " =>" .. string.rep(" ", width - #b_hex - #a_str - 3) .. a_str
+
+    local b_start_col = 0
+    local b_end_col = #b_hex
+    local a_start_col = width - #a_str
+    local a_end_col = -1
+    return line, b_start_col, b_end_col, a_start_col, a_end_col
 end
 
 ---@param delta integer

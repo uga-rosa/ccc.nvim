@@ -11,7 +11,7 @@ local prev_colors = require("ccc.prev_colors")
 ---@class UI
 ---@field color Color
 ---@field pickers ColorPicker[]
----@field before_color string # HEX
+---@field before_color Color #Picked color or default
 ---@field bufnr integer
 ---@field win_id integer
 ---@field win_height integer
@@ -58,7 +58,6 @@ function UI:set_default_color()
     assert(start, "Invalid color format: " .. default_color)
     ---@cast RGB number[]
     self.color:set_rgb(RGB)
-    self.before_color = self.color:hex()
 end
 
 function UI:_open()
@@ -83,6 +82,7 @@ function UI:open(insert)
     else
         self:pick()
     end
+    self.before_color = self.color:copy()
     self:update()
     self:_open()
     utils.cursor_set({ 2, 1 })
@@ -182,23 +182,8 @@ local function create_bar(value, min, max, bar_len)
     return string.rep(bar_char, ratio_ - 1) .. point_char .. string.rep(bar_char, bar_len - ratio_)
 end
 
----@param length integer
----@param lhs string
----@param mid string
----@param rhs string
-local function fill_in_blank(length, lhs, mid, rhs)
-    local len_lhs = api.nvim_strwidth(lhs)
-    local len_mid = api.nvim_strwidth(mid)
-    local len_rhs = api.nvim_strwidth(rhs)
-    local num_blank = length - len_lhs - len_mid - len_rhs
-    local left_blank = 2
-    local right_blank = num_blank - left_blank
-    return lhs .. string.rep(" ", left_blank) .. mid .. string.rep(" ", right_blank) .. rhs
-end
-
 function UI:buffer()
     local bar_len = config.get("bar_len")
-    local color = self.color:str()
 
     local buffer = { self.input_mode }
     local width
@@ -215,8 +200,10 @@ function UI:buffer()
         end
     end
     self.win_width = width
-    local line = fill_in_blank(self.win_width, self.before_color, "=>", color)
-    table.insert(buffer, line)
+
+    local output_line = config.get("output_line")(self.before_color, self.color, self.win_width)
+    table.insert(buffer, output_line)
+
     return buffer
 end
 
@@ -252,16 +239,18 @@ function UI:highlight()
 
     local output_row = #value + 1
 
-    local before_bg = self.before_color
+    local _, b_start_col, b_end_col, a_start_col, a_end_col =
+        config.get("output_line")(self.before_color, self.color, self.win_width)
+
+    local before_bg = self.before_color:hex()
     local before_fg = before_bg > "#800000" and "#000000" or "#ffffff"
     set_hl(self.ns_id, "CccBefore", { fg = before_fg, bg = before_bg })
-    add_hl(self.bufnr, self.ns_id, "CccBefore", output_row, 0, 7)
+    add_hl(self.bufnr, self.ns_id, "CccBefore", output_row, b_start_col, b_end_col)
 
-    local output_bg = self.color:hex()
-    local output_fg = output_bg > "#800000" and "#000000" or "#ffffff"
-    set_hl(self.ns_id, "CccOutput", { fg = output_fg, bg = output_bg })
-    local start_output = self.win_width - #self.color:str()
-    add_hl(self.bufnr, self.ns_id, "CccOutput", output_row, start_output, -1)
+    local after_bg = self.color:hex()
+    local after_fg = after_bg > "#800000" and "#000000" or "#ffffff"
+    set_hl(self.ns_id, "CccAfter", { fg = after_fg, bg = after_bg })
+    add_hl(self.bufnr, self.ns_id, "CccAfter", output_row, a_start_col, a_end_col)
 
     if self.prev_colors.is_showed then
         local start_prev, end_prev = 0, 7
@@ -329,7 +318,7 @@ function UI:pick()
         self.start_col = start
         self.end_col = end_
         self.color:set_rgb(RGB)
-        self.before_color = self.color:hex()
+        self.before_color = self.color
     else
         self.end_col = self.start_col - 1
     end
