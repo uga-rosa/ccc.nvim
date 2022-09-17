@@ -1,6 +1,5 @@
 local ColorInput = require("ccc.input")
-local hsluv = require("ccc.utils.hsluv")
-local sa = require("ccc.utils.safe_array")
+local convert = require("ccc.utils.convert")
 
 ---@class HSLuvInput: ColorInput
 local HSLuvInput = setmetatable({
@@ -12,24 +11,15 @@ local HSLuvInput = setmetatable({
 }, { __index = ColorInput })
 
 ---@param RGB number[]
----@return number[] HSL
+---@return number[] HSLuv
 function HSLuvInput.from_rgb(RGB)
-    RGB = sa.new(RGB)
-        :map(function(x)
-            return x / 255
-        end)
-        :unpack()
-    return hsluv.rgb_to_hsluv(RGB)
+    return convert.rgb2hsluv(RGB)
 end
 
----@param HSL number[]
+---@param HSLuv number[]
 ---@return number[] RGB
-function HSLuvInput.to_rgb(HSL)
-    return sa.new(hsluv.hsluv_to_rgb(HSL))
-        :map(function(v)
-            return v * 255
-        end)
-        :unpack()
+function HSLuvInput.to_rgb(HSLuv)
+    return convert.hsluv2rgb(HSLuv)
 end
 
 return HSLuvInput

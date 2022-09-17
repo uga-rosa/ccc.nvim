@@ -1,5 +1,25 @@
 local utils = require("ccc.utils")
+local hsluv = require("ccc.utils.hsluv")
+
 local convert = {}
+
+---@param RGB number[]
+---@return number[] HSLuv
+function convert.rgb2hsluv(RGB)
+    RGB = vim.tbl_map(function (x)
+        return x / 255
+    end, RGB)
+    return hsluv.rgb_to_hsluv(RGB)
+end
+
+---@param HSLuv number[]
+---@return number[] RGB
+function convert.hsluv2rgb(HSLuv)
+    RGB = hsluv.hsluv_to_rgb(HSLuv)
+    return vim.tbl_map(function (x)
+        return x * 255
+    end, RGB)
+end
 
 ---@param RGB integer[]
 ---@return integer[] HSL
