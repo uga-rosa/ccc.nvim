@@ -132,13 +132,23 @@ function Color:str()
     return self.output.str(self.input:get_rgb())
 end
 
----@param value? integer[]
+---@param index? integer
+---@param new_value? number
 ---@return string
-function Color:hex(value)
-    if not value then
-        value = self.input:get()
+function Color:hex(index, new_value)
+    local RGB
+    if index and new_value then
+        local pre_value = {}
+        -- copy
+        for i, v in ipairs(self.input.value) do
+            pre_value[i] = v
+        end
+        self.input:callback(index, new_value)
+        RGB = self.input:get_rgb()
+        self.input.value = pre_value
+    else
+        RGB = self.input:get_rgb()
     end
-    local RGB = self.input.to_rgb(value)
     return hex.str(RGB)
 end
 

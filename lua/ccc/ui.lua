@@ -223,9 +223,8 @@ function UI:highlight()
         for j = 0, bar_len - 1 do
             end_ = update_end(j == point_idx, start, #bar_char, #point_char)
 
-            local _value = { unpack(value) }
-            _value[i] = (j + 0.5) / bar_len * (max - min) + min
-            local hex = self.color:hex(_value)
+            local new_value = (j + 0.5) / bar_len * (max - min) + min
+            local hex = self.color:hex(i, new_value)
             local color_name = "CccBar" .. i .. "_" .. j
             set_hl(self.ns_id, color_name, { fg = hex })
             add_hl(self.bufnr, self.ns_id, color_name, i, start, end_)
