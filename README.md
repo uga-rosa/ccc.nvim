@@ -1,17 +1,17 @@
 ## Selectable input/output mode
 
-![ccc](https://user-images.githubusercontent.com/82267684/190639755-6b1f3ea3-35f9-461a-be37-2df30146a9bc.gif)
+![toggle](https://user-images.githubusercontent.com/82267684/190847776-81763c84-2662-4693-97df-b15e8d9115ec.gif)
 
 ## Restore previously used colors
 
-![prev](https://user-images.githubusercontent.com/82267684/190639758-a974b892-6266-480d-96d3-2348d84e6369.gif)
+![prev](https://user-images.githubusercontent.com/82267684/190847777-e1f434f9-a8f9-4cb9-b496-cbd849e71a9c.gif)
 
 ## Use multiple color spaces simultaneously
 
-- Advanced setting
+- Advanced settings
 - See wiki
 
-![multi](https://user-images.githubusercontent.com/82267684/190832932-a0751236-b77a-470c-a1f2-20e1ef054c02.gif)
+![multi](https://user-images.githubusercontent.com/82267684/190847778-751e7656-985b-47e7-890f-91339ee354e9.gif)
 
 # ccc.nvim
 
