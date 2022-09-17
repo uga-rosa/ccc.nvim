@@ -6,7 +6,7 @@ local convert = {}
 ---@param RGB number[]
 ---@return number[] HSLuv
 function convert.rgb2hsluv(RGB)
-    RGB = vim.tbl_map(function (x)
+    RGB = vim.tbl_map(function(x)
         return x / 255
     end, RGB)
     return hsluv.rgb_to_hsluv(RGB)
@@ -16,7 +16,7 @@ end
 ---@return number[] RGB
 function convert.hsluv2rgb(HSLuv)
     RGB = hsluv.hsluv_to_rgb(HSLuv)
-    return vim.tbl_map(function (x)
+    return vim.tbl_map(function(x)
         return x * 255
     end, RGB)
 end
@@ -54,10 +54,12 @@ function convert.rgb2hsl(RGB)
 
     L = (MAX + MIN) / 2 * 100 / 255
 
-    if not S and L <= 50 then
-        S = (MAX - MIN) / (MAX + MIN) * 100
-    else
-        S = (MAX - MIN) / (510 - (MAX + MIN)) * 100
+    if S == nil then
+        if L <= 50 then
+            S = (MAX - MIN) / (MAX + MIN) * 100
+        else
+            S = (MAX - MIN) / (510 - (MAX + MIN)) * 100
+        end
     end
 
     return { H, S, L }

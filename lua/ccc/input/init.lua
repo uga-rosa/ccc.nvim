@@ -12,7 +12,7 @@
 local ColorInput = {}
 
 function ColorInput.format(v)
-    return ("%6d"):format(v)
+    return ("%6d"):format(v):sub(1, 6)
 end
 
 function ColorInput:new()
