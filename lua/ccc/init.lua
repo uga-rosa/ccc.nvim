@@ -17,6 +17,7 @@ local M = {
     },
     pickers = {
         hex = require("ccc.picker.hex"),
+        hex_short = require("ccc.picker.hex_short"),
         css_rgb = require("ccc.picker.css_rgb"),
         css_hsl = require("ccc.picker.css_hsl"),
     },

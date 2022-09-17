@@ -27,6 +27,7 @@ return {
     },
     pickers = {
         ccc.pickers.hex,
+        ccc.pickers.hex_short,
         ccc.pickers.css_rgb,
         ccc.pickers.css_hsl,
     },

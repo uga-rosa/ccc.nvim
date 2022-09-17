@@ -151,12 +151,14 @@ pickers ~
 table
 Default: {
 	ccc.pickers.hex,
+	ccc.pickers.hex_short,
 	ccc.pickers.css_rgb,
 	ccc.pickers.css_hsl,
 }
 	List of formats that can be detected by |:CccPick| to be activated.
 	The presets currently available are as follows:
 		- HEX:    ccc.pickers.hex
+			  ccc.pickers.hex_short
 		- CssRGB: ccc.pickers.css_rgb
 		- CssHSL: ccc.pickers.css_hsl
 
