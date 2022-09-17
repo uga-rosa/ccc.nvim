@@ -9,6 +9,7 @@ local M = {
         lab = require("ccc.input.lab"),
         hsluv = require("ccc.input.hsluv"),
         xyz = require("ccc.input.xyz"),
+        hsv = require("ccc.input.hsv"),
     },
     outputs = {
         hex = require("ccc.output.hex"),

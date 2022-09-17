@@ -30,12 +30,6 @@ end
 ---@return integer[] HSL
 function convert.rgb2hsl(RGB)
     local R, G, B = unpack(RGB)
-    vim.validate({
-        R = { R, "n" },
-        G = { G, "n" },
-        B = { B, "n" },
-    })
-
     local H, S, L
 
     local MAX = utils.max(R, G, B)
@@ -70,12 +64,6 @@ end
 ---@return number[] RGB
 function convert.hsl2rgb(HSL)
     local H, S, L = unpack(HSL)
-    vim.validate({
-        H = { H, "n" },
-        S = { S, "n" },
-        L = { L, "n" },
-    })
-
     local RGB
 
     H = H % 360
@@ -84,6 +72,70 @@ function convert.hsl2rgb(HSL)
 
     local MAX = (L + L_ * S)
     local MIN = (L - L_ * S)
+
+    local function f(x)
+        return x / 60 * (MAX - MIN) + MIN
+    end
+
+    if H < 60 then
+        RGB = { MAX, f(H), MIN }
+    elseif H < 120 then
+        RGB = { f(120 - H), MAX, MIN }
+    elseif H < 180 then
+        RGB = { MIN, MAX, f(H - 120) }
+    elseif H < 240 then
+        RGB = { MIN, f(240 - H), MAX }
+    elseif H < 300 then
+        RGB = { f(H - 240), MIN, MAX }
+    else
+        RGB = { MAX, MIN, f(360 - H) }
+    end
+
+    return RGB
+end
+
+---@param RGB number[]
+---@return number[] HSV
+function convert.rgb2hsv(RGB)
+    local R, G, B = unpack(RGB)
+    local H, S, V
+
+    local MAX = utils.max(R, G, B)
+    local MIN = utils.min(R, G, B)
+
+    if MAX == MIN then
+        H = 0
+        S = 0
+    else
+        if MAX == R then
+            H = (G - B) / (MAX - MIN) * 60
+        elseif MAX == G then
+            H = (B - R) / (MAX - MIN) * 60 + 120
+        else
+            H = (R - G) / (MAX - MIN) * 60 + 240
+        end
+        H = H % 360
+
+        if V == 0 then
+            S = 0
+        else
+            S = (MAX - MIN) / MAX
+        end
+    end
+
+    V = MAX
+
+    return { H, S, V }
+end
+
+---@param HSV number[]
+---@return number[] RGB
+function convert.hsv2rgb(HSV)
+    local H, S, V = unpack(HSV)
+    local RGB
+
+    local MAX = V
+    local MIN = MAX - S * MAX
 
     local function f(x)
         return x / 60 * (MAX - MIN) + MIN

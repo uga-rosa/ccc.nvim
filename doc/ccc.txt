@@ -127,6 +127,7 @@ Default: {
 		- Lab:   ccc.inputs.lab
 		- HSLuv: ccc.inputs.hsluv
 		- XYZ:   ccc.inputs.xyz
+		- HSV:   ccc.inputs.hsv
 
 
                                                             *ccc-option-outputs*
