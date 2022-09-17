@@ -10,8 +10,8 @@ local HexPicker = {
 ---@return integer end_
 ---@return integer[] RGB
 ---@overload fun(self: HexPicker, s: string): nil
-function HexPicker:parse_color(s)
-    local start, end_, cap1, cap2, cap3 = s:find(self.pattern)
+function HexPicker.parse_color(s)
+    local start, end_, cap1, cap2, cap3 = s:find(HexPicker.pattern)
     if start == nil then
         ---@diagnostic disable-next-line
         return nil

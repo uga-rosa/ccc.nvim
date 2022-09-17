@@ -10,8 +10,8 @@ local CssRgbPicker = {
 ---@return integer end_
 ---@return integer[] RGB
 ---@overload fun(self: CssRgbPicker, s: string): nil
-function CssRgbPicker:parse_color(s)
-    local start, end_, cap1, cap2, cap3 = s:find(self.pattern)
+function CssRgbPicker.parse_color(s)
+    local start, end_, cap1, cap2, cap3 = s:find(CssRgbPicker.pattern)
     if start == nil then
         ---@diagnostic disable-next-line
         return nil

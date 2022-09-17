@@ -11,8 +11,8 @@ local CssHslPicker = {
 ---@return integer end_
 ---@return integer[] RGB
 ---@overload fun(self: CssHslPicker, s: string): nil
-function CssHslPicker:parse_color(s)
-    local start, end_, cap1, cap2, cap3 = s:find(self.pattern)
+function CssHslPicker.parse_color(s)
+    local start, end_, cap1, cap2, cap3 = s:find(CssHslPicker.pattern)
     if start == nil then
         ---@diagnostic disable-next-line
         return

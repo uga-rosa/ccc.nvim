@@ -98,7 +98,7 @@ end
 ---@overload fun(self: Color, s: string): nil
 function Color:pick(s)
     for _, picker in ipairs(self._pickers) do
-        local start, end_, RGB = picker:parse_color(s)
+        local start, end_, RGB = picker.parse_color(s)
         if start then
             return start, end_, RGB
         end
