@@ -25,6 +25,8 @@ Super powerful color picker plugin.
     - Restore previously used colors.
     - Selectable output formats.
 
+**If you use release version (0.7.2), use barnch** `0.7.2`
+
 # Setup
 
 If you do not want to change the default setting, there is no need to call setup (Empty setup is done automatically by plugin/ccc.lua).
