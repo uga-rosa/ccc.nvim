@@ -183,10 +183,10 @@ local function create_bar(value, min, max, bar_len)
 end
 
 function UI:buffer()
-    local bar_len = config.get("bar_len")
+    local buffer = {}
 
-    local buffer = { self.input_mode }
     local width
+    local bar_len = config.get("bar_len")
     local input = self.color.input
     for i, v in ipairs(self.color:get()) do
         local line = input.bar_name[i]
@@ -194,14 +194,17 @@ function UI:buffer()
             .. input.format(v, i)
             .. " "
             .. create_bar(v, input.min[i], input.max[i], bar_len)
-        table.insert(buffer, line)
+        buffer[i] = line
         if i == 1 then
             width = api.nvim_strwidth(line)
         end
     end
     self.win_width = width
 
-    local output_line = config.get("output_line")(self.before_color, self.color, self.win_width)
+    local mode = self.input_mode
+    table.insert(buffer, 1, mode .. string.rep(" ", width - #mode))
+
+    local output_line = config.get("output_line")(self.before_color, self.color, width)
     table.insert(buffer, output_line)
 
     return buffer
@@ -209,6 +212,11 @@ end
 
 function UI:highlight()
     api.nvim_buf_clear_namespace(self.bufnr, self.ns_id, 0, -1)
+    local hl_group = config.get("hl_group")
+    for i = 0, self.win_height - 1 do
+        add_hl(self.bufnr, self.ns_id, hl_group, i, 0, -1)
+    end
+
     local value = self.color:get()
 
     local bar_char = config.get("bar_char")

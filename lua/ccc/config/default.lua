@@ -6,6 +6,7 @@ return {
     bar_char = "■",
     point_char = "◇",
     bar_len = 30,
+    hl_group = "NormalFloat",
     win_opts = {
         relative = "cursor",
         row = 1,

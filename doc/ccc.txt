@@ -94,6 +94,13 @@ Default: {
 	be specified.
 
 
+                                                           *ccc-option-hl-group*
+hl_group ~
+string
+Default: NormalFloat
+	A highlight group set for the entire UI buffer.
+
+
                                                            *ccc-option-preserve*
 preserve ~
 boolean
