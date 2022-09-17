@@ -12,6 +12,7 @@ local M = {
     },
     outputs = {
         hex = require("ccc.output.hex"),
+        hex_short = require("ccc.output.hex_short"),
         css_rgb = require("ccc.output.css_rgb"),
         css_hsl = require("ccc.output.css_hsl"),
     },

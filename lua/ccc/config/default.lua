@@ -22,6 +22,7 @@ return {
     },
     outputs = {
         ccc.outputs.hex,
+        ccc.outputs.hex_short,
         ccc.outputs.css_rgb,
         ccc.outputs.css_hsl,
     },

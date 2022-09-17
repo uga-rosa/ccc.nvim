@@ -134,6 +134,7 @@ outputs ~
 table
 Default: {
 	ccc.outputs.hex,
+	ccc.outputs.hex_short,
 	ccc.outputs.css_rgb,
 	ccc.outputs.css_hsl,
 }
@@ -142,6 +143,7 @@ Default: {
 	startup. Once activated, it will keep the previous output mode.
 	The presets currently available are as follows:
 		- HEX:    ccc.outputs.hex
+		          ccc.outputs.hex_short
 		- CssRGB: ccc.outputs.css_rgb
 		- CssHSL: ccc.outputs.css_hsl
 
@@ -158,7 +160,7 @@ Default: {
 	List of formats that can be detected by |:CccPick| to be activated.
 	The presets currently available are as follows:
 		- HEX:    ccc.pickers.hex
-			  ccc.pickers.hex_short
+		          ccc.pickers.hex_short
 		- CssRGB: ccc.pickers.css_rgb
 		- CssHSL: ccc.pickers.css_hsl
 
