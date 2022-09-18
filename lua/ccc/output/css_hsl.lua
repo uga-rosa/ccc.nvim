@@ -1,4 +1,3 @@
-local UI = require("ccc.ui")
 local convert = require("ccc.utils.convert")
 
 ---@class CssHslOutput: ColorOutput
@@ -7,14 +6,15 @@ local CssHslOutput = {
 }
 
 ---@param RGB number[]
+---@param alpha AlphaSlider
 ---@return string
-function CssHslOutput.str(RGB)
+function CssHslOutput.str(RGB, alpha)
     local H, S, L = unpack(convert.rgb2hsl(RGB))
     S = S * 100
     L = L * 100
-    if UI.alpha.is_showed then
+    if alpha.is_showed then
         local pattern = "hsl(%d,%d%%,%d%%,%d%%)"
-        local A = UI.alpha:get() * 100
+        local A = alpha:get() * 100
         return pattern:format(H, S, L, A)
     else
         local pattern = "hsl(%d,%d%%,%d%%)"

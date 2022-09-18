@@ -9,15 +9,18 @@ local hex = require("ccc.output.hex")
 ---@field output_idx integer
 ---@field _inputs ColorInput[]
 ---@field _outputs ColorOutput[]
+---@field alpha AlphaSlider
 local Color = {}
 
 ---@param input_mode? string
 ---@param output_mode? string
+---@param alpha AlphaSlider
 ---@return Color
-function Color.new(input_mode, output_mode)
+function Color.new(input_mode, output_mode, alpha)
     local self = setmetatable({
         _inputs = config.get("inputs"),
         _outputs = config.get("outputs"),
+        alpha = alpha,
     }, { __index = Color })
     for i, input in ipairs(self._inputs) do
         self._inputs[i] = input:new()
@@ -60,7 +63,7 @@ end
 
 ---@return Color
 function Color:copy()
-    local new = Color.new()
+    local new = Color.new(nil, nil, self.alpha)
     new.input_idx = self.input_idx
     new.input = new._inputs[new.input_idx]
     new:set_rgb(self:get_rgb())
@@ -111,7 +114,7 @@ end
 
 ---@return string
 function Color:str()
-    return self.output.str(self.input:get_rgb())
+    return self.output.str(self.input:get_rgb(), self.alpha)
 end
 
 ---@param index? integer

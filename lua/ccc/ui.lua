@@ -11,6 +11,8 @@ local alpha = require("ccc.alpha")
 
 ---@class UI
 ---@field color Color
+---@field input_mode string
+---@field output_mode string
 ---@field pickers ColorPicker[]
 ---@field before_color Color #Picked color or default
 ---@field bufnr integer
@@ -26,36 +28,36 @@ local alpha = require("ccc.alpha")
 ---@field prev_colors PrevColors
 local UI = {}
 
+function UI:new()
+    self.alpha = alpha.new(self)
+    self.color = Color.new(nil, nil, self.alpha)
+    self.input_mode = self.color.input.name
+    self.output_mode = self.color.output.name
+    self.bufnr = api.nvim_create_buf(false, true)
+    api.nvim_buf_set_option(self.bufnr, "buftype", "nofile")
+    api.nvim_buf_set_option(self.bufnr, "modifiable", false)
+    api.nvim_buf_set_option(self.bufnr, "filetype", "ccc-ui")
+    local mappings = config.get("mappings")
+    for lhs, rhs in pairs(mappings) do
+        vim.keymap.set("n", lhs, rhs, { nowait = true, buffer = self.bufnr })
+    end
+    self.ns_id = api.nvim_create_namespace("ccc")
+    self.prev_colors = prev_colors.new(self)
+end
+
 function UI:init()
-    if self.color == nil or not config.get("preserve") then
-        self.color = Color.new(self.input_mode, self.output_mode)
-    else
+    if config.get("preserve") then
         self.color = self.color:copy()
+    else
+        self.color = Color.new(self.input_mode, self.output_mode, self.alpha)
+        self:set_default_color()
     end
-    self.input_mode = self.input_mode or self.color.input.name
-    self.output_mode = self.output_mode or self.color.output.name
-    self:set_default_color()
     self.win_height = 2 + #self.color.input.value
-    if self.bufnr == nil then
-        self.bufnr = api.nvim_create_buf(false, true)
-        api.nvim_buf_set_option(self.bufnr, "buftype", "nofile")
-        api.nvim_buf_set_option(self.bufnr, "modifiable", false)
-        api.nvim_buf_set_option(self.bufnr, "filetype", "ccc-ui")
-        local mappings = config.get("mappings")
-        for lhs, rhs in pairs(mappings) do
-            vim.keymap.set("n", lhs, rhs, { nowait = true, buffer = self.bufnr })
-        end
-    end
-    if self.ns_id == nil then
-        self.ns_id = api.nvim_create_namespace("ccc")
-    end
     self.row = utils.row()
     self.start_col = utils.col()
-    self.alpha = self.alpha or alpha.new(self)
     if self.alpha.is_showed then
         self.win_height = self.win_height + 1
     end
-    self.prev_colors = self.prev_colors or prev_colors.new(self)
 end
 
 function UI:set_default_color()
@@ -75,6 +77,9 @@ end
 
 ---@param insert boolean
 function UI:open(insert)
+    if self.color == nil then
+        self:new()
+    end
     if api.nvim_win_is_valid(self.win_id or -1) then
         return
     end
