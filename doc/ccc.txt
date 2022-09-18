@@ -23,6 +23,7 @@ Features:
 - Dynamic highlighting of sliders.
 - Record and restore previously used colors.
 - Selectable output formats.
+- Transparent slider (for css rgb()/hsl())
 
 
 

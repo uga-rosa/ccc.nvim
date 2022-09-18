@@ -24,6 +24,7 @@ Super powerful color picker plugin.
     - Dynamic highlighting of sliders.
     - Restore previously used colors.
     - Selectable output formats.
+    - Transparent slider (for css `rgb()`/`hsl()`)
 
 **If you use release version (0.7.2), use barnch** `0.7.2`
 
@@ -88,6 +89,7 @@ local mapping = ccc.mapping
     - Default mapping: `a`
 	- Toggle show/hide alpha (transparency) slider.
 	- Transparency is used only when output mode is `css_rgb` or `css_hsl`.
+    - `mapping.toggle_alpha()`
 
 - toggle_prev_colors
     - Default mapping: `g`
