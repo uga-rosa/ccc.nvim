@@ -1,24 +1,31 @@
 local convert = require("ccc.utils.convert")
 
 ---@class CssHslPicker: ColorPicker
-local CssHslPicker = {
-    pattern = "hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%%)",
-}
+local CssHslPicker = {}
 
 ---@param s string
 ---@return integer start
 ---@return integer end_
 ---@return number[] RGB
+---@return number alpha
 ---@overload fun(self: CssHslPicker, s: string): nil
 function CssHslPicker.parse_color(s)
-    local start, end_, cap1, cap2, cap3 = s:find(CssHslPicker.pattern)
+    local start, end_, cap1, cap2, cap3, cap4, A
+    start, end_, cap1, cap2, cap3 = s:find("hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%%)")
     if start == nil then
-        ---@diagnostic disable-next-line
-        return
+        start, end_, cap1, cap2, cap3, cap4 =
+            s:find("hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%,%s*(%d+)%%%)")
+        if start == nil then
+            ---@diagnostic disable-next-line
+            return
+        end
+        A = tonumber(cap4) / 100
     end
-    local HSL = vim.tbl_map(tonumber, { cap1, cap2, cap3 })
-    local RGB = convert.hsl2rgb(HSL)
-    return start, end_, RGB
+    local H = tonumber(cap1)
+    local S = tonumber(cap2) / 100
+    local L = tonumber(cap3) / 100
+    local RGB = convert.hsl2rgb({ H, S, L })
+    return start, end_, RGB, A
 end
 
 return CssHslPicker

@@ -363,7 +363,7 @@ end
 function UI:pick()
     ---@type string
     local current_line = api.nvim_get_current_line()
-    local start, end_, RGB = self:_pick(current_line)
+    local start, end_, RGB, A = self:_pick(current_line)
     local cursor_col = utils.col()
     if start and start <= cursor_col and cursor_col <= end_ then
         ---@cast end_ integer
@@ -372,6 +372,10 @@ function UI:pick()
         self.end_col = end_
         self.color:set_rgb(RGB)
         self.before_color = self.color
+        if A then
+            self.alpha:set(A)
+            self.alpha:show(true)
+        end
     else
         self.end_col = self.start_col - 1
     end

@@ -8,23 +8,25 @@ local utils = require("ccc.utils")
 local AlphaSlider = {}
 
 ---@param ui UI
----@param value? number
 ---@return AlphaSlider
-function AlphaSlider.new(ui, value)
+function AlphaSlider.new(ui)
     return setmetatable({
         ui = ui,
-        value = value or 1,
+        value = 1,
     }, { __index = AlphaSlider })
 end
 
-function AlphaSlider:show()
+---@param cursor_keep? boolean
+function AlphaSlider:show(cursor_keep)
     self.is_showed = true
     local ui = self.ui
     ui:update()
     ui.win_height = ui.win_height + 1
     ui:refresh()
-    self.prev_pos = utils.cursor()
-    utils.cursor_set({ ui.win_height - 1, 1 })
+    if not cursor_keep then
+        self.prev_pos = utils.cursor()
+        utils.cursor_set({ ui.win_height - 1, 1 })
+    end
 end
 
 function AlphaSlider:hide()
@@ -33,7 +35,9 @@ function AlphaSlider:hide()
     ui:update()
     ui.win_height = ui.win_height - 1
     ui:refresh()
-    utils.cursor_set(self.prev_pos)
+    if self.prev_pos then
+        utils.cursor_set(self.prev_pos)
+    end
 end
 
 function AlphaSlider:toggle()
@@ -60,7 +64,7 @@ function AlphaSlider:str()
     return ("%5d%%"):format(self.value * 100)
 end
 
----@param value number
+---@param value? number
 function AlphaSlider:hex(value)
     value = value or self.value
     local h = math.floor(255 - value * 255)
