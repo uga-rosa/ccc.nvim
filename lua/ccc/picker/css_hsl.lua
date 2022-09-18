@@ -4,14 +4,16 @@ local convert = require("ccc.utils.convert")
 local CssHslPicker = {}
 
 ---@param s string
+---@param init? integer
 ---@return integer start
 ---@return integer end_
 ---@return number[] RGB
 ---@return number alpha
 ---@overload fun(s: string): nil
-function CssHslPicker.parse_color(s)
+function CssHslPicker.parse_color(s, init)
+    init = init or 1
     local start, end_, cap1, cap2, cap3, cap4, A
-    start, end_, cap1, cap2, cap3 = s:find("hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%%)")
+    start, end_, cap1, cap2, cap3 = s:find("hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%%)", init)
     if start == nil then
         start, end_, cap1, cap2, cap3, cap4 =
             s:find("hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%,%s*(%d+)%%%)")

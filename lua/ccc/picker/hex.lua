@@ -4,12 +4,14 @@ local sa = require("ccc.utils.safe_array")
 local HexPicker = {}
 
 ---@param s string
+---@param init? integer
 ---@return integer start
 ---@return integer end_
 ---@return integer[] RGB
 ---@overload fun(s: string): nil
-function HexPicker.parse_color(s)
-    local start, end_, cap1, cap2, cap3 = s:find("#(%x%x)(%x%x)(%x%x)")
+function HexPicker.parse_color(s, init)
+    init = init or 1
+    local start, end_, cap1, cap2, cap3 = s:find("#(%x%x)(%x%x)(%x%x)", init)
     if start == nil then
         ---@diagnostic disable-next-line
         return nil
