@@ -105,7 +105,7 @@ function UI:close()
     if self.is_insert then
         vim.cmd("startinsert")
     end
-    vim.g.ccc_color = ""
+    self:_set_color("")
 end
 
 function UI:refresh()
@@ -152,7 +152,14 @@ function UI:update()
     if self.win_width ~= prev_width then
         self:refresh()
     end
-    vim.g.ccc_color = self.color:hex()
+    self:_set_color()
+end
+
+---@param color? string HEX format color or empty string ("")
+function UI:_set_color(color)
+    color = vim.F.if_nil(color, self.color:hex())
+    vim.g.ccc_color = color
+    vim.cmd("do User CccColorChanged")
 end
 
 ---@param value number

@@ -7,8 +7,10 @@ Contents                                                          *ccc-contents*
 Introduction						|ccc-introduction|
 Setup							|ccc-setup|
 Option							|ccc-option|
-Interface						|ccc-interface|
+Command							|ccc-command|
+Key mapping						|ccc-key-mapping|
 Variable						|ccc-variable|
+Autocmd							|ccc-autocmd|
 Action							|ccc-action|
 
 
@@ -202,10 +204,6 @@ Default: See |ccc-action|
 
 
 ==============================================================================
-Interface                                                        *ccc-interface*
-
-
-------------------------------------------------------------------------------
 Command                                                            *ccc-command*
 
 
@@ -216,7 +214,8 @@ Command                                                            *ccc-command*
 	is inserted at a cursor position.
 
 
-------------------------------------------------------------------------------
+
+==============================================================================
 Key mapping                                                    *ccc-key-mapping*
 
 
@@ -238,10 +237,20 @@ g:ccc_color ~
 
 
 ==============================================================================
+Autocmd                                                            *ccc-autocmd*
+
+
+                                                               *CccColorChanged*
+CccColorChanged ~
+	After changing |g:ccc_color|.
+
+
+
+==============================================================================
 Action                                                              *ccc-action*
 
 
-All functions are implemented as lua functions.
+All actions are implemented as lua functions.
 To customize, use |ccc-option-mappings|.
 
 >
