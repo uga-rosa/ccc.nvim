@@ -55,8 +55,8 @@ Option                                                             *ccc-option*
 default_color ~
 string
 Default: "#000000"
-	The default color used when a color cannot be picked. See also
-	|ccc-option-preserve|.
+	The default color used when a color cannot be picked. It must be HEX
+	format. See also |ccc-option-preserve|.
 
 
                                                            *ccc-option-bar-char*
@@ -71,6 +71,15 @@ point_char ~
 string
 Default: "◇"
 	The character used for the cursor point on the sliders.
+
+
+                                                        *ccc-option-point-color*
+point_color ~
+string
+Default: ""
+	The color of the cursor point on the sliders. It must be HEX format.
+	If it is empty string (""), like the other part of the sliders, it is
+	dynamically highlighted.
 
 
                                                             *ccc-option-bar-len*

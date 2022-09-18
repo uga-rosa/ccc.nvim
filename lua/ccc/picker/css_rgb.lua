@@ -8,7 +8,7 @@ local CssRgbPicker = {}
 ---@return integer end_
 ---@return number[] RGB
 ---@return number alpha
----@overload fun(self: CssRgbPicker, s: string): nil
+---@overload fun(s: string): nil
 function CssRgbPicker.parse_color(s)
     local start, end_, cap1, cap2, cap3, cap4, A
     -- no transparent

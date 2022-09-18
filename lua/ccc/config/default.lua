@@ -5,6 +5,7 @@ return {
     default_color = "#000000",
     bar_char = "■",
     point_char = "◇",
+    point_color = "",
     bar_len = 30,
     hl_group = "NormalFloat",
     win_opts = {

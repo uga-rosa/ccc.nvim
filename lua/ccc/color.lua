@@ -120,14 +120,10 @@ end
 function Color:hex(index, new_value)
     local RGB
     if index and new_value then
-        local pre_value = {}
-        -- copy
-        for i, v in ipairs(self.input.value) do
-            pre_value[i] = v
-        end
+        local pre = self:get_rgb()
         self.input:callback(index, new_value)
         RGB = self.input:get_rgb()
-        self.input.value = pre_value
+        self:set_rgb(pre)
     else
         RGB = self.input:get_rgb()
     end

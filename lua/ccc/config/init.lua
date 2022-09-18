@@ -13,6 +13,7 @@ function M.setup(opt)
         ["config.default_color"] = { M.config.default_color, "s" },
         ["config.bar_char"] = { M.config.bar_char, "s" },
         ["config.point_char"] = { M.config.point_char, "s" },
+        ["config.point_color"] = { M.config.point_color, "s" },
         ["config.bar_len"] = { M.config.bar_len, "n" },
         ["config.hl_group"] = { M.config.hl_group, "s" },
         ["config.win_opts"] = { M.config.win_opts, "t" },

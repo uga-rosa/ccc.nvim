@@ -7,7 +7,7 @@ local HexShortPicker = {}
 ---@return integer start
 ---@return integer end_
 ---@return integer[] RGB
----@overload fun(self: HexPicker, s: string): nil
+---@overload fun(s: string): nil
 function HexShortPicker.parse_color(s)
     local start, end_, cap1, cap2, cap3 = s:find("#(%x)(%x)(%x)")
     if start == nil then

@@ -60,9 +60,8 @@ end
 
 function UI:set_default_color()
     local default_color = config.get("default_color")
-    local start, _, RGB = self:_pick(default_color)
-    assert(start, "Invalid color format: " .. default_color)
-    ---@cast RGB number[]
+    local _, _, RGB = require("ccc.picker.hex").parse_color(default_color)
+    assert(RGB, "default_color must be HEX format (#ffffff)")
     self.color:set_rgb(RGB)
 end
 
@@ -154,14 +153,6 @@ function UI:update()
     end
 end
 
-local function update_end(is_point, start, bar_char_len, point_char_len)
-    if is_point then
-        return start + point_char_len
-    else
-        return start + bar_char_len
-    end
-end
-
 ---@param value number
 ---@param min number
 ---@param max number
@@ -170,7 +161,11 @@ end
 local function ratio(value, min, max, bar_len)
     value = value - min
     max = max - min
-    return utils.round(value / max * bar_len)
+    local r = utils.round(value / max * bar_len)
+    if r == 0 then
+        r = 1
+    end
+    return r
 end
 
 ---@param value number
@@ -226,6 +221,19 @@ function UI:buffer()
     return buffer
 end
 
+---@param is_point boolean
+---@param start integer
+---@param bar_char_len integer
+---@param point_char_len integer
+---@return integer
+local function update_end(is_point, start, bar_char_len, point_char_len)
+    if is_point then
+        return start + point_char_len
+    else
+        return start + bar_char_len
+    end
+end
+
 function UI:highlight()
     api.nvim_buf_clear_namespace(self.bufnr, self.ns_id, 0, -1)
     local hl_group = config.get("hl_group")
@@ -233,26 +241,37 @@ function UI:highlight()
         add_hl(self.bufnr, self.ns_id, hl_group, i, 0, -1)
     end
 
-    local value = self.color:get()
-
     local bar_char = config.get("bar_char")
     local point_char = config.get("point_char")
+    local point_color = config.get("point_color")
     local bar_len = config.get("bar_len")
     local bar_name_len = #self.color.input.bar_name[1]
-    -- See ColorInput.format()
+    -- The specification for ColorInput.format() specifies that it should be 6 bytes.
     local value_len = 6
-    -- 3 means ' : ', 1 means ' '
-    for i, v in ipairs(value) do
+    local row = 0
+    for i = 1, #self.color:get() do
+        row = row + 1
+        -- Using ipairs arises weird problem where v is rewritten to a different value.
+        -- Temporary storage in a variable does the same thing; I have to call self.color:get() twice to avoid it.
+        -- It seems to be caused by processing within self.color:hex(), but it maybe a bug of Lua(jit).
+        local v = self.color:get()[i]
+
         local max = self.color.input.max[i]
         local min = self.color.input.min[i]
         local point_idx = ratio(v, min, max, bar_len)
+        -- 3 means ' : ', 1 means ' '
         local start = bar_name_len + 3 + value_len + 1
         local end_
-        for j = 0, bar_len - 1 do
+        for j = 1, bar_len do
             end_ = update_end(j == point_idx, start, #bar_char, #point_char)
 
-            local new_value = (j + 0.5) / bar_len * (max - min) + min
-            local hex = self.color:hex(i, new_value)
+            local new_value = (j - 0.5) / bar_len * (max - min) + min
+            local hex
+            if point_color ~= "" and j == point_idx then
+                hex = point_color
+            else
+                hex = self.color:hex(i, new_value)
+            end
             local color_name = "CccBar" .. i .. "_" .. j
             set_hl(self.ns_id, color_name, { fg = hex })
             add_hl(self.bufnr, self.ns_id, color_name, i, start, end_)
@@ -260,8 +279,6 @@ function UI:highlight()
             start = end_
         end
     end
-
-    local row = #value -- 0-index
 
     if self.alpha.is_showed then
         row = row + 1
@@ -345,25 +362,16 @@ function UI:set_percent(percent)
     self:update()
 end
 
----comment
----@param s string
----@return integer? start
----@return integer? end_
----@return number[]? RGB
-function UI:_pick(s)
-    for _, picker in ipairs(config.get("pickers")) do
-        local start, end_, RGB = picker.parse_color(s)
-        if start then
-            return start, end_, RGB
-        end
-    end
-    return nil
-end
-
 function UI:pick()
     ---@type string
     local current_line = api.nvim_get_current_line()
-    local start, end_, RGB, A = self:_pick(current_line)
+    local start, end_, RGB, A
+    for _, picker in ipairs(config.get("pickers")) do
+        start, end_, RGB, A = picker.parse_color(current_line)
+        if start then
+            break
+        end
+    end
     local cursor_col = utils.col()
     if start and start <= cursor_col and cursor_col <= end_ then
         ---@cast end_ integer
