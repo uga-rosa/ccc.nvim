@@ -8,6 +8,7 @@ Introduction						|ccc-introduction|
 Setup							|ccc-setup|
 Option							|ccc-option|
 Interface						|ccc-interface|
+Variable						|ccc-variable|
 Action							|ccc-action|
 
 
@@ -222,6 +223,17 @@ Key mapping                                                    *ccc-key-mapping*
                                                             *<Plug>(ccc-insert)*
 <Plug>(ccc-insert) ~
 	Defined in insert mode. Insert the color without detection.
+
+
+
+==============================================================================
+Variable                                                          *ccc-variable*
+
+
+                                                                   *g:ccc_color*
+g:ccc_color ~
+	The color currently being edited is stored in HEX format. If the ccc
+	UI is not open, it is empty string ("").
 
 
 
