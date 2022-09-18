@@ -7,6 +7,7 @@ local Color = require("ccc.color")
 local config = require("ccc.config")
 local utils = require("ccc.utils")
 local prev_colors = require("ccc.prev_colors")
+local alpha = require("ccc.alpha")
 
 ---@class UI
 ---@field color Color
@@ -21,6 +22,7 @@ local prev_colors = require("ccc.prev_colors")
 ---@field start_col integer 1-index
 ---@field end_col integer 1-index
 ---@field is_insert boolean
+---@field alpha AlphaSlider
 ---@field prev_colors PrevColors
 local UI = {}
 
@@ -49,6 +51,10 @@ function UI:init()
     end
     self.row = utils.row()
     self.start_col = utils.col()
+    self.alpha = self.alpha or alpha.new(self)
+    if self.alpha.is_showed then
+        self.win_height = self.win_height + 1
+    end
     self.prev_colors = self.prev_colors or prev_colors.new(self)
 end
 
@@ -204,6 +210,16 @@ function UI:buffer()
     local mode = self.input_mode
     table.insert(buffer, 1, mode .. string.rep(" ", width - #mode))
 
+    if self.alpha.is_showed then
+        local line = "A"
+            .. string.rep(" ", #input.bar_name[1] - 1)
+            .. " : "
+            .. self.alpha:str()
+            .. " "
+            .. create_bar(self.alpha:get(), 0, 1, bar_len)
+        table.insert(buffer, line)
+    end
+
     local output_line = config.get("output_line")(self.before_color, self.color, width)
     table.insert(buffer, output_line)
 
@@ -222,14 +238,14 @@ function UI:highlight()
     local bar_char = config.get("bar_char")
     local point_char = config.get("point_char")
     local bar_len = config.get("bar_len")
+    local bar_name_len = #self.color.input.bar_name[1]
+    -- See ColorInput.format()
+    local value_len = 6
+    -- 3 means ' : ', 1 means ' '
     for i, v in ipairs(value) do
         local max = self.color.input.max[i]
         local min = self.color.input.min[i]
         local point_idx = ratio(v, min, max, bar_len)
-        local bar_name_len = api.nvim_strwidth(self.color.input.bar_name[1])
-        -- See ColorInput.format()
-        local value_len = 6
-        -- 3 means ' : ', 1 means ' '
         local start = bar_name_len + 3 + value_len + 1
         local end_
         for j = 0, bar_len - 1 do
@@ -245,7 +261,26 @@ function UI:highlight()
         end
     end
 
-    local output_row = #value + 1
+    local row = #value -- 0-index
+
+    if self.alpha.is_showed then
+        row = row + 1
+        local point_idx = ratio(self.alpha:get(), 0, 1, bar_len)
+        local start = bar_name_len + 3 + value_len + 1
+        local end_
+        for i = 0, bar_len - 1 do
+            end_ = update_end(i == point_idx, start, #bar_char, #point_char)
+
+            local hex = self.alpha:hex((i + 0.5) / bar_len)
+            local color_name = "CccAlpha" .. i
+            set_hl(self.ns_id, color_name, { fg = hex })
+            add_hl(self.bufnr, self.ns_id, color_name, row, start, end_)
+
+            start = end_
+        end
+    end
+
+    row = row + 1
 
     local _, b_start_col, b_end_col, a_start_col, a_end_col =
         config.get("output_line")(self.before_color, self.color, self.win_width)
@@ -253,21 +288,21 @@ function UI:highlight()
     local before_bg = self.before_color:hex()
     local before_fg = before_bg > "#800000" and "#000000" or "#ffffff"
     set_hl(self.ns_id, "CccBefore", { fg = before_fg, bg = before_bg })
-    add_hl(self.bufnr, self.ns_id, "CccBefore", output_row, b_start_col, b_end_col)
+    add_hl(self.bufnr, self.ns_id, "CccBefore", row, b_start_col, b_end_col)
 
     local after_bg = self.color:hex()
     local after_fg = after_bg > "#800000" and "#000000" or "#ffffff"
     set_hl(self.ns_id, "CccAfter", { fg = after_fg, bg = after_bg })
-    add_hl(self.bufnr, self.ns_id, "CccAfter", output_row, a_start_col, a_end_col)
+    add_hl(self.bufnr, self.ns_id, "CccAfter", row, a_start_col, a_end_col)
 
     if self.prev_colors.is_showed then
+        row = row + 1
         local start_prev, end_prev = 0, 7
         for i, color in ipairs(self.prev_colors.colors) do
-            local pre_row = output_row + 1
             local pre_bg = color:hex()
             local pre_fg = pre_bg > "#800000" and "#000000" or "#ffffff"
             set_hl(self.ns_id, "CccPrev" .. i, { fg = pre_fg, bg = pre_bg })
-            add_hl(self.bufnr, self.ns_id, "CccPrev" .. i, pre_row, start_prev, end_prev)
+            add_hl(self.bufnr, self.ns_id, "CccPrev" .. i, row, start_prev, end_prev)
             start_prev = end_prev + 1
             end_prev = start_prev + 7
         end
@@ -277,26 +312,36 @@ end
 ---@param d integer
 function UI:delta(d)
     local index = utils.row() - 1
-    if index < 1 or #self.color.input.value < index then
+    local input = self.color.input
+    if 1 <= index and index <= #input.value then
+        local value = input.value[index]
+        local delta = input.delta[index] * d
+        local new_value = utils.fix_overflow(value + delta, input.min[index], input.max[index])
+        input:callback(index, new_value)
+    elseif self.alpha.is_showed and index == #input.value + 1 then
+        local value = self.alpha:get()
+        local new_value = utils.fix_overflow(value + d / 100, 0, 1)
+        self.alpha:set(new_value)
+    else
         return
     end
-    local value = self.color.input.value[index]
-    local input = self.color.input
-    local delta = input.delta[index] * d
-    local new_value = utils.fix_overflow(value + delta, input.min[index], input.max[index])
-    self.color.input:callback(index, new_value)
     self:update()
 end
 
 function UI:set_percent(percent)
     local index = utils.row() - 1
-    if index < 1 or #self.color.input.value < index then
+    local input = self.color.input
+    if 1 <= index and index <= #input.value then
+        local max = input.max[index]
+        local min = input.min[index]
+        local new_value = (max - min) * percent / 100 + min
+        input:callback(index, new_value)
+    elseif self.alpha.is_showed and index == #input.value + 1 then
+        local new_value = percent / 100
+        self.alpha:set(new_value)
+    else
         return
     end
-    local max = self.color.input.max[index]
-    local min = self.color.input.min[index]
-    local new_value = (max - min) * percent / 100 + min
-    self.color.input:callback(index, new_value)
     self:update()
 end
 

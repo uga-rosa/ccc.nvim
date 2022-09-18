@@ -39,6 +39,7 @@ return {
         ["<CR>"] = mapping.complete,
         ["i"] = mapping.toggle_input_mode,
         ["o"] = mapping.toggle_output_mode,
+        ["a"] = mapping.toggle_alpha,
         ["g"] = mapping.toggle_prev_colors,
         ["w"] = mapping.goto_next,
         ["b"] = mapping.goto_prev,

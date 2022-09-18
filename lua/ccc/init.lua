@@ -89,6 +89,18 @@ function M.mapping.toggle_output_mode()
     UI:toggle_output_mode()
 end
 
+function M.mapping.show_alpha()
+    UI.alpha:show()
+end
+
+function M.mapping.hide_alpha()
+    UI.alpha:hide()
+end
+
+function M.mapping.toggle_alpha()
+    UI.alpha:toggle()
+end
+
 function M.mapping.show_prev_colors()
     UI.prev_colors:show()
 end

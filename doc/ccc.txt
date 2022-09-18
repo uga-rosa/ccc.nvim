@@ -201,8 +201,8 @@ Command                                                            *ccc-command*
                                                                       *:CccPick*
 :CccPick ~
 	Detects and replaces the color under the cursor. Detectable formats
-	are defined in |ccc-option-pickers|. If nothing is detected, it is
-	inserted at a new cursor position.
+	are defined in |ccc-option-pickers|. If nothing is detected, the color
+	is inserted at a cursor position.
 
 
 ------------------------------------------------------------------------------
@@ -255,6 +255,14 @@ toggle_output_mode ~
 mapping.toggle_output_mode()
 Default mapping: o
 	Toggle output mode. See |ccc-option-outputs|.
+
+
+                                                       *ccc-action-toggle-alpha*
+toggle_alpha ~
+mapping.toggle_alpha()
+Default mapping: a
+	Toggle show/hide alpha (transparency) slider.
+	Transparency is used only when output mode is css_rgb or css_hsl.
 
 
                                                  *ccc-action-toggle-prev-colors*

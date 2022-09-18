@@ -47,7 +47,7 @@ This plugin provides one command and one mapping.
 - `:CccPick`
 	- Detects and replaces the color under the cursor.
     - Detectable formats are defined in `ccc-option-pickers` (See [doc](./doc/ccc.txt)).
-    - If nothing is detected, it is inserted at a new cursor position.
+    - If nothing is detected, the color is inserted at a cursor position.
 
 - `<Plug>(ccc-insert)`
     - Defined in insert mode.
@@ -83,6 +83,11 @@ local mapping = ccc.mapping
     - Default mapping: `o`
     - Toggle output mode. See `ccc-option-outputs` in [doc](./doc/ccc.txt).
     - `mapping.toggle_output_mode()`
+
+- toggle_alpha
+    - Default mapping: `a`
+	- Toggle show/hide alpha (transparency) slider.
+	- Transparency is used only when output mode is `css_rgb` or `css_hsl`.
 
 - toggle_prev_colors
     - Default mapping: `g`
