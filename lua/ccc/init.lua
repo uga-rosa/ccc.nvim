@@ -1,8 +1,9 @@
 local UI = require("ccc.ui")
 local config = require("ccc.config")
+local utils = require("ccc.utils")
 
 local M = {
-    inputs = {
+    input = {
         rgb = require("ccc.input.rgb"),
         hsl = require("ccc.input.hsl"),
         cmyk = require("ccc.input.cmyk"),
@@ -11,13 +12,13 @@ local M = {
         xyz = require("ccc.input.xyz"),
         hsv = require("ccc.input.hsv"),
     },
-    outputs = {
+    output = {
         hex = require("ccc.output.hex"),
         hex_short = require("ccc.output.hex_short"),
         css_rgb = require("ccc.output.css_rgb"),
         css_hsl = require("ccc.output.css_hsl"),
     },
-    pickers = {
+    picker = {
         hex = require("ccc.picker.hex"),
         hex_short = require("ccc.picker.hex_short"),
         css_rgb = require("ccc.picker.css_rgb"),
@@ -25,6 +26,16 @@ local M = {
     },
     mapping = {},
 }
+
+setmetatable(M, {
+    __index = function(self, key)
+        if key == "inputs" or key == "outputs" or key == "pickers" then
+            local properer_key = key:sub(1, -2)
+            utils.notify("ccc.%s is deprecated. Use ccc.%s instead.", key, properer_key)
+            return self[properer_key]
+        end
+    end,
+})
 
 local ready = false
 

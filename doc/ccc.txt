@@ -121,57 +121,57 @@ Default: false
 inputs ~
 table
 Default: {
-	ccc.inputs.rgb,
-	ccc.inputs.hsl,
-	ccc.inputs.cmyk,
+	ccc.input.rgb,
+	ccc.input.hsl,
+	ccc.input.cmyk,
 }
 	List of color system to be activated. |ccc-action-toggle-input-mode|
 	toggles in this order. The first one is the default used at the first
 	startup. Once activated, it will keep the previous input mode.
 	The presets currently available are as follows:
-		- RGB:   ccc.inputs.rgb
-		- HSL:   ccc.inputs.hsl
-		- CMYK:  ccc.inputs.cmyk
-		- Lab:   ccc.inputs.lab
-		- HSLuv: ccc.inputs.hsluv
-		- XYZ:   ccc.inputs.xyz
-		- HSV:   ccc.inputs.hsv
+		- RGB:   ccc.input.rgb
+		- HSL:   ccc.input.hsl
+		- CMYK:  ccc.input.cmyk
+		- Lab:   ccc.input.lab
+		- HSLuv: ccc.input.hsluv
+		- XYZ:   ccc.input.xyz
+		- HSV:   ccc.input.hsv
 
 
                                                             *ccc-option-outputs*
 outputs ~
 table
 Default: {
-	ccc.outputs.hex,
-	ccc.outputs.hex_short,
-	ccc.outputs.css_rgb,
-	ccc.outputs.css_hsl,
+	ccc.output.hex,
+	ccc.output.hex_short,
+	ccc.output.css_rgb,
+	ccc.output.css_hsl,
 }
 	List of output format to be activated. |ccc-action-toggle-output-mode|
 	toggles in this order. The first one is the default used at the first
 	startup. Once activated, it will keep the previous output mode.
 	The presets currently available are as follows:
-		- HEX:    ccc.outputs.hex
-		          ccc.outputs.hex_short
-		- CssRGB: ccc.outputs.css_rgb
-		- CssHSL: ccc.outputs.css_hsl
+		- HEX:    ccc.output.hex
+		          ccc.output.hex_short
+		- CssRGB: ccc.output.css_rgb
+		- CssHSL: ccc.output.css_hsl
 
 
                                                             *ccc-option-pickers*
 pickers ~
 table
 Default: {
-	ccc.pickers.hex,
-	ccc.pickers.hex_short,
-	ccc.pickers.css_rgb,
-	ccc.pickers.css_hsl,
+	ccc.picker.hex,
+	ccc.picker.hex_short,
+	ccc.picker.css_rgb,
+	ccc.picker.css_hsl,
 }
 	List of formats that can be detected by |:CccPick| to be activated.
 	The presets currently available are as follows:
-		- HEX:    ccc.pickers.hex
-		          ccc.pickers.hex_short
-		- CssRGB: ccc.pickers.css_rgb
-		- CssHSL: ccc.pickers.css_hsl
+		- HEX:    ccc.picker.hex
+		          ccc.picker.hex_short
+		- CssRGB: ccc.picker.css_rgb
+		- CssHSL: ccc.picker.css_hsl
 
 
                                                         *ccc-option-output-line*

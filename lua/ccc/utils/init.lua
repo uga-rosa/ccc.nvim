@@ -11,6 +11,15 @@ function utils.feedkey(key, plain)
     api.nvim_feedkeys(key, "n", false)
 end
 
+---@param msg string
+---@param ... unknown
+function utils.notify(msg, ...)
+    if select("#", ...) > 0 then
+        msg = msg:format(...)
+    end
+    vim.notify(msg)
+end
+
 ---(1,1)-index
 ---@return integer[]
 function utils.cursor()
