@@ -19,7 +19,7 @@ function CssRgbPicker.parse_color(s, init)
         start, end_, cap1, cap2, cap3, cap4 = s:find("rgb%((%d+),(%d+),(%d+),(%d+)%%%)", init)
         if start == nil then
             ---@diagnostic disable-next-line
-            return nil
+            return
         end
         A = tonumber(cap4) / 100
     end

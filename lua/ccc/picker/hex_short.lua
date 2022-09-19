@@ -11,7 +11,7 @@ local HexShortPicker = {}
 ---@overload fun(s: string): nil
 function HexShortPicker.parse_color(s, init)
     init = init or 1
-    local start, end_, cap1, cap2, cap3 = s:find("#(%x)(%x)(%x)")
+    local start, end_, cap1, cap2, cap3 = s:find("#(%x)(%x)(%x)", init)
     if start == nil then
         ---@diagnostic disable-next-line
         return nil
