@@ -43,7 +43,6 @@ function Highlighter:enable()
         self:init()
     end
     self.enabled = true
-    api.nvim_set_hl_ns(self.ns_id)
 
     self:update()
     self.aug_id = api.nvim_create_augroup("ccc-highlighter", {})
