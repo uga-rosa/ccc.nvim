@@ -1,6 +1,9 @@
 local api = vim.api
 
-local set_hl = api.nvim_set_hl
+local function set_hl(_, name, val)
+    api.nvim_set_hl(0, name, val)
+end
+
 local add_hl = api.nvim_buf_add_highlight
 
 local Color = require("ccc.color")
@@ -72,7 +75,6 @@ function UI:_open()
     win_opts.height = self.win_height
     win_opts.width = self.win_width
     self.win_id = api.nvim_open_win(self.bufnr, true, win_opts)
-    api.nvim_win_set_hl_ns(self.win_id, self.ns_id)
 end
 
 ---@param insert boolean

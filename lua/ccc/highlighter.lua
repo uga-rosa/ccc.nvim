@@ -81,7 +81,7 @@ function Highlighter:update()
             local hl_group = "CccHighlighter" .. row .. "_" .. start
             local bg = hex.str(RGB)
             local fg = utils.fg_hex(bg)
-            api.nvim_set_hl(self.ns_id, hl_group, { fg = fg, bg = bg })
+            api.nvim_set_hl(0, hl_group, { fg = fg, bg = bg })
             api.nvim_buf_add_highlight(0, self.ns_id, hl_group, row, start - 1, end_)
             init = end_ + 1
         end
