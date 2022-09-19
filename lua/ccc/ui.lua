@@ -41,7 +41,7 @@ function UI:new()
     for lhs, rhs in pairs(mappings) do
         vim.keymap.set("n", lhs, rhs, { nowait = true, buffer = self.bufnr })
     end
-    self.ns_id = api.nvim_create_namespace("ccc")
+    self.ns_id = api.nvim_create_namespace("ccc-ui")
     self.prev_colors = prev_colors.new(self)
 end
 
@@ -317,12 +317,12 @@ function UI:highlight()
         config.get("output_line")(self.before_color, self.color, self.win_width)
 
     local before_bg = self.before_color:hex()
-    local before_fg = before_bg > "#800000" and "#000000" or "#ffffff"
+    local before_fg = utils.fg_hex(before_bg)
     set_hl(self.ns_id, "CccBefore", { fg = before_fg, bg = before_bg })
     add_hl(self.bufnr, self.ns_id, "CccBefore", row, b_start_col, b_end_col)
 
     local after_bg = self.color:hex()
-    local after_fg = after_bg > "#800000" and "#000000" or "#ffffff"
+    local after_fg = utils.fg_hex(after_bg)
     set_hl(self.ns_id, "CccAfter", { fg = after_fg, bg = after_bg })
     add_hl(self.bufnr, self.ns_id, "CccAfter", row, a_start_col, a_end_col)
 
@@ -331,7 +331,7 @@ function UI:highlight()
         local start_prev, end_prev = 0, 7
         for i, color in ipairs(self.prev_colors.colors) do
             local pre_bg = color:hex()
-            local pre_fg = pre_bg > "#800000" and "#000000" or "#ffffff"
+            local pre_fg = utils.fg_hex(pre_bg)
             set_hl(self.ns_id, "CccPrev" .. i, { fg = pre_fg, bg = pre_bg })
             add_hl(self.bufnr, self.ns_id, "CccPrev" .. i, row, start_prev, end_prev)
             start_prev = end_prev + 1

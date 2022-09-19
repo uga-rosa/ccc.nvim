@@ -123,4 +123,25 @@ function utils.fix_overflow(int, min, max)
     return int
 end
 
+---@param HEX string
+---@return boolean
+local function is_bright(HEX)
+    -- 0-255
+    local R = tonumber(HEX:sub(2, 3), 16)
+    local G = tonumber(HEX:sub(4, 5), 16)
+    local B = tonumber(HEX:sub(6, 7), 16)
+    local luminance = 0.298912 * R + 0.586611 * G + 0.114478 * B
+    return luminance > 127
+end
+
+---@param bg_hex string
+---@return string
+function utils.fg_hex(bg_hex)
+    if is_bright(bg_hex) then
+        return "#000000"
+    else
+        return "#ffffff"
+    end
+end
+
 return utils
