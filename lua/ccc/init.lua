@@ -1,5 +1,4 @@
 local UI = require("ccc.ui")
-local highlighter = require("ccc.highlighter")
 local config = require("ccc.config")
 local utils = require("ccc.utils")
 
@@ -174,18 +173,6 @@ end
 
 function M.mapping.set100()
     M.set_percent(100)
-end
-
-function M.mapping.enable_highlighter()
-    highlighter:enable()
-end
-
-function M.mapping.disable_highlighter()
-    highlighter:disable()
-end
-
-function M.mapping.toggle_highlighter()
-    highlighter:toggle()
 end
 
 return M

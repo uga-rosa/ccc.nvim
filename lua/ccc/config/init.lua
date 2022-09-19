@@ -25,8 +25,21 @@ function M.setup(opt)
         ["config.outputs"] = { M.config.outputs, "t" },
         ["config.pickers"] = { M.config.pickers, "t" },
         ["config.output_line"] = { M.config.output_line, "f" },
+        ["config.highlighter"] = { M.config.highlighter, "t" },
+        ["config.highlighter.auto_enable"] = { M.config.highlighter.auto_enable, "b" },
+        ["config.highlighter.filetypes"] = { M.config.highlighter.filetypes, "t" },
+        ["config.highlighter.events"] = { M.config.highlighter.events, "t" },
         ["config.mappings"] = { M.config.mappings, "t" },
     })
+
+    if M.config.highlighter.auto_enable then
+        api.nvim_create_autocmd("VimEnter", {
+            callback = function()
+                require("ccc.highlighter"):enable()
+            end,
+            once = true,
+        })
+    end
 end
 
 ---@param name string

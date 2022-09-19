@@ -192,6 +192,33 @@ Default: ccc.output_line
 	the colors before and after the change. See source code for details.
 
 
+                                                        *ccc-option-highlighter*
+highlighter ~
+table
+	These are settings for CccHighlighter.
+
+
+                                            *ccc-option-highlighter-auto-enable*
+highlighter.auto_enable ~
+boolean
+Default: false
+	Whether to enable at startup.
+
+
+                                              *ccc-option-highlighter-filetypes*
+highlighter.filetypes ~
+string[]
+Default: { "css", "html" }
+	File types for which highlighting is enabled.
+
+
+                                                 *ccc-option-highlighter-events*
+highlighter.events ~
+string[]
+Default: { "WinScrolled", "TextChanged", "TextChangedI" }
+	Events to update highlighting.
+
+
                                                            *ccc-option-mappings*
 mappings ~
 table
@@ -210,6 +237,25 @@ Command                                                            *ccc-command*
 	Detects and replaces the color under the cursor. Detectable formats
 	are defined in |ccc-option-pickers|. If nothing is detected, the color
 	is inserted at a cursor position.
+
+
+                                                         *:CccHighlighterEnable*
+:CccHighlighterEnable ~
+	Highlight colors in the current buffer that ccc.nvim can pick up.
+	The following options are available.
+		|ccc-option-highlighter-auto-enable|
+		|ccc-option-highlighter-filetypes|
+		|ccc-option-highlighter-events|
+
+
+                                                        *:CccHighlighterDisable*
+:CccHighlighterDisable ~
+	Disable highlight.
+
+
+                                                         *:CccHighlighterToggle*
+:CccHighlighterToggle ~
+	Toggle highlight.
 
 
 

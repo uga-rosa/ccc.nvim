@@ -9,15 +9,17 @@ local hex = require("ccc.output.hex")
 ---@field pickers ColorPicker[]
 ---@field ns_id integer
 ---@field aug_id integer
+---@field ft_filter table<string, boolean>
+---@field events string[]
 ---@field enabled boolean
 local Highlighter = {}
 
 function Highlighter:init()
     self.pickers = config.get("pickers")
     self.ns_id = api.nvim_create_namespace("ccc-highlighter")
-    self.aug_id = api.nvim_create_augroup("ccc-highlighter", {})
+    local highlighter_config = config.get("highlighter")
     ---@type string[]
-    local filetypes = config.get("highlighter").filetypes
+    local filetypes = highlighter_config.filetypes
     local always_valid = #filetypes == 0
     local ft_filter = {}
     for _, v in ipairs(filetypes) do
@@ -28,6 +30,7 @@ function Highlighter:init()
             return always_valid
         end,
     })
+    self.events = highlighter_config.events
 end
 
 function Highlighter:enable()
@@ -36,8 +39,10 @@ function Highlighter:enable()
     end
     self.enabled = true
     api.nvim_set_hl_ns(self.ns_id)
+
     self:update()
-    api.nvim_create_autocmd({ "WinScrolled" }, {
+    self.aug_id = api.nvim_create_augroup("ccc-highlighter", {})
+    api.nvim_create_autocmd(self.events, {
         group = self.aug_id,
         pattern = "*",
         callback = function()
@@ -77,10 +82,7 @@ function Highlighter:update()
             local bg = hex.str(RGB)
             local fg = utils.fg_hex(bg)
             api.nvim_set_hl(self.ns_id, hl_group, { fg = fg, bg = bg })
-            api.nvim_buf_add_highlight(0, self.ns_id, hl_group, row, start, end_)
-            if end_ == #line then
-                break
-            end
+            api.nvim_buf_add_highlight(0, self.ns_id, hl_group, row, start - 1, end_)
             init = end_ + 1
         end
     end
@@ -89,6 +91,7 @@ end
 function Highlighter:disable()
     self.enabled = false
     api.nvim_buf_clear_namespace(0, self.ns_id, 0, -1)
+    api.nvim_del_augroup_by_id(self.aug_id)
 end
 
 function Highlighter:toggle()
