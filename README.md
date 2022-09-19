@@ -48,7 +48,7 @@ ccc.setup({
 
 # Interface
 
-This plugin provides one command and one mapping.
+This plugin provides four commands and one mapping.
 
 - `:CccPick`
 	- Detects and replaces the color under the cursor.
@@ -58,6 +58,19 @@ This plugin provides one command and one mapping.
 - `<Plug>(ccc-insert)`
     - Defined in insert mode.
     - Insert the color without detection.
+
+- `:CccHighlighterEnable`
+	- Highlight colors in the current buffer that ccc.nvim can pick up.
+	- The following options are available.
+		- `:h ccc-option-highlighter-auto-enable`
+		- `:h ccc-option-highlighter-filetypes`
+		- `:h ccc-option-highlighter-events`
+
+- `:CccHighlighterDisable`
+	- Disable highlight.
+
+- `:CccHighlighterToggle`
+	- Toggle highlight.
 
 # Action
 
