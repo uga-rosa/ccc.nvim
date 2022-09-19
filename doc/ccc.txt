@@ -177,12 +177,14 @@ Default: {
 	ccc.picker.hex,
 	ccc.picker.css_rgb,
 	ccc.picker.css_hsl,
+	ccc.picker.css_name,
 }
 	List of formats that can be detected by |:CccPick| to be activated.
 	The presets currently available are as follows:
-		- HEX:    ccc.picker.hex
-		- CssRGB: ccc.picker.css_rgb
-		- CssHSL: ccc.picker.css_hsl
+		- HEX:     ccc.picker.hex
+		- CssRGB:  ccc.picker.css_rgb
+		- CssHSL:  ccc.picker.css_hsl
+		- CssName: ccc.picker.css_name
 
 
                                                         *ccc-option-output-line*

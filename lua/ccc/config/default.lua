@@ -32,6 +32,7 @@ return {
         ccc.picker.hex,
         ccc.picker.css_rgb,
         ccc.picker.css_hsl,
+        ccc.picker.css_name,
     },
     output_line = ccc.output_line,
     highlighter = {
