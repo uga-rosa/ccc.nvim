@@ -30,7 +30,6 @@ return {
     },
     pickers = {
         ccc.picker.hex,
-        ccc.picker.hex_short,
         ccc.picker.css_rgb,
         ccc.picker.css_hsl,
     },

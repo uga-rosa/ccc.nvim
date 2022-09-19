@@ -3,31 +3,57 @@ local convert = require("ccc.utils.convert")
 ---@class CssHslPicker: ColorPicker
 local CssHslPicker = {}
 
+---@param cap string
+---@return number?
+local function cap2sl(cap)
+    local x = tonumber(cap)
+    if x and 0 <= x and x <= 100 then
+        return x / 100
+    end
+end
+
+---@param cap? string
+---@return number?
+local function cap2alpha(cap)
+    if cap == nil then
+        return
+    end
+    local x
+    if cap:sub(-1, -1) == "%" then
+        x = tonumber(cap:sub(1, -2)) / 100
+    else
+        x = tonumber(cap) / 100
+    end
+    if 0 <= x and x <= 1 then
+        return x
+    end
+end
+
 ---@param s string
 ---@param init? integer
----@return integer start
----@return integer end_
----@return number[] RGB
----@return number alpha
----@overload fun(s: string): nil
+---@return integer? start
+---@return integer? end_
+---@return number[]? RGB
+---@return number? alpha
 function CssHslPicker.parse_color(s, init)
     init = init or 1
-    local start, end_, cap1, cap2, cap3, cap4, A
-    start, end_, cap1, cap2, cap3 = s:find("hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%%)", init)
+    local start, end_, cap1, cap2, cap3, cap4
+    start, end_, cap1, cap2, cap3 = s:find("hsl%(%s*(%d+)%s*,%s*(%d+)%%%s*,%s*(%d+)%%%s*%)", init)
     if start == nil then
         start, end_, cap1, cap2, cap3, cap4 =
-            s:find("hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%,%s*(%d+)%%%)")
+            s:find("hsl%(%s*(%d+)%s*,%s*(%d+)%%%s*,%s*(%d+)%%%s*,%s*([%.%d]+%%?)%s*%)")
         if start == nil then
-            ---@diagnostic disable-next-line
             return
         end
-        A = tonumber(cap4) / 100
     end
     local H = tonumber(cap1)
-    local S = tonumber(cap2) / 100
-    local L = tonumber(cap3) / 100
-    local RGB = convert.hsl2rgb({ H, S, L })
-    return start, end_, RGB, A
+    local S = cap2sl(cap2)
+    local L = cap2sl(cap3)
+    if H and S and L then
+        local RGB = convert.hsl2rgb({ H, S, L })
+        local A = cap2alpha(cap4)
+        return start, end_, RGB, A
+    end
 end
 
 return CssHslPicker

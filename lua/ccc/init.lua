@@ -1,4 +1,5 @@
 local UI = require("ccc.ui")
+local highlighter = require("ccc.highlighter")
 local config = require("ccc.config")
 local utils = require("ccc.utils")
 
@@ -20,7 +21,6 @@ local M = {
     },
     picker = {
         hex = require("ccc.picker.hex"),
-        hex_short = require("ccc.picker.hex_short"),
         css_rgb = require("ccc.picker.css_rgb"),
         css_hsl = require("ccc.picker.css_hsl"),
     },
@@ -174,6 +174,18 @@ end
 
 function M.mapping.set100()
     M.set_percent(100)
+end
+
+function M.mapping.enable_highlighter()
+    highlighter:enable()
+end
+
+function M.mapping.disable_highlighter()
+    highlighter:disable()
+end
+
+function M.mapping.toggle_highlighter()
+    highlighter:toggle()
 end
 
 return M
