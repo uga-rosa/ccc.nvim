@@ -18,18 +18,23 @@ function Highlighter:init()
     self.pickers = config.get("pickers")
     self.ns_id = api.nvim_create_namespace("ccc-highlighter")
     local highlighter_config = config.get("highlighter")
-    ---@type string[]
     local filetypes = highlighter_config.filetypes
-    local always_valid = #filetypes == 0
     local ft_filter = {}
-    for _, v in ipairs(filetypes) do
-        ft_filter[v] = true
+    if #filetypes == 0 then
+        for _, v in ipairs(highlighter_config.excludes) do
+            ft_filter[v] = false
+        end
+        setmetatable(ft_filter, {
+            __index = function()
+                return true
+            end,
+        })
+    else
+        for _, v in ipairs(filetypes) do
+            ft_filter[v] = true
+        end
     end
-    self.ft_filter = setmetatable(ft_filter, {
-        __index = function()
-            return always_valid
-        end,
-    })
+    self.ft_filter = ft_filter
     self.events = highlighter_config.events
 end
 
@@ -46,15 +51,16 @@ function Highlighter:enable()
         group = self.aug_id,
         pattern = "*",
         callback = function()
-            if self.ft_filter[vim.bo.filetype] then
-                self:update()
-            end
+            self:update()
         end,
     })
 end
 
 function Highlighter:update()
     api.nvim_buf_clear_namespace(0, self.ns_id, 0, -1)
+    if not self.ft_filter[vim.bo.filetype] then
+        return
+    end
     local start_row = fn.line("w0") - 1
     local end_row = fn.line("w$")
     for i, line in ipairs(api.nvim_buf_get_lines(0, start_row, end_row, false)) do
