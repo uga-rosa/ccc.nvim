@@ -37,7 +37,7 @@ return {
     output_line = ccc.output_line,
     highlighter = {
         auto_enable = false,
-        filetypes = { "css", "html" },
+        filetypes = {},
         events = { "WinScrolled", "TextChanged", "TextChangedI" },
     },
     mappings = {

@@ -211,7 +211,7 @@ Default: false
                                               *ccc-option-highlighter-filetypes*
 highlighter.filetypes ~
 string[]
-Default: { "css", "html" }
+Default: {}
 	File types for which highlighting is enabled. An empty table means all
 	file types.
 
