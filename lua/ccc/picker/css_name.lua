@@ -162,7 +162,7 @@ function NamePicker.parse_color(s, init)
     local start, end_, RGB
     for name, rgb in pairs(name_rgb) do
         local s_, e_ = s:find(name, init)
-        if s_ and (start == nil or s_ < start) then
+        if s_ and (start == nil or s_ < start or (s_ == start and e_ > end_)) then
             start = s_
             end_ = e_
             RGB = rgb
