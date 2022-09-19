@@ -379,28 +379,35 @@ end
 function UI:pick()
     ---@type string
     local current_line = api.nvim_get_current_line()
-    local start, end_, RGB, A
-    for _, picker in ipairs(config.get("pickers")) do
-        start, end_, RGB, A = picker.parse_color(current_line)
-        if start then
+    local cursor_col = utils.col()
+    local init = 1
+    while true do
+        local start, end_, RGB, A
+        for _, picker in ipairs(config.get("pickers")) do
+            start, end_, RGB, A = picker.parse_color(current_line, init)
+            if start then
+                break
+            end
+        end
+        if start == nil then
             break
         end
-    end
-    local cursor_col = utils.col()
-    if start and start <= cursor_col and cursor_col <= end_ then
-        ---@cast end_ integer
-        ---@cast RGB number[]
-        self.start_col = start
-        self.end_col = end_
-        self.color:set_rgb(RGB)
-        self.before_color = self.color
-        if A then
-            self.alpha:set(A)
-            self.alpha:show(true)
+        if start <= cursor_col and cursor_col <= end_ then
+            ---@cast end_ integer
+            ---@cast RGB number[]
+            self.start_col = start
+            self.end_col = end_
+            self.color:set_rgb(RGB)
+            self.before_color = self.color
+            if A then
+                self.alpha:set(A)
+                self.alpha:show(true)
+            end
+            return
         end
-    else
-        self.end_col = self.start_col - 1
+        init = end_ + 1
     end
+    self.end_col = self.start_col - 1
 end
 
 function UI:toggle_input_mode()
