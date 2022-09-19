@@ -6,9 +6,17 @@ local CssRgbPicker = {}
 local function cap2rgb(cap)
     local x
     if cap:sub(-1, -1) == "%" then
-        x = tonumber(cap:sub(1, -2)) / 100
+        x = tonumber(cap:sub(1, -2))
+        if x == nil then
+            return
+        end
+        x = x / 100
     else
-        x = tonumber(cap) / 255
+        x = tonumber(cap)
+        if x == nil then
+            return
+        end
+        x = x / 255
     end
     if 0 <= x and x <= 1 then
         return x
@@ -23,11 +31,15 @@ local function cap2alpha(cap)
     end
     local x
     if cap:sub(-1, -1) == "%" then
-        x = tonumber(cap:sub(1, -2)) / 100
+        x = tonumber(cap:sub(1, -2))
+        if x == nil then
+            return
+        end
+        x = x / 100
     else
-        x = tonumber(cap) / 100
+        x = tonumber(cap)
     end
-    if 0 <= x and x <= 1 then
+    if x and 0 <= x and x <= 1 then
         return x
     end
 end
