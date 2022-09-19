@@ -6,6 +6,10 @@
 
 ![prev](https://user-images.githubusercontent.com/82267684/190847777-e1f434f9-a8f9-4cb9-b496-cbd849e71a9c.gif)
 
+## Highlight colors that can be picked up by ccc.nvim
+
+![image](https://user-images.githubusercontent.com/82267684/190941438-9dba6f6a-fc87-4d47-8106-bfc865913b97.png)
+
 ## Use multiple color spaces simultaneously
 
 - Advanced settings
@@ -25,6 +29,7 @@ Super powerful color picker plugin.
     - Restore previously used colors.
     - Selectable output formats.
     - Transparent slider (for css `rgb()`/`hsl()`)
+    - Highlight colors that can be picked up for current buffer.
 
 **If you use release version (0.7.2), use branch** `0.7.2`
 

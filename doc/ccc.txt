@@ -27,6 +27,7 @@ Features:
 - Record and restore previously used colors.
 - Selectable output formats.
 - Transparent slider (for css rgb()/hsl())
+- Highlight colors that can be picked up for current buffer.
 
 
 
