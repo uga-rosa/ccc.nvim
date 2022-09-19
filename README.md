@@ -26,7 +26,7 @@ Super powerful color picker plugin.
     - Selectable output formats.
     - Transparent slider (for css `rgb()`/`hsl()`)
 
-**If you use release version (0.7.2), use barnch** `0.7.2`
+**If you use release version (0.7.2), use branch** `0.7.2`
 
 # Setup
 
