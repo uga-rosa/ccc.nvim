@@ -216,6 +216,14 @@ Default: {}
 	file types.
 
 
+                                               *ccc-option-highlighter-excludes*
+highlighter.excludes ~
+string[]
+Default: {}
+	Used only when |ccc-option-highlighter-filetypes| is empty table. You
+	can specify file types to be excludes.
+
+
                                                  *ccc-option-highlighter-events*
 highlighter.events ~
 string[]

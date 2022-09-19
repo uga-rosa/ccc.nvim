@@ -28,6 +28,7 @@ function M.setup(opt)
         ["config.highlighter"] = { M.config.highlighter, "t" },
         ["config.highlighter.auto_enable"] = { M.config.highlighter.auto_enable, "b" },
         ["config.highlighter.filetypes"] = { M.config.highlighter.filetypes, "t" },
+        ["config.highlighter.excludes"] = { M.config.highlighter.excludes, "t" },
         ["config.highlighter.events"] = { M.config.highlighter.events, "t" },
         ["config.mappings"] = { M.config.mappings, "t" },
     })

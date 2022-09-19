@@ -38,6 +38,7 @@ return {
     highlighter = {
         auto_enable = false,
         filetypes = {},
+        excludes = {},
         events = { "WinScrolled", "TextChanged", "TextChangedI" },
     },
     mappings = {
