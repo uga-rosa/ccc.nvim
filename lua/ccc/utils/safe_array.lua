@@ -1,42 +1,47 @@
 local utils = require("ccc.utils")
 
----@class safe_array
----@field raw unknown[]
----@field len integer
-local safe_array = {}
-safe_array.__index = safe_array
+---@class SafeArray
+---@field private _raw unknown[]
+---@field private _len integer
+local SafeArray = {}
+SafeArray.__index = SafeArray
 
 ---@param t any[]
----@return safe_array
-function safe_array.new(t)
+---@return SafeArray
+function SafeArray.new(t)
     vim.validate({ t = { t, "t" } })
     return setmetatable({
-        raw = t,
-        len = #t,
-    }, safe_array)
+        _raw = t,
+        _len = #t,
+    }, SafeArray)
 end
 
 ---@return unknown[]
-function safe_array:unpack()
-    return self.raw
+function SafeArray:raw()
+    return self._raw
 end
 
----@param func fun(x: any): any
----@return safe_array
-function safe_array:map(func)
+---@return ...unknown
+function SafeArray:unpack()
+    return unpack(self._raw)
+end
+
+---@param func fun(x: unknown): unknown
+---@return SafeArray
+function SafeArray:map(func)
     vim.validate({ func = { func, "f" } })
     local new = {}
-    for i, v in ipairs(self.raw) do
-        new[i] = func(v)
+    for i = 1, self._len do
+        new[i] = func(self._raw[i])
     end
-    return safe_array.new(new)
+    return SafeArray.new(new)
 end
 
----@param func fun(x: any)
-function safe_array:apply(func)
+---@param func fun(x: unknown)
+function SafeArray:apply(func)
     vim.validate({ func = { func, "f" } })
-    for _, v in ipairs(self.raw) do
-        func(v)
+    for i = 1, self._len do
+        func(self._raw[i])
     end
 end
 
@@ -44,7 +49,7 @@ end
 ---@param i? integer
 ---@param j? integer
 ---@return string
-function safe_array:concat(sep, i, j)
+function SafeArray:concat(sep, i, j)
     vim.validate({
         sep = { sep, "s", true },
         i = { i, "n", true },
@@ -52,29 +57,27 @@ function safe_array:concat(sep, i, j)
     })
     sep = vim.F.if_nil(sep, "")
     i = vim.F.if_nil(i, 1)
-    j = vim.F.if_nil(j, #self.raw)
-    return table.concat(self.raw, sep, i, j)
+    j = vim.F.if_nil(j, self._len)
+    return table.concat(self._raw, sep, i, j)
 end
 
 ---@return number
-function safe_array:max()
-    return utils.max(unpack(self:unpack()))
+function SafeArray:max()
+    return utils.max(unpack(self._raw))
 end
 
 ---@return number
-function safe_array:min()
-    return utils.min(unpack(self:unpack()))
+function SafeArray:min()
+    return utils.min(unpack(self._raw))
 end
 
----@class Set table<any, boolean>
-
----@return Set
-function safe_array:to_set()
+---@return table<any, boolean>
+function SafeArray:to_set()
     local new = {}
-    for _, v in ipairs(self.raw) do
+    for _, v in ipairs(self._raw) do
         new[v] = true
     end
     return new
 end
 
-return safe_array
+return SafeArray
