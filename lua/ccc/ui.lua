@@ -73,6 +73,11 @@ function UI:_open()
     win_opts.width = self.win_width
     self.win_id = api.nvim_open_win(self.bufnr, true, win_opts)
     api.nvim_win_set_option(self.win_id, "signcolumn", "no")
+    api.nvim_win_set_option(
+        self.win_id,
+        "winhl",
+        "NormalFloat:CccFloatNormal,FloatBorder:CccFloatBorder"
+    )
     api.nvim_win_set_hl_ns(self.win_id, self.ns_id)
 end
 
@@ -251,10 +256,6 @@ end
 
 function UI:highlight()
     api.nvim_buf_clear_namespace(self.bufnr, self.ns_id, 0, -1)
-    local hl_group = config.get("hl_group")
-    for i = 0, self.win_height - 1 do
-        add_hl(self.bufnr, self.ns_id, hl_group, i, 0, -1)
-    end
 
     local bar_char = config.get("bar_char")
     local point_char = config.get("point_char")

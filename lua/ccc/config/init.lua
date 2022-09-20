@@ -17,7 +17,6 @@ function M.setup(opt)
         ["config.point_char"] = { M.config.point_char, "s" },
         ["config.point_color"] = { M.config.point_color, "s" },
         ["config.bar_len"] = { M.config.bar_len, "n" },
-        ["config.hl_group"] = { M.config.hl_group, "s" },
         ["config.win_opts"] = { M.config.win_opts, "t" },
         ["config.preserve"] = { M.config.preserve, "b" },
         ["config.save_on_quit"] = { M.config.save_on_quit, "b" },
