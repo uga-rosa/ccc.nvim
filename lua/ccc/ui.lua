@@ -72,6 +72,7 @@ function UI:_open()
     win_opts.height = self.win_height
     win_opts.width = self.win_width
     self.win_id = api.nvim_open_win(self.bufnr, true, win_opts)
+    api.nvim_win_set_option(self.win_id, "signcolumn", "no")
     api.nvim_win_set_hl_ns(self.win_id, self.ns_id)
 end
 
