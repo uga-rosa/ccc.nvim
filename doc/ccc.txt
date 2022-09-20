@@ -177,7 +177,6 @@ Default: {
 	ccc.picker.hex,
 	ccc.picker.css_rgb,
 	ccc.picker.css_hsl,
-	ccc.picker.css_name,
 }
 	List of formats that can be detected by |:CccPick| to be activated.
 	The presets currently available are as follows:
