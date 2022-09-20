@@ -66,18 +66,14 @@ function Highlighter:update()
     for i, line in ipairs(api.nvim_buf_get_lines(0, start_row, end_row, false)) do
         local row = start_row + i - 1
         local init = 1
-        local max = 100
-        local count = 0
         while true do
-            count = count + 1
-            if count > max then
-                break
-            end
             local start, end_, RGB
             for _, picker in ipairs(self.pickers) do
-                start, end_, RGB = picker.parse_color(line, init)
-                if start then
-                    break
+                local s_, e_, rgb = picker.parse_color(line, init)
+                if s_ and (start == nil or s_ < start) then
+                    start = s_
+                    end_ = e_
+                    RGB = rgb
                 end
             end
             if start == nil then
