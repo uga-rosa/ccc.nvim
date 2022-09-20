@@ -7,7 +7,6 @@ return {
     point_char = "◇",
     point_color = "",
     bar_len = 30,
-    hl_group = "NormalFloat",
     win_opts = {
         relative = "cursor",
         row = 1,

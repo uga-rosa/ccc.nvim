@@ -108,13 +108,6 @@ Default: {
 	be specified.
 
 
-                                                           *ccc-option-hl-group*
-hl_group ~
-string
-Default: NormalFloat
-	A highlight group set for the entire UI buffer.
-
-
                                                            *ccc-option-preserve*
 preserve ~
 boolean
@@ -298,6 +291,21 @@ Autocmd                                                            *ccc-autocmd*
                                                                *CccColorChanged*
 CccColorChanged ~
 	After changing |g:ccc_color|.
+
+
+
+==============================================================================
+Highlight                                                        *ccc-highlight*
+
+
+                                              *CccFloatNormal* *hl-CccFloatNormal*
+CccFloatNormal ~
+	The highlight for float window.
+
+
+                                              *CccFloatBorder* *hl-CccFloatBorder*
+CccFloatBorder ~
+	The highlight for float window border.
 
 
 

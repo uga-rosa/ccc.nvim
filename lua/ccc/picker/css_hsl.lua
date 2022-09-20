@@ -40,7 +40,7 @@ end
 ---@return number[]? RGB
 ---@return number? alpha
 function CssHslPicker.parse_color(s, init)
-    init = init or 1
+    init = vim.F.if_nil(init, 1)
     local start, end_, cap1, cap2, cap3, cap4
     start, end_, cap1, cap2, cap3 = s:find("hsl%(%s*(%d+)%s*,%s*(%d+)%%%s*,%s*(%d+)%%%s*%)", init)
     if start == nil then
