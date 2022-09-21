@@ -1,3 +1,6 @@
+local config = require("ccc.config")
+local utils = require("ccc.utils")
+
 ---@class CssRgbPicker: ColorPicker
 local CssRgbPicker = {}
 
@@ -52,22 +55,31 @@ end
 ---@return number? alpha
 function CssRgbPicker.parse_color(s, init)
     init = vim.F.if_nil(init, 1)
-    local start, end_, cap1, cap2, cap3, cap4
-    start, end_, cap1, cap2, cap3 =
-        s:find("rgb%(%s*(%d+%%?)%s*,%s*(%d+%%?)%s*,%s*(%d+%%?)%s*%)", init)
-    if start == nil then
-        start, end_, cap1, cap2, cap3, cap4 =
-            s:find("rgba?%(%s*(%d+%%?)%s*,%s*(%d+%%?)%s*,%s*(%d+%%?)%s*,%s*([%.%d]+%%?)%)", init)
+    -- The shortest patten is 10 characters like `rgb(0,0,0)`
+    while init < #s - 9 do
+        local start, end_, cap1, cap2, cap3, cap4
+        start, end_, cap1, cap2, cap3 =
+            s:find("rgb%(%s*(%d+%%?)%s*,%s*(%d+%%?)%s*,%s*(%d+%%?)%s*%)", init)
+        if start == nil then
+            start, end_, cap1, cap2, cap3, cap4 = s:find(
+                "rgba?%(%s*(%d+%%?)%s*,%s*(%d+%%?)%s*,%s*(%d+%%?)%s*,%s*([%.%d]+%%?)%)",
+                init
+            )
+        end
         if start == nil then
             return
         end
-    end
-    local R = cap2rgb(cap1)
-    local G = cap2rgb(cap2)
-    local B = cap2rgb(cap3)
-    if R and G and B then
-        local A = cap2alpha(cap4)
-        return start, end_, { R, G, B }, A
+        local R = cap2rgb(cap1)
+        local G = cap2rgb(cap2)
+        local B = cap2rgb(cap3)
+        if R and G and B then
+            local ex_patten = config.get("exclude_pattern")
+            if not utils.is_excluded(ex_patten.css_rgb, s, init, start, end_) then
+                local A = cap2alpha(cap4)
+                return start, end_, { R, G, B }, A
+            end
+        end
+        init = end_ + 1
     end
 end
 

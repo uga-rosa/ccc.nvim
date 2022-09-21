@@ -32,6 +32,15 @@ return {
         ccc.picker.css_rgb,
         ccc.picker.css_hsl,
     },
+    exclude_pattern = {
+        hex = {
+            "[%w_]#%x%x%x",
+            "[%w_]#%x%x%x%x%x%x",
+        },
+        css_rgb = nil,
+        css_hsl = nil,
+        css_name = nil,
+    },
     output_line = ccc.output_line,
     highlighter = {
         auto_enable = false,

@@ -1,3 +1,6 @@
+local config = require("ccc.config")
+local utils = require("ccc.utils")
+
 local name_rgb = {
     aliceblue = { 0.94117647058824, 0.97254901960784, 1 },
     antiquewhite = { 0.98039215686275, 0.92156862745098, 0.84313725490196 },
@@ -148,6 +151,156 @@ local name_rgb = {
     yellowgreen = { 0.60392156862745, 0.80392156862745, 0.19607843137255 },
 }
 
+local name_lst = {
+    "lightgoldenrodyellow",
+    "mediumspringgreen",
+    "mediumaquamarine",
+    "mediumturquoise",
+    "mediumvioletred",
+    "mediumslateblue",
+    "cornflowerblue",
+    "lightslategray",
+    "blanchedalmond",
+    "lightslategrey",
+    "lightsteelblue",
+    "darkolivegreen",
+    "mediumseagreen",
+    "paleturquoise",
+    "lightseagreen",
+    "lavenderblush",
+    "palegoldenrod",
+    "darkgoldenrod",
+    "palevioletred",
+    "darkslateblue",
+    "darkslategrey",
+    "darkslategray",
+    "darkturquoise",
+    "antiquewhite",
+    "lemonchiffon",
+    "midnightblue",
+    "mediumpurple",
+    "mediumorchid",
+    "darkseagreen",
+    "lightskyblue",
+    "deepskyblue",
+    "floralwhite",
+    "darkmagenta",
+    "saddlebrown",
+    "navajowhite",
+    "yellowgreen",
+    "forestgreen",
+    "lightsalmon",
+    "lightyellow",
+    "springgreen",
+    "greenyellow",
+    "chartreuse",
+    "lightgreen",
+    "darkorange",
+    "whitesmoke",
+    "darkviolet",
+    "sandybrown",
+    "ghostwhite",
+    "lightcoral",
+    "powderblue",
+    "papayawhip",
+    "darkorchid",
+    "aquamarine",
+    "mediumblue",
+    "darksalmon",
+    "dodgerblue",
+    "blueviolet",
+    "slategrey",
+    "indianred",
+    "limegreen",
+    "gainsboro",
+    "slateblue",
+    "darkgreen",
+    "firebrick",
+    "aliceblue",
+    "goldenrod",
+    "slategray",
+    "darkkhaki",
+    "chocolate",
+    "lightpink",
+    "olivedrab",
+    "rosybrown",
+    "mistyrose",
+    "royalblue",
+    "orangered",
+    "palegreen",
+    "burlywood",
+    "peachpuff",
+    "cadetblue",
+    "turquoise",
+    "mintcream",
+    "steelblue",
+    "lightgray",
+    "lightcyan",
+    "lightgrey",
+    "lightblue",
+    "lawngreen",
+    "cornsilk",
+    "darkgrey",
+    "honeydew",
+    "seagreen",
+    "darkblue",
+    "seashell",
+    "deeppink",
+    "lavender",
+    "darkcyan",
+    "moccasin",
+    "darkgray",
+    "magenta",
+    "dimgray",
+    "dimgrey",
+    "crimson",
+    "fuchsia",
+    "hotpink",
+    "thistle",
+    "oldlace",
+    "skyblue",
+    "darkred",
+    "silver",
+    "maroon",
+    "orange",
+    "orchid",
+    "indigo",
+    "purple",
+    "sienna",
+    "tomato",
+    "salmon",
+    "violet",
+    "yellow",
+    "bisque",
+    "brown",
+    "azure",
+    "coral",
+    "linen",
+    "khaki",
+    "wheat",
+    "beige",
+    "black",
+    "green",
+    "olive",
+    "white",
+    "ivory",
+    "teal",
+    "snow",
+    "lime",
+    "peru",
+    "plum",
+    "gold",
+    "blue",
+    "aqua",
+    "grey",
+    "gray",
+    "navy",
+    "cyan",
+    "pink",
+    "red",
+    "tan",
+}
+
 ---@class NamePicker
 local NamePicker = {}
 
@@ -159,17 +312,25 @@ local NamePicker = {}
 function NamePicker.parse_color(s, init)
     init = vim.F.if_nil(init, 1)
     s = s:lower()
-    local start, end_, RGB
-    for name, rgb in pairs(name_rgb) do
-        local s_, e_ = s:find(name, init)
-        if s_ and (start == nil or s_ < start or (s_ == start and e_ > end_)) then
-            start = s_
-            end_ = e_
-            RGB = rgb
+    -- The shortest patten is 3 characters like `red`
+    while init < #s - 2 do
+        local start, end_, RGB
+        for _, name in ipairs(name_lst) do
+            local s_, e_ = s:find(name, init, true)
+            if s_ and (start == nil or s_ < start) then
+                start = s_
+                end_ = e_
+                RGB = name_rgb[name]
+            end
         end
-    end
-    if start then
-        return start, end_, RGB
+        if start == nil then
+            return
+        end
+        local ex_patten = config.get("exclude_pattern")
+        if not utils.is_excluded(ex_patten.css_name, s, init, start, end_) then
+            return start, end_, RGB
+        end
+        init = end_ + 1
     end
 end
 

@@ -386,9 +386,12 @@ function UI:pick()
     while true do
         local start, end_, RGB, A
         for _, picker in ipairs(config.get("pickers")) do
-            start, end_, RGB, A = picker.parse_color(current_line, init)
-            if start then
-                break
+            local s_, e_, rgb, a = picker.parse_color(current_line, init)
+            if s_ and (start == nil or s_ < start) then
+                start = s_
+                end_ = e_
+                RGB = rgb
+                A = a
             end
         end
         if start == nil then

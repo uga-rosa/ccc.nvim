@@ -177,6 +177,24 @@ Default: {
 		- CssRGB:  ccc.picker.css_rgb
 		- CssHSL:  ccc.picker.css_hsl
 		- CssName: ccc.picker.css_name
+	If it picks up even the parts you do not want picked up, try
+	|ccc-option-exclude-pattern|.
+
+
+                                                    *ccc-option-exclude-pattern*
+exclude_pattern ~
+table
+Default: {
+	hex = {
+		"[%w_]#%x%x%x",
+		"[%w_]#%x%x%x%x%x%x",
+	}
+	css_rgb = nil,
+	css_hsl = nil,
+	css_name = nil,
+}
+	Exclude patterns for each picker. For example, default patterns
+	exclude 'foo#add' in the vim script.
 
 
                                                         *ccc-option-output-line*
