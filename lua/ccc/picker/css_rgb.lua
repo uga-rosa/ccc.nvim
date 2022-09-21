@@ -47,6 +47,11 @@ local function cap2alpha(cap)
     end
 end
 
+local pattern = {
+    "rgb%(%s*(%d+%%?)%s*,%s*(%d+%%?)%s*,%s*(%d+%%?)%s*%)",
+    "rgba?%(%s*(%d+%%?)%s*,%s*(%d+%%?)%s*,%s*(%d+%%?)%s*,%s*([%.%d]+%%?)%)",
+}
+
 ---@param s string
 ---@param init? integer
 ---@return integer? start
@@ -58,13 +63,11 @@ function CssRgbPicker.parse_color(s, init)
     -- The shortest patten is 10 characters like `rgb(0,0,0)`
     while init < #s - 9 do
         local start, end_, cap1, cap2, cap3, cap4
-        start, end_, cap1, cap2, cap3 =
-            s:find("rgb%(%s*(%d+%%?)%s*,%s*(%d+%%?)%s*,%s*(%d+%%?)%s*%)", init)
-        if start == nil then
-            start, end_, cap1, cap2, cap3, cap4 = s:find(
-                "rgba?%(%s*(%d+%%?)%s*,%s*(%d+%%?)%s*,%s*(%d+%%?)%s*,%s*([%.%d]+%%?)%)",
-                init
-            )
+        for _, pat in ipairs(pattern) do
+            start, end_, cap1, cap2, cap3, cap4 = s:find(pat, init)
+            if start then
+                break
+            end
         end
         if start == nil then
             return
@@ -74,7 +77,7 @@ function CssRgbPicker.parse_color(s, init)
         local B = cap2rgb(cap3)
         if R and G and B then
             local ex_patten = config.get("exclude_pattern")
-            if not utils.is_excluded(ex_patten.css_rgb, s, init, start, end_) then
+            if not utils.is_excluded(ex_patten.css_rgb, pattern, s, init, start, end_) then
                 local A = cap2alpha(cap4)
                 return start, end_, { R, G, B }, A
             end

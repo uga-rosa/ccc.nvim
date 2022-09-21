@@ -327,7 +327,7 @@ function NamePicker.parse_color(s, init)
             return
         end
         local ex_patten = config.get("exclude_pattern")
-        if not utils.is_excluded(ex_patten.css_name, s, init, start, end_) then
+        if not utils.is_excluded(ex_patten.css_name, name_lst, s, init, start, end_) then
             return start, end_, RGB
         end
         init = end_ + 1

@@ -33,13 +33,13 @@ return {
         ccc.picker.css_hsl,
     },
     exclude_pattern = {
-        hex = {
-            "[%w_]#%x%x%x",
-            "[%w_]#%x%x%x%x%x%x",
-        },
+        hex = "[%w_]{{pattern}}",
         css_rgb = nil,
         css_hsl = nil,
-        css_name = nil,
+        css_name = {
+            "[%w_]{{pattern}}",
+            "{{pattern}}[%w_]",
+        },
     },
     output_line = ccc.output_line,
     highlighter = {

@@ -16,6 +16,11 @@ local function cap2rgb(cap)
     end
 end
 
+local pattern = {
+    "#(%x%x)(%x%x)(%x%x)",
+    "#(%x)(%x)(%x)",
+}
+
 ---@param s string
 ---@param init? integer
 ---@return integer? start
@@ -26,9 +31,11 @@ function HexPicker.parse_color(s, init)
     -- The shortest patten is 4 characters like `#fff`
     while init <= #s - 3 do
         local start, end_, cap1, cap2, cap3
-        start, end_, cap1, cap2, cap3 = s:find("#(%x%x)(%x%x)(%x%x)", init)
-        if start == nil then
-            start, end_, cap1, cap2, cap3 = s:find("#(%x)(%x)(%x)", init)
+        for _, pat in ipairs(pattern) do
+            start, end_, cap1, cap2, cap3 = s:find(pat, init)
+            if start then
+                break
+            end
         end
         if start == nil then
             return
@@ -38,7 +45,7 @@ function HexPicker.parse_color(s, init)
         local B = cap2rgb(cap3)
         if R and G and B then
             local ex_patten = config.get("exclude_pattern")
-            if not utils.is_excluded(ex_patten.hex, s, init, start, end_) then
+            if not utils.is_excluded(ex_patten.hex, pattern, s, init, start, end_) then
                 return start, end_, { R, G, B }
             end
         end
