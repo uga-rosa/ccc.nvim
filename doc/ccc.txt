@@ -185,7 +185,10 @@ Default: {
 exclude_pattern ~
 table
 Default: {
-	hex = "[%w_]{{pattern}}",
+	hex = {
+		"[%w_]{{pattern}}",
+		"{{pattern}}[%w_]",
+	},
 	css_rgb = nil,
 	css_hsl = nil,
 	css_name = {
@@ -193,7 +196,7 @@ Default: {
 		"{{pattern}}[%w_]",
 	},
 }
-	Define exclude patterns for each picker. {{pattern}} is expanded to
+	Define exclude patterns for each picker. `{{pattern}}` is expanded to
 	the pattern defined in each picker. For example, default option of hex
 	excludes 'foo#add' in the vim script.
 
