@@ -176,4 +176,7 @@ function M.mapping.set100()
     M.set_percent(100)
 end
 
+-- Disable only some of the default mappings
+M.mapping.none = "<Plug>(ccc-none)"
+
 return M

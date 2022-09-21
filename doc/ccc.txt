@@ -241,12 +241,36 @@ Default: { "WinScrolled", "TextChanged", "TextChangedI" }
 	Events to update highlighting.
 
 
+                                           *ccc-option-disable-default-mappings*
+disable_default_mappings ~
+boolean
+Default: false
+	If true, all default mappings are disabled.
+
+
                                                            *ccc-option-mappings*
 mappings ~
 table
 Default: See |ccc-action|
 	The mappings are set in the UI of ccc. The table where lhs is key and
-	rhs is value.
+	rhs is value. To disable all default mappings, use
+	|ccc-option-disable-default-mappings|. To disable only some of the
+	default mappings, set ccc.mapping.none.
+
+
+>
+	local ccc = require("ccc")
+	local mapping = ccc.mapping
+
+	ccc.setup({
+		-- Disable all default mappings
+		-- disable_default_mappings = true
+		mappings = {
+			-- Disable only 'q' (|ccc-action-quit|)
+			q = mapping.none
+		}
+	})
+<
 
 
 
