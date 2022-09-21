@@ -175,7 +175,6 @@ end
 ---@return boolean
 function utils.is_excluded(exclude_pattern, pattern, s, init, start, end_)
     exclude_pattern = utils.expand_template(exclude_pattern, pattern)
-    dump(exclude_pattern)
     for _, ex in pairs(exclude_pattern) do
         local ex_start, ex_end = s:find(ex, init)
         if ex_start and ex_start <= start and end_ <= ex_end then
