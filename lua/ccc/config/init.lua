@@ -8,6 +8,12 @@ function M.setup(opt)
     local default = require("ccc.config.default")
     if opt.disable_default_mappings then
         default.mappings = {}
+    else
+        for lhs, rhs in pairs(opt.mappings or {}) do
+            if rhs == "<Plug>(ccc-none)" then
+                default.mappings[lhs] = nil
+            end
+        end
     end
     M.config = vim.tbl_deep_extend("force", M.config, default, opt)
 
