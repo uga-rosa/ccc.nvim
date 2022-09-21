@@ -185,16 +185,17 @@ Default: {
 exclude_pattern ~
 table
 Default: {
-	hex = {
-		"[%w_]#%x%x%x",
-		"[%w_]#%x%x%x%x%x%x",
-	}
+	hex = "[%w_]{{pattern}}",
 	css_rgb = nil,
 	css_hsl = nil,
-	css_name = nil,
+	css_name = {
+		"[%w_]{{pattern}}",
+		"{{pattern}}[%w_]",
+	},
 }
-	Exclude patterns for each picker. For example, default patterns
-	exclude 'foo#add' in the vim script.
+	Define exclude patterns for each picker. {{pattern}} is expanded to
+	the pattern defined in each picker. For example, default option of hex
+	excludes 'foo#add' in the vim script.
 
 
                                                         *ccc-option-output-line*

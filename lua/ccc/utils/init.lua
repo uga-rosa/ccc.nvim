@@ -144,18 +144,39 @@ function utils.fg_hex(bg_hex)
     end
 end
 
----@param ex_pattern string | string[] | nil
+---@param exclude_pattern nil | string | string[]
+---@param pattern string[]
+---@return string[]
+function utils.expand_template(exclude_pattern, pattern)
+    if exclude_pattern == nil then
+        exclude_pattern = {}
+    elseif type(exclude_pattern) == "string" then
+        exclude_pattern = { exclude_pattern }
+    end
+    local new = {}
+    for _, ex in pairs(exclude_pattern) do
+        if ex:find("{{pattern}}", 1, true) then
+            for _, pat in pairs(pattern) do
+                pat = pat:gsub("%%", "%%%%")
+                local expanded = ex:gsub("{{pattern}}", pat)
+                table.insert(new, expanded)
+            end
+        else
+            table.insert(new, ex)
+        end
+    end
+    return new
+end
+
+---@param exclude_pattern nil | string | string[]
 ---@param s any
 ---@param start any
 ---@param end_ any
 ---@return boolean
-function utils.is_excluded(ex_pattern, s, init, start, end_)
-    if ex_pattern == nil then
-        return false
-    end
-    ex_pattern = type(ex_pattern) == "table" and ex_pattern or { ex_pattern }
-    for _, pattern in ipairs(ex_pattern) do
-        local ex_start, ex_end = s:find(pattern, init)
+function utils.is_excluded(exclude_pattern, pattern, s, init, start, end_)
+    exclude_pattern = utils.expand_template(exclude_pattern, pattern)
+    for _, ex in pairs(exclude_pattern) do
+        local ex_start, ex_end = s:find(ex, init)
         if ex_start and ex_start <= start and end_ <= ex_end then
             return true
         end
