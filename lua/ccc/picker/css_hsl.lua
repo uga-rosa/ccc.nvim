@@ -39,6 +39,7 @@ local pattern = {
     "hsl%(%s*(%d+)%s*,%s*(%d+)%%%s*,%s*(%d+)%%%s*%)",
     "hsl%(%s*(%d+)%s*,%s*(%d+)%%%s*,%s*(%d+)%%%s*,%s*([%.%d]+%%?)%s*%)",
 }
+local exclude_pattern
 
 ---@param s string
 ---@param init? integer
@@ -48,6 +49,10 @@ local pattern = {
 ---@return number? alpha
 function CssHslPicker.parse_color(s, init)
     init = vim.F.if_nil(init, 1)
+    if exclude_pattern == nil then
+        local ex_pat = config.get("exclude_pattern")
+        exclude_pattern = utils.expand_template(ex_pat.css_hsl, pattern)
+    end
     -- The shortest patten is 12 characters like `hsl(0,0%,0%)`
     while init <= #s - 11 do
         local start, end_, cap1, cap2, cap3, cap4
@@ -64,8 +69,7 @@ function CssHslPicker.parse_color(s, init)
         local S = cap2sl(cap2)
         local L = cap2sl(cap3)
         if H and S and L then
-            local ex_patten = config.get("exclude_pattern")
-            if not utils.is_excluded(ex_patten.css_hsl, pattern, s, init, start, end_) then
+            if not utils.is_excluded(exclude_pattern, s, init, start, end_) then
                 local RGB = convert.hsl2rgb({ H, S, L })
                 local A = cap2alpha(cap4)
                 return start, end_, RGB, A
