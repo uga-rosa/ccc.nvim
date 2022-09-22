@@ -90,7 +90,8 @@ local mapping = ccc.mapping
 
 - quit
     - Default mapping: `q`
-    - Cancel and close the UI without replace or insert. Don't use `:q`.
+    - Alias of `:quit`.
+    - Cancel and close the UI without replace or insert.
     - `mapping.quit()`
 
 - toggle_input_mode
