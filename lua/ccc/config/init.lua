@@ -11,6 +11,7 @@ function M.setup(opt)
     else
         for lhs, rhs in pairs(opt.mappings or {}) do
             if rhs == "<Plug>(ccc-none)" then
+                opt.mappings[lhs] = nil
                 default.mappings[lhs] = nil
             end
         end
