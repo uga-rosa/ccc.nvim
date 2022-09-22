@@ -85,7 +85,7 @@ function M.set_percent(percent)
 end
 
 function M.mapping.quit()
-    UI:quit()
+    vim.cmd("quit")
 end
 
 function M.mapping.complete()

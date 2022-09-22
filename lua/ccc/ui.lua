@@ -88,7 +88,7 @@ function UI:open(insert)
     if self.color == nil then
         self:new()
     end
-    if api.nvim_win_is_valid(self.win_id or -1) then
+    if self.win_id and api.nvim_win_is_valid(self.win_id) then
         return
     end
 
@@ -104,33 +104,24 @@ function UI:open(insert)
     self:update()
     self:_open()
     utils.cursor_set({ 2, 1 })
+    api.nvim_create_augroup("ccc-on-close", { clear = true })
+    api.nvim_create_autocmd("WinClosed", {
+        pattern = self.win_id .. "",
+        callback = function()
+            self:on_close(true)
+        end,
+        once = true,
+    })
 end
 
-function UI:_close()
-    api.nvim_win_close(self.win_id, true)
-end
-
-function UI:close()
-    if not api.nvim_win_is_valid(self.win_id) then
-        return
-    end
-    self:_close()
+---@param from_autocmd boolean
+function UI:on_close(from_autocmd)
+    self.win_id = nil
+    self:_set_color("")
     if self.is_insert then
         vim.cmd("startinsert")
     end
-    self:_set_color("")
-end
-
-function UI:refresh()
-    if self.win_id and api.nvim_win_is_valid(self.win_id) then
-        self:_close()
-        self:_open()
-    end
-end
-
-function UI:quit()
-    self:close()
-    if config.get("save_on_quit") then
+    if not from_autocmd or config.get("save_on_quit") then
         self.prev_colors:add(self.color)
     end
 end
@@ -144,8 +135,9 @@ function UI:complete()
         end
         return
     end
-    self:close()
-    self.prev_colors:add(self.color)
+    api.nvim_del_augroup_by_name("ccc-on-close")
+    api.nvim_win_close(self.win_id, true)
+    self:on_close(false)
     if self.is_insert then
         utils.feedkey(self.color:str(), true)
     else
@@ -154,6 +146,13 @@ function UI:complete()
             .. self.color:str()
             .. line:sub(self.end_col + 1)
         api.nvim_set_current_line(new_line)
+    end
+end
+
+function UI:refresh()
+    if self.win_id and api.nvim_win_is_valid(self.win_id) then
+        api.nvim_win_set_height(self.win_id, self.win_height)
+        api.nvim_win_set_width(self.win_id, self.win_width)
     end
 end
 

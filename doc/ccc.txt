@@ -380,7 +380,7 @@ Default mapping: <CR>
 quit ~
 mapping.quit()
 Default mapping: q
-	Cancel and close the UI without replace or insert. Don't use |:q|.
+	Alias of |:quit|. Cancel and close the UI without replace or insert.
 
 
                                                   *ccc-action-toggle-input-mode*
