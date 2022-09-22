@@ -76,7 +76,7 @@ function UI:_open()
     api.nvim_win_set_option(
         self.win_id,
         "winhl",
-        "NormalFloat:CccFloatNormal,FloatBorder:CccFloatBorder"
+        "Normal:CccFloatNormal,EndOfBuffer:CccFloatNormal,FloatBorder:CccFloatBorder"
     )
     api.nvim_win_set_hl_ns(self.win_id, self.ns_id)
 end
