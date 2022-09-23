@@ -31,6 +31,7 @@ function M.setup(opt)
         ["config.outputs"] = { M.config.outputs, "t" },
         ["config.pickers"] = { M.config.pickers, "t" },
         ["config.exclude_pattern"] = { M.config.exclude_pattern, "t" },
+        ["config.highlight_mode"] = { M.config.highlight_mode, "s" },
         ["config.output_line"] = { M.config.output_line, "f" },
         ["config.highlighter"] = { M.config.highlighter, "t" },
         ["config.highlighter.auto_enable"] = { M.config.highlighter.auto_enable, "b" },

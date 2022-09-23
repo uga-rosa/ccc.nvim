@@ -56,6 +56,8 @@ return {
             "{{pattern}}[%w_]",
         },
     },
+    ---@type "fg" | "bg" | "foreground" | "background"
+    highlight_mode = "bg",
     ---@type function
     output_line = ccc.output_line,
     ---@type {auto_enable: boolean, filetypes: string[], excludes: string[], events: string[]}
