@@ -2,11 +2,17 @@ local ccc = require("ccc")
 local mapping = ccc.mapping
 
 return {
+    ---@type string hex
     default_color = "#000000",
+    ---@type string
     bar_char = "■",
+    ---@type string
     point_char = "◇",
+    ---@type string hex
     point_color = "",
+    ---@type integer
     bar_len = 30,
+    ---@type table
     win_opts = {
         relative = "cursor",
         row = 1,
@@ -14,24 +20,30 @@ return {
         style = "minimal",
         border = "rounded",
     },
+    ---@type boolean
     preserve = false,
+    ---@type boolean
     save_on_quit = false,
+    ---@type ColorInput[]
     inputs = {
         ccc.input.rgb,
         ccc.input.hsl,
         ccc.input.cmyk,
     },
+    ---@type ColorOutput[]
     outputs = {
         ccc.output.hex,
         ccc.output.hex_short,
         ccc.output.css_rgb,
         ccc.output.css_hsl,
     },
+    ---@type ColorPicker[]
     pickers = {
         ccc.picker.hex,
         ccc.picker.css_rgb,
         ccc.picker.css_hsl,
     },
+    ---@type table<string, string[] | string | nil>
     exclude_pattern = {
         hex = {
             "[%w_]{{pattern}}",
@@ -44,13 +56,16 @@ return {
             "{{pattern}}[%w_]",
         },
     },
+    ---@type function
     output_line = ccc.output_line,
+    ---@type {auto_enable: boolean, filetypes: string[], excludes: string[], events: string[]}
     highlighter = {
         auto_enable = false,
         filetypes = {},
         excludes = {},
         events = { "WinScrolled", "TextChanged", "TextChangedI" },
     },
+    ---@type table<string, function>
     mappings = {
         ["q"] = mapping.quit,
         ["<CR>"] = mapping.complete,

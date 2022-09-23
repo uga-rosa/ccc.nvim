@@ -160,9 +160,10 @@ function utils.expand_template(exclude_pattern, pattern)
 end
 
 ---@param exclude_pattern string[]
----@param s any
----@param start any
----@param end_ any
+---@param s string
+---@param init integer
+---@param start integer
+---@param end_ integer
 ---@return boolean
 function utils.is_excluded(exclude_pattern, s, init, start, end_)
     for _, ex in pairs(exclude_pattern) do
