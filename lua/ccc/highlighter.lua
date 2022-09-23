@@ -3,12 +3,13 @@ local fn = vim.fn
 
 local config = require("ccc.config")
 local utils = require("ccc.utils")
-local hex = require("ccc.output.hex")
+local rgb2hex = require("ccc.output.hex").str
 
 ---@class Highlighter
 ---@field pickers ColorPicker[]
 ---@field ns_id integer
 ---@field aug_id integer
+---@field is_defined table<string, boolean> #Set. Keys are hexes.
 ---@field ft_filter table<string, boolean>
 ---@field events string[]
 ---@field enabled boolean
@@ -17,6 +18,7 @@ local Highlighter = {}
 function Highlighter:init()
     self.pickers = config.get("pickers")
     self.ns_id = api.nvim_create_namespace("ccc-highlighter")
+    self.is_defined = {}
     local highlighter_config = config.get("highlighter")
     local filetypes = highlighter_config.filetypes
     local ft_filter = {}
@@ -79,11 +81,14 @@ function Highlighter:update()
                 break
             end
             ---@cast RGB number[]
-            local hl_group = "CccHighlighter" .. row .. "_" .. start
-            local bg = hex.str(RGB)
-            local fg = utils.fg_hex(bg)
-            api.nvim_set_hl(0, hl_group, { fg = fg, bg = bg })
-            api.nvim_buf_add_highlight(0, self.ns_id, hl_group, row, start - 1, end_)
+            local hex = rgb2hex(RGB)
+            local hl_name = "CccHighlighter" .. hex:sub(2)
+            if not self.is_defined[hex] then
+                local highlight = utils.create_highlight(hex)
+                api.nvim_set_hl(0, hl_name, highlight)
+                self.is_defined[hex] = true
+            end
+            api.nvim_buf_add_highlight(0, self.ns_id, hl_name, row, start - 1, end_)
             init = end_ + 1
         end
     end
