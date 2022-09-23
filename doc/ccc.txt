@@ -201,6 +201,14 @@ Default: {
 	excludes 'foo#add' in the vim script.
 
 
+                                                     *ccc-option-highlight-mode*
+highlight_mode ~
+"fg" | "bg" | "foreground" | "background"
+Default: "bg"
+	Option to highlight text foreground or background. It is used to
+	output_line and highlighter.
+
+
                                                         *ccc-option-output-line*
 output_line ~
 function
