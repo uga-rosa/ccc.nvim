@@ -73,12 +73,12 @@ function UI:_open()
     win_opts.width = self.win_width
     self.win_id = api.nvim_open_win(self.bufnr, true, win_opts)
     api.nvim_win_set_option(self.win_id, "signcolumn", "no")
-    api.nvim_win_set_option(
-        self.win_id,
-        "winhl",
-        "Normal:CccFloatNormal,EndOfBuffer:CccFloatNormal,FloatBorder:CccFloatBorder"
-    )
     api.nvim_win_set_hl_ns(self.win_id, self.ns_id)
+    local float_normal = api.nvim_get_hl_by_name("CccFloatNormal", true)
+    local float_border = api.nvim_get_hl_by_name("CccFloatBorder", true)
+    set_hl(self.ns_id, "Normal", float_normal)
+    set_hl(self.ns_id, "EndOfBuffer", float_normal)
+    set_hl(self.ns_id, "FloatBorder", float_border)
 end
 
 ---@param insert boolean
