@@ -134,14 +134,11 @@ local function is_bright(HEX)
     return luminance > 127
 end
 
----@param bg_hex string
----@return string
-function utils.fg_hex(bg_hex)
-    if is_bright(bg_hex) then
-        return "#000000"
-    else
-        return "#ffffff"
-    end
+---@param bg string
+---@return table
+function utils.create_highlight(bg)
+    local fg = is_bright(bg) and "#000000" or "#ffffff"
+    return { fg = fg, bg = bg }
 end
 
 ---@param exclude_pattern nil | string | string[]
