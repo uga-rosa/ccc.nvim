@@ -72,30 +72,14 @@ return {
         ["M"] = mapping.set50,
         ["L"] = mapping.set100,
         ["0"] = mapping.set0,
-        ["1"] = function()
-            ccc.set_percent(10)
-        end,
-        ["2"] = function()
-            ccc.set_percent(20)
-        end,
-        ["3"] = function()
-            ccc.set_percent(30)
-        end,
-        ["4"] = function()
-            ccc.set_percent(40)
-        end,
+        ["1"] = function() ccc.set_percent(10) end,
+        ["2"] = function() ccc.set_percent(20) end,
+        ["3"] = function() ccc.set_percent(30) end,
+        ["4"] = function() ccc.set_percent(40) end,
         ["5"] = mapping.set50,
-        ["6"] = function()
-            ccc.set_percent(60)
-        end,
-        ["7"] = function()
-            ccc.set_percent(70)
-        end,
-        ["8"] = function()
-            ccc.set_percent(80)
-        end,
-        ["9"] = function()
-            ccc.set_percent(90)
-        end,
+        ["6"] = function() ccc.set_percent(60) end,
+        ["7"] = function() ccc.set_percent(70) end,
+        ["8"] = function() ccc.set_percent(80) end,
+        ["9"] = function() ccc.set_percent(90) end,
     },
 }

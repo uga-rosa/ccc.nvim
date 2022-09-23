@@ -75,106 +75,56 @@ function M.output_line(b_color, a_color, width)
 end
 
 ---@param delta integer
-function M.delta(delta)
-    UI:delta(delta)
-end
+function M.delta(delta) UI:delta(delta) end
 
 ---@param percent integer
-function M.set_percent(percent)
-    UI:set_percent(percent)
-end
+function M.set_percent(percent) UI:set_percent(percent) end
 
-function M.mapping.quit()
-    vim.cmd("quit")
-end
+function M.mapping.quit() vim.cmd("quit") end
 
-function M.mapping.complete()
-    UI:complete()
-end
+function M.mapping.complete() UI:complete() end
 
-function M.mapping.toggle_input_mode()
-    UI:toggle_input_mode()
-end
+function M.mapping.toggle_input_mode() UI:toggle_input_mode() end
 
-function M.mapping.toggle_output_mode()
-    UI:toggle_output_mode()
-end
+function M.mapping.toggle_output_mode() UI:toggle_output_mode() end
 
-function M.mapping.show_alpha()
-    UI.alpha:show()
-end
+function M.mapping.show_alpha() UI.alpha:show() end
 
-function M.mapping.hide_alpha()
-    UI.alpha:hide()
-end
+function M.mapping.hide_alpha() UI.alpha:hide() end
 
-function M.mapping.toggle_alpha()
-    UI.alpha:toggle()
-end
+function M.mapping.toggle_alpha() UI.alpha:toggle() end
 
-function M.mapping.show_prev_colors()
-    UI.prev_colors:show()
-end
+function M.mapping.show_prev_colors() UI.prev_colors:show() end
 
-function M.mapping.hide_prev_colors()
-    UI.prev_colors:hide()
-end
+function M.mapping.hide_prev_colors() UI.prev_colors:hide() end
 
-function M.mapping.toggle_prev_colors()
-    UI.prev_colors:toggle()
-end
+function M.mapping.toggle_prev_colors() UI.prev_colors:toggle() end
 
-function M.mapping.goto_prev()
-    UI.prev_colors:goto_prev()
-end
+function M.mapping.goto_prev() UI.prev_colors:goto_prev() end
 
-function M.mapping.goto_next()
-    UI.prev_colors:goto_next()
-end
+function M.mapping.goto_next() UI.prev_colors:goto_next() end
 
-function M.mapping.goto_head()
-    UI.prev_colors:goto_head()
-end
+function M.mapping.goto_head() UI.prev_colors:goto_head() end
 
-function M.mapping.goto_tail()
-    UI.prev_colors:goto_tail()
-end
+function M.mapping.goto_tail() UI.prev_colors:goto_tail() end
 
-function M.mapping.increase1()
-    M.delta(1)
-end
+function M.mapping.increase1() M.delta(1) end
 
-function M.mapping.increase5()
-    M.delta(5)
-end
+function M.mapping.increase5() M.delta(5) end
 
-function M.mapping.increase10()
-    M.delta(10)
-end
+function M.mapping.increase10() M.delta(10) end
 
-function M.mapping.decrease1()
-    M.delta(-1)
-end
+function M.mapping.decrease1() M.delta(-1) end
 
-function M.mapping.decrease5()
-    M.delta(-5)
-end
+function M.mapping.decrease5() M.delta(-5) end
 
-function M.mapping.decrease10()
-    M.delta(-10)
-end
+function M.mapping.decrease10() M.delta(-10) end
 
-function M.mapping.set0()
-    M.set_percent(0)
-end
+function M.mapping.set0() M.set_percent(0) end
 
-function M.mapping.set50()
-    M.set_percent(50)
-end
+function M.mapping.set50() M.set_percent(50) end
 
-function M.mapping.set100()
-    M.set_percent(100)
-end
+function M.mapping.set100() M.set_percent(100) end
 
 -- Disable only some of the default mappings
 M.mapping.none = "<Plug>(ccc-none)"

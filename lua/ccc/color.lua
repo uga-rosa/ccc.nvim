@@ -39,9 +39,7 @@ function Color.new(input_mode, output_mode, alpha)
     return self
 end
 
-local function get_name(x)
-    return x.name
-end
+local function get_name(x) return x.name end
 
 ---@param input_mode string
 function Color:set_input(input_mode)
@@ -73,24 +71,16 @@ function Color:copy()
 end
 
 ---@param value number[]
-function Color:set(value)
-    self.input:set(value)
-end
+function Color:set(value) self.input:set(value) end
 
 ---@return number[] value
-function Color:get()
-    return self.input:get()
-end
+function Color:get() return self.input:get() end
 
 ---@param RGB number[]
-function Color:set_rgb(RGB)
-    self.input:set_rgb(RGB)
-end
+function Color:set_rgb(RGB) self.input:set_rgb(RGB) end
 
 ---@return number[] RGB
-function Color:get_rgb()
-    return self.input:get_rgb()
-end
+function Color:get_rgb() return self.input:get_rgb() end
 
 function Color:toggle_input()
     local RGB = self.input:get_rgb()
@@ -113,9 +103,7 @@ function Color:toggle_output()
 end
 
 ---@return string
-function Color:str()
-    return self.output.str(self.input:get_rgb(), self.alpha)
-end
+function Color:str() return self.output.str(self.input:get_rgb(), self.alpha) end
 
 ---@param index? integer
 ---@param new_value? number

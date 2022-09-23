@@ -8,23 +8,17 @@ local convert = {}
 ---@return integer G #0-255
 ---@return integer B #0-255
 function convert.rgb_format(RGB)
-    RGB = vim.tbl_map(function(n)
-        return utils.round(n * 255)
-    end, RGB)
+    RGB = vim.tbl_map(function(n) return utils.round(n * 255) end, RGB)
     return unpack(RGB)
 end
 
 ---@param RGB number[]
 ---@return number[] HSLuv
-function convert.rgb2hsluv(RGB)
-    return hsluv.rgb_to_hsluv(RGB)
-end
+function convert.rgb2hsluv(RGB) return hsluv.rgb_to_hsluv(RGB) end
 
 ---@param HSLuv number[]
 ---@return number[] RGB
-function convert.hsluv2rgb(HSLuv)
-    return hsluv.hsluv_to_rgb(HSLuv)
-end
+function convert.hsluv2rgb(HSLuv) return hsluv.hsluv_to_rgb(HSLuv) end
 
 ---@param RGB integer[]
 ---@return integer[] HSL
@@ -73,9 +67,7 @@ function convert.hsl2rgb(HSL)
     local MAX = (L + L_ * S)
     local MIN = (L - L_ * S)
 
-    local function f(x)
-        return x / 60 * (MAX - MIN) + MIN
-    end
+    local function f(x) return x / 60 * (MAX - MIN) + MIN end
 
     if H < 60 then
         RGB = { MAX, f(H), MIN }
@@ -137,9 +129,7 @@ function convert.hsv2rgb(HSV)
     local MAX = V
     local MIN = MAX - S * MAX
 
-    local function f(x)
-        return x / 60 * (MAX - MIN) + MIN
-    end
+    local function f(x) return x / 60 * (MAX - MIN) + MIN end
 
     if H < 60 then
         RGB = { MAX, f(H), MIN }
@@ -251,15 +241,11 @@ local xyz2linear = {
 
 ---@param Linear number[]
 ---@return number[] XYZ
-function convert.linear2xyz(Linear)
-    return product(linear2xyz, Linear)
-end
+function convert.linear2xyz(Linear) return product(linear2xyz, Linear) end
 
 ---@param XYZ number[]
 ---@return number[] Linear
-function convert.xyz2linear(XYZ)
-    return product(xyz2linear, XYZ)
-end
+function convert.xyz2linear(XYZ) return product(xyz2linear, XYZ) end
 
 ---@param RGB number[]
 ---@return number[] XYZ
@@ -273,9 +259,7 @@ end
 function convert.xyz2rgb(XYZ)
     local Linear = convert.xyz2linear(XYZ)
     local RGB = convert.linear2rgb(Linear)
-    return vim.tbl_map(function(n)
-        return utils.fix_overflow(n, 0, 1)
-    end, RGB)
+    return vim.tbl_map(function(n) return utils.fix_overflow(n, 0, 1) end, RGB)
 end
 
 ---@param XYZ number[]
@@ -331,9 +315,7 @@ function convert.lab2rgb(Lab)
     local XYZ = convert.lab2xyz(Lab)
     local Linear = convert.xyz2linear(XYZ)
     local RGB = convert.linear2rgb(Linear)
-    return vim.tbl_map(function(x)
-        return utils.fix_overflow(x, 0, 1)
-    end, RGB)
+    return vim.tbl_map(function(x) return utils.fix_overflow(x, 0, 1) end, RGB)
 end
 
 return convert

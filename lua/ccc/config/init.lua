@@ -42,9 +42,7 @@ function M.setup(opt)
 
     if M.config.highlighter.auto_enable then
         api.nvim_create_autocmd("VimEnter", {
-            callback = function()
-                require("ccc.highlighter"):enable()
-            end,
+            callback = function() require("ccc.highlighter"):enable() end,
             once = true,
         })
     end

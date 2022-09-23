@@ -17,14 +17,10 @@ function SafeArray.new(t)
 end
 
 ---@return unknown[]
-function SafeArray:raw()
-    return self._raw
-end
+function SafeArray:raw() return self._raw end
 
 ---@return ...unknown
-function SafeArray:unpack()
-    return unpack(self._raw)
-end
+function SafeArray:unpack() return unpack(self._raw) end
 
 ---@param func fun(x: unknown): unknown
 ---@return SafeArray
@@ -62,14 +58,10 @@ function SafeArray:concat(sep, i, j)
 end
 
 ---@return number
-function SafeArray:max()
-    return utils.max(unpack(self._raw))
-end
+function SafeArray:max() return utils.max(unpack(self._raw)) end
 
 ---@return number
-function SafeArray:min()
-    return utils.min(unpack(self._raw))
-end
+function SafeArray:min() return utils.min(unpack(self._raw)) end
 
 ---@return table<any, boolean>
 function SafeArray:to_set()

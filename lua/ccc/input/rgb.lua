@@ -11,9 +11,7 @@ local RgbInput = setmetatable({
 
 ---@param n number
 ---@return string
-function RgbInput.format(n)
-    return ("%6d"):format(n * 255)
-end
+function RgbInput.format(n) return ("%6d"):format(n * 255) end
 
 local function copy(t)
     local new = {}
@@ -25,14 +23,10 @@ end
 
 ---@param RGB number[]
 ---@return number[] RGB
-function RgbInput.from_rgb(RGB)
-    return copy(RGB)
-end
+function RgbInput.from_rgb(RGB) return copy(RGB) end
 
 ---@param RGB number[]
 ---@return number[] RGB
-function RgbInput.to_rgb(RGB)
-    return copy(RGB)
-end
+function RgbInput.to_rgb(RGB) return copy(RGB) end
 
 return RgbInput
