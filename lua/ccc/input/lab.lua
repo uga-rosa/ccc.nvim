@@ -12,14 +12,10 @@ local LabInput = setmetatable({
 
 ---@param RGB number[]
 ---@return number[] Lab
-function LabInput.from_rgb(RGB)
-    return convert.rgb2lab(RGB)
-end
+function LabInput.from_rgb(RGB) return convert.rgb2lab(RGB) end
 
 ---@param Lab number[]
 ---@return number[] RGB
-function LabInput.to_rgb(Lab)
-    return convert.lab2rgb(Lab)
-end
+function LabInput.to_rgb(Lab) return convert.lab2rgb(Lab) end
 
 return LabInput

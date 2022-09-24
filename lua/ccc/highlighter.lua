@@ -27,9 +27,7 @@ function Highlighter:init()
             ft_filter[v] = false
         end
         setmetatable(ft_filter, {
-            __index = function()
-                return true
-            end,
+            __index = function() return true end,
         })
     else
         for _, v in ipairs(filetypes) do
@@ -51,9 +49,7 @@ function Highlighter:enable()
     api.nvim_create_autocmd(self.events, {
         group = self.aug_id,
         pattern = "*",
-        callback = function()
-            self:update()
-        end,
+        callback = function() self:update() end,
     })
 end
 

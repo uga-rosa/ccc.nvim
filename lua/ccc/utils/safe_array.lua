@@ -17,9 +17,7 @@ function safe_array.new(t)
 end
 
 ---@return unknown[]
-function safe_array:unpack()
-    return self.raw
-end
+function safe_array:unpack() return self.raw end
 
 ---@param func fun(x: any): any
 ---@return safe_array
@@ -57,14 +55,10 @@ function safe_array:concat(sep, i, j)
 end
 
 ---@return number
-function safe_array:max()
-    return utils.max(unpack(self:unpack()))
-end
+function safe_array:max() return utils.max(unpack(self:unpack())) end
 
 ---@return number
-function safe_array:min()
-    return utils.min(unpack(self:unpack()))
-end
+function safe_array:min() return utils.min(unpack(self:unpack())) end
 
 ---@class Set table<any, boolean>
 

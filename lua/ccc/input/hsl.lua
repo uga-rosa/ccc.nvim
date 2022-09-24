@@ -22,14 +22,10 @@ end
 
 ---@param RGB number[]
 ---@return number[] HSL
-function HslInput.from_rgb(RGB)
-    return convert.rgb2hsl(RGB)
-end
+function HslInput.from_rgb(RGB) return convert.rgb2hsl(RGB) end
 
 ---@param HSL number[]
 ---@return number[] RGB
-function HslInput.to_rgb(HSL)
-    return convert.hsl2rgb(HSL)
-end
+function HslInput.to_rgb(HSL) return convert.hsl2rgb(HSL) end
 
 return HslInput

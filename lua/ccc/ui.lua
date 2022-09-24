@@ -1,8 +1,6 @@
 local api = vim.api
 
-local function set_hl(_, name, val)
-    api.nvim_set_hl(0, name, val)
-end
+local function set_hl(_, name, val) api.nvim_set_hl(0, name, val) end
 
 local add_hl = api.nvim_buf_add_highlight
 
@@ -107,9 +105,7 @@ function UI:open(insert)
     api.nvim_create_augroup("ccc-on-close", { clear = true })
     api.nvim_create_autocmd("WinClosed", {
         pattern = self.win_id .. "",
-        callback = function()
-            self:on_close(true)
-        end,
+        callback = function() self:on_close(true) end,
         once = true,
     })
 end
