@@ -1,3 +1,3 @@
 ---@class ColorOutput
 ---@field name string
----@field str fun(RGB: number[], alpha?: AlphaSlider): string
+---@field str fun(RGB: number[], A?: number): string

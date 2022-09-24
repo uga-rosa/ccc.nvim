@@ -114,7 +114,11 @@ end
 
 ---@return string
 function Color:str()
-    return self.output.str(self.input:get_rgb(), self.alpha)
+    local A
+    if self.alpha.is_showed then
+        A = self.alpha:get()
+    end
+    return self.output.str(self.input:get_rgb(), A)
 end
 
 ---@param index? integer

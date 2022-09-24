@@ -6,16 +6,15 @@ local CssHslOutput = {
 }
 
 ---@param RGB number[]
----@param alpha AlphaSlider
+---@param A? number
 ---@return string
-function CssHslOutput.str(RGB, alpha)
+function CssHslOutput.str(RGB, A)
     local H, S, L = unpack(convert.rgb2hsl(RGB))
     S = S * 100
     L = L * 100
-    if alpha.is_showed then
+    if A then
         local pattern = "hsl(%d,%d%%,%d%%,%d%%)"
-        local A = alpha:get() * 100
-        return pattern:format(H, S, L, A)
+        return pattern:format(H, S, L, A * 100)
     else
         local pattern = "hsl(%d,%d%%,%d%%)"
         return pattern:format(H, S, L)
