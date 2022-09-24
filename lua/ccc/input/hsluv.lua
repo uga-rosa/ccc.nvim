@@ -12,10 +12,14 @@ local HSLuvInput = setmetatable({
 
 ---@param RGB number[]
 ---@return number[] HSLuv
-function HSLuvInput.from_rgb(RGB) return convert.rgb2hsluv(RGB) end
+function HSLuvInput.from_rgb(RGB)
+    return convert.rgb2hsluv(RGB)
+end
 
 ---@param HSLuv number[]
 ---@return number[] RGB
-function HSLuvInput.to_rgb(HSLuv) return convert.hsluv2rgb(HSLuv) end
+function HSLuvInput.to_rgb(HSLuv)
+    return convert.hsluv2rgb(HSLuv)
+end
 
 return HSLuvInput

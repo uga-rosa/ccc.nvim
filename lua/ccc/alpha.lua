@@ -49,14 +49,20 @@ function AlphaSlider:toggle()
 end
 
 ---@param value number
-function AlphaSlider:set(value) self.value = value end
+function AlphaSlider:set(value)
+    self.value = value
+end
 
 ---@return number
-function AlphaSlider:get() return self.value end
+function AlphaSlider:get()
+    return self.value
+end
 
 ---For slider
 ---@return string
-function AlphaSlider:str() return ("%5d%%"):format(self.value * 100) end
+function AlphaSlider:str()
+    return ("%5d%%"):format(self.value * 100)
+end
 
 ---@param value? number
 function AlphaSlider:hex(value)

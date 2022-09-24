@@ -38,12 +38,15 @@ function M.setup(opt)
         ["config.highlighter.filetypes"] = { M.config.highlighter.filetypes, "t" },
         ["config.highlighter.excludes"] = { M.config.highlighter.excludes, "t" },
         ["config.highlighter.events"] = { M.config.highlighter.events, "t" },
+        ["config.convert"] = { M.config.convert, "t" },
         ["config.mappings"] = { M.config.mappings, "t" },
     })
 
     if M.config.highlighter.auto_enable then
         api.nvim_create_autocmd("VimEnter", {
-            callback = function() require("ccc.highlighter"):enable() end,
+            callback = function()
+                require("ccc.highlighter"):enable()
+            end,
             once = true,
         })
     end

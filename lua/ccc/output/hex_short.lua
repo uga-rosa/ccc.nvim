@@ -10,7 +10,11 @@ local HexShortOutput = {
 ---@return string
 function HexShortOutput.str(RGB)
     RGB = { convert.rgb_format(RGB) }
-    local hex = sa.new(RGB):map(function(x) return ("%x"):format(x):sub(1, 1) end):concat()
+    local hex = sa.new(RGB)
+        :map(function(x)
+            return ("%x"):format(x):sub(1, 1)
+        end)
+        :concat()
     return "#" .. hex
 end
 

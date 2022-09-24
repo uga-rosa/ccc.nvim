@@ -105,7 +105,9 @@ function UI:open(insert)
     api.nvim_create_augroup("ccc-on-close", { clear = true })
     api.nvim_create_autocmd("WinClosed", {
         pattern = self.win_id .. "",
-        callback = function() self:on_close(true) end,
+        callback = function()
+            self:on_close(true)
+        end,
         once = true,
     })
 end
