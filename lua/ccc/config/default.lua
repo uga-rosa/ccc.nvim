@@ -65,7 +65,7 @@ return {
         auto_enable = false,
         filetypes = {},
         excludes = {},
-        events = { "WinScrolled", "TextChanged", "TextChangedI" },
+        events = { "WinScrolled", "TextChanged", "TextChangedI", "BufEnter" },
     },
     ---@type {[1]: ColorPicker, [2]: ColorOutput}[]
     convert = {

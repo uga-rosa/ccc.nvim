@@ -1,5 +1,3 @@
-local api = vim.api
-
 local M = {
     config = {},
 }
@@ -43,16 +41,7 @@ function M.setup(opt)
     })
 
     if M.config.highlighter.auto_enable then
-        if vim.fn.has("vim_starting") == 1 then
-            api.nvim_create_autocmd("VimEnter", {
-                callback = function()
-                    require("ccc.highlighter"):enable()
-                end,
-                once = true,
-            })
-        else
-            require("ccc.highlighter"):enable()
-        end
+        require("ccc.highlighter"):enable()
     end
 end
 
