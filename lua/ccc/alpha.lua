@@ -19,13 +19,18 @@ end
 ---@param cursor_keep? boolean
 function AlphaSlider:show(cursor_keep)
     self.is_showed = true
-    local ui = self.ui
-    ui:update()
-    ui.win_height = ui.win_height + 1
-    ui:refresh()
     if not cursor_keep then
         self.prev_pos = utils.cursor()
-        utils.cursor_set({ ui.win_height - 1, 1 })
+    end
+    local ui = self.ui
+    ui:update()
+    ui:refresh()
+    if not cursor_keep then
+        local lnum = ui.win_height - 1
+        if ui.prev_colors.is_showed then
+            lnum = lnum - 1
+        end
+        utils.cursor_set({ lnum, 1 })
     end
 end
 
@@ -33,7 +38,6 @@ function AlphaSlider:hide()
     self.is_showed = false
     local ui = self.ui
     ui:update()
-    ui.win_height = ui.win_height - 1
     ui:refresh()
     if self.prev_pos then
         utils.cursor_set(self.prev_pos)

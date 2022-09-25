@@ -54,11 +54,11 @@ function UI:init()
         self:set_default_color()
     end
     self.win_height = 2 + #self.color.input.value
-    self.row = utils.row()
-    self.start_col = utils.col()
     if self.alpha.is_showed then
         self.win_height = self.win_height + 1
     end
+    self.row = utils.row()
+    self.start_col = utils.col()
 end
 
 function UI:set_default_color()
@@ -204,6 +204,7 @@ local function create_bar(value, min, max, bar_len)
     return string.rep(bar_char, ratio_ - 1) .. point_char .. string.rep(bar_char, bar_len - ratio_)
 end
 
+---@return string[]
 function UI:buffer()
     local buffer = {}
 
@@ -239,6 +240,10 @@ function UI:buffer()
     local output_line = config.get("output_line")(self.before_color, self.color, width)
     table.insert(buffer, output_line)
 
+    self.win_height = #buffer
+    if self.prev_colors.is_showed then
+        self.win_height = self.win_height + 1
+    end
     return buffer
 end
 
@@ -416,15 +421,8 @@ end
 function UI:toggle_input_mode()
     self.color:toggle_input()
     self.input_mode = self.color.input.name
-    self.win_height = 2 + #self.color.input.value
-    if self.alpha.is_showed then
-        self.win_height = self.win_height + 1
-    end
-    if self.prev_colors.is_showed then
-        self.win_height = self.win_height + 1
-    end
-    self:refresh()
     self:update()
+    self:refresh()
 end
 
 function UI:toggle_output_mode()
