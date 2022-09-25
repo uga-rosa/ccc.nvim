@@ -39,11 +39,15 @@ end
 
 ---1-index
 ---@return integer
-function utils.row() return utils.cursor()[1] end
+function utils.row()
+    return utils.cursor()[1]
+end
 
 ---1-index
 ---@return integer
-function utils.col() return utils.cursor()[2] end
+function utils.col()
+    return utils.cursor()[2]
+end
 
 ---@param bufnr integer
 ---@param start integer
@@ -97,7 +101,9 @@ function utils.search_idx(array, value, func)
         array = { array, "t" },
         func = { func, "f", true },
     })
-    func = vim.F.if_nil(func, function(x) return x end)
+    func = vim.F.if_nil(func, function(x)
+        return x
+    end)
 
     for i, v in ipairs(array) do
         if func(v) == value then

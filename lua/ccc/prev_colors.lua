@@ -28,7 +28,9 @@ function PrevColors:add(color)
     self.index = 1
 end
 
-function PrevColors:get() return self.selected_color end
+function PrevColors:get()
+    return self.selected_color
+end
 
 ---@return Color?
 function PrevColors:select()
@@ -54,7 +56,11 @@ function PrevColors:show()
     ui.win_height = ui.win_height + 1
     ui:refresh()
 
-    local line = sa.new(self.colors):map(function(color) return color:hex() end):concat(" ")
+    local line = sa.new(self.colors)
+        :map(function(color)
+            return color:hex()
+        end)
+        :concat(" ")
     utils.set_lines(ui.bufnr, ui.win_height - 1, ui.win_height, { line })
 
     self.prev_pos = utils.cursor()

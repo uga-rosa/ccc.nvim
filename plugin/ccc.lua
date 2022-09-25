@@ -25,6 +25,10 @@ vim.api.nvim_create_user_command("CccHighlighterToggle", function()
     require("ccc.highlighter"):toggle()
 end, {})
 
+vim.api.nvim_create_user_command("CccConvert", function()
+    require("ccc.convert"):toggle()
+end, {})
+
 vim.cmd([[
 hi def link CccFloatNormal NormalFloat
 hi def link CccFloatBorder FloatBorder

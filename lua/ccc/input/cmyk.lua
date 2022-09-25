@@ -12,14 +12,20 @@ local CmykInput = setmetatable({
 
 ---@param n number
 ---@return string
-function CmykInput.format(n) return ("%5.1f%%"):format(math.floor(n * 200) / 2) end
+function CmykInput.format(n)
+    return ("%5.1f%%"):format(math.floor(n * 200) / 2)
+end
 
 ---@param RGB number[]
 ---@return number[] CMYK
-function CmykInput.from_rgb(RGB) return convert.rgb2cmyk(RGB) end
+function CmykInput.from_rgb(RGB)
+    return convert.rgb2cmyk(RGB)
+end
 
 ---@param CMYK number[]
 ---@return number[] RGB
-function CmykInput.to_rgb(CMYK) return convert.cmyk2rgb(CMYK) end
+function CmykInput.to_rgb(CMYK)
+    return convert.cmyk2rgb(CMYK)
+end
 
 return CmykInput

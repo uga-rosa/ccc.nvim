@@ -48,7 +48,7 @@ ccc.setup({
 
 # Interface
 
-This plugin provides four commands and one mapping.
+This plugin provides five commands and one mapping.
 
 - `:CccPick`
 	- Detects and replaces the color under the cursor.
@@ -58,6 +58,10 @@ This plugin provides four commands and one mapping.
 - `<Plug>(ccc-insert)`
     - Defined in insert mode.
     - Insert the color without detection.
+
+- `:CccConvert`
+    - Convert color formats directly without opening the UI.
+    - The conversion rules are specified in `ccc-option-convert`.
 
 - `:CccHighlighterEnable`
 	- Highlight colors in the current buffer that ccc.nvim can pick up.

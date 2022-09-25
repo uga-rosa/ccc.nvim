@@ -253,6 +253,20 @@ Default: { "WinScrolled", "TextChanged", "TextChangedI" }
 	Events to update highlighting.
 
 
+                                                            *ccc-option-convert*
+convert ~
+table
+Default: {
+	{ ccc.picker.hex, ccc.output.css_rgb },
+	{ ccc.picker.css_rgb, ccc.output.css_hsl },
+	{ ccc.picker.css_hsl, ccc.output.hex },
+}
+	Specify the correspondence between picker and output. The default
+	setting converts the color to css_rgb if it is in hex format, to
+	css_hsl if it is in css_rgb format, and to hex if it is in css_hsl
+	format.
+
+
                                            *ccc-option-disable-default-mappings*
 disable_default_mappings ~
 boolean
@@ -295,6 +309,12 @@ Command                                                            *ccc-command*
 	Detects and replaces the color under the cursor. Detectable formats
 	are defined in |ccc-option-pickers|. If nothing is detected, the color
 	is inserted at a cursor position.
+
+
+                                                                   *:CccConvert*
+:CccConvert ~
+	Convert color formats directly without opening the UI. The conversion
+	rules are specified in |ccc-option-convert|.
 
 
                                                          *:CccHighlighterEnable*

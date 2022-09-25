@@ -6,14 +6,13 @@ local CssRgbOutput = {
 }
 
 ---@param RGB number[]
----@param alpha AlphaSlider
+---@param A? number
 ---@return string
-function CssRgbOutput.str(RGB, alpha)
+function CssRgbOutput.str(RGB, A)
     local R, G, B = convert.rgb_format(RGB)
-    if alpha.is_showed then
+    if A then
         local pattern = "rgb(%d,%d,%d,%d%%)"
-        local A = alpha:get() * 100
-        return pattern:format(R, G, B, A)
+        return pattern:format(R, G, B, A * 100)
     else
         local pattern = "rgb(%d,%d,%d)"
         return pattern:format(R, G, B)
