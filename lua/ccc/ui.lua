@@ -1,4 +1,5 @@
 local api = vim.api
+local fn = vim.fn
 
 local set_hl = api.nvim_set_hl
 local add_hl = api.nvim_buf_add_highlight
@@ -151,6 +152,7 @@ function UI:refresh()
     if self.win_id and api.nvim_win_is_valid(self.win_id) then
         api.nvim_win_set_height(self.win_id, self.win_height)
         api.nvim_win_set_width(self.win_id, self.win_width)
+        fn.winrestview({ topline = 1 })
     end
 end
 
@@ -414,10 +416,14 @@ end
 function UI:toggle_input_mode()
     self.color:toggle_input()
     self.input_mode = self.color.input.name
-    if self.win_height ~= 2 + #self.color.input.value then
-        self.win_height = 2 + #self.color.input.value
-        self:refresh()
+    self.win_height = 2 + #self.color.input.value
+    if self.alpha.is_showed then
+        self.win_height = self.win_height + 1
     end
+    if self.prev_colors.is_showed then
+        self.win_height = self.win_height + 1
+    end
+    self:refresh()
     self:update()
 end
 
