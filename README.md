@@ -8,7 +8,8 @@
 
 ## Colorizer
 
-- supported colors are `hex`, `rgb()`, `hsl()`, and `textDocument/documentColor` of LSP.
+- supported colors are `hex`, `rgb()`, `hsl()`, 147 color names, and `textDocument/documentColor` of LSP.
+- Color names and LSP are disabled by default.
 
 ![image](https://user-images.githubusercontent.com/430272/192379267-7b069281-021a-4ee5-bc65-58def20f9c0d.png)
 
@@ -70,11 +71,12 @@ This plugin provides five commands and one mapping.
 - `:CccHighlighterEnable`
 - `:CccHighlighterDisable`
 	- Highlight colors in the buffer.
+    - The colors to be highlighted are those registered in `ccc-option-pickers` and those returned by `textDocument/documentColor` request.
 	- The following options are available.
-		- `:h ccc-option-highlighter-auto-enable`
-		- `:h ccc-option-highlighter-filetypes`
-		- `:h ccc-option-highlighter-events`
-		- `:h ccc-option-highlighter-lsp`
+		- `ccc-option-highlighter-auto-enable`
+		- `ccc-option-highlighter-filetypes`
+		- `ccc-option-highlighter-events`
+		- `ccc-option-highlighter-lsp`
 
 # Action
 

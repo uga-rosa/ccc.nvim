@@ -328,11 +328,14 @@ Command                                                            *ccc-command*
 
                                                          *:CccHighlighterEnable*
 :CccHighlighterEnable ~
-	Highlight colors in the current buffer that ccc.nvim can pick up.
+	Highlight colors in the buffer. The colors to be highlighted are those
+	registered in |ccc-option-pickers| and those returned by
+	textDocument/documentColor request.
 	The following options are available.
 		|ccc-option-highlighter-auto-enable|
 		|ccc-option-highlighter-filetypes|
 		|ccc-option-highlighter-events|
+		|ccc-option-highlighter-lsp|
 
 
                                                         *:CccHighlighterDisable*
