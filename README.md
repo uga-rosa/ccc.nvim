@@ -6,9 +6,11 @@
 
 ![prev](https://user-images.githubusercontent.com/82267684/190847777-e1f434f9-a8f9-4cb9-b496-cbd849e71a9c.gif)
 
-## Highlight colors that can be picked up by ccc.nvim
+## Colorizer
 
-![image](https://user-images.githubusercontent.com/82267684/190941438-9dba6f6a-fc87-4d47-8106-bfc865913b97.png)
+- supported colors are `hex`, `rgb()`, `hsl()`, and `textDocument/documentColor` of LSP.
+
+![image](https://user-images.githubusercontent.com/430272/192379267-7b069281-021a-4ee5-bc65-58def20f9c0d.png)
 
 ## Use multiple color spaces simultaneously
 
@@ -28,15 +30,16 @@ Super powerful color picker plugin.
     - Dynamic highlighting of sliders.
     - Restore previously used colors.
     - Selectable output formats.
-    - Transparent slider (for css `rgb()`/`hsl()`)
-    - Highlight colors that can be picked up for current buffer.
+    - Transparent slider (for css `rgb()`/`hsl()`).
+    - Fast colorizer.
 
 **If you use release version (0.7.2), use branch** `0.7.2`
 
 # Setup
 
-If you do not want to change the default setting, there is no need to call setup (Empty setup is done automatically by plugin/ccc.lua).
-See `ccc-option` in [doc](./doc/ccc.txt) for the options that can be specified.
+If you do not want to change the default setting, there is no need to call `setup` (Empty `setup` is called automatically by plugin/ccc.lua).
+See `ccc-option` in [doc](./doc/ccc.txt) for the options that can be used.
+You can see the default options [here](./lua/ccc/config/default.lua).
 
 ```lua
 local ccc = require("ccc")
@@ -61,24 +64,21 @@ This plugin provides five commands and one mapping.
 
 - `:CccConvert`
     - Convert color formats directly without opening the UI.
-    - The conversion rules are specified in `ccc-option-convert`.
+    - The conversion rules are defined in `ccc-option-convert`.
 
+- `:CccHighlighterToggle`
 - `:CccHighlighterEnable`
-	- Highlight colors in the current buffer that ccc.nvim can pick up.
+- `:CccHighlighterDisable`
+	- Highlight colors in the buffer.
 	- The following options are available.
 		- `:h ccc-option-highlighter-auto-enable`
 		- `:h ccc-option-highlighter-filetypes`
 		- `:h ccc-option-highlighter-events`
-
-- `:CccHighlighterDisable`
-	- Disable highlight.
-
-- `:CccHighlighterToggle`
-	- Toggle highlight.
+		- `:h ccc-option-highlighter-lsp`
 
 # Action
 
-All functions are implemented as lua functions.
+All actions have been implemented as lua functions.
 To customize, use `ccc-option-mappings`.
 
 ```lua
@@ -151,7 +151,7 @@ local mapping = ccc.mapping
     - `mapping.increase1()`
     - `mapping.increase5()`
     - `mapping.increase10()`
-    - `mapping.delta(integer)`
+    - `ccc.delta(integer)`
 
 - decrease
     - Default mapping: `h` / `s` / `m` (1 / 5 / 10)
@@ -160,7 +160,7 @@ local mapping = ccc.mapping
     - `mapping.decrease1()`
     - `mapping.decrease5()`
     - `mapping.decrease10()`
-    - `mapping.delta(integer)`
+    - `ccc.delta(integer)`
 
 - set
     - Default mapping: `H` / `M` / `L` (0 / 50 / 100), `1` - `9` (10% - 90%)
