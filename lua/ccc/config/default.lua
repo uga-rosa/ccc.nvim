@@ -60,12 +60,13 @@ return {
     highlight_mode = "bg",
     ---@type function
     output_line = ccc.output_line,
-    ---@type {auto_enable: boolean, filetypes: string[], excludes: string[], events: string[]}
+    ---@type { auto_enable: boolean, filetypes: string[], excludes: string[], events: string[], lsp: boolean }
     highlighter = {
         auto_enable = false,
         filetypes = {},
         excludes = {},
         events = { "WinScrolled", "TextChanged", "TextChangedI", "BufEnter" },
+        lsp = false,
     },
     ---@type {[1]: ColorPicker, [2]: ColorOutput}[]
     convert = {

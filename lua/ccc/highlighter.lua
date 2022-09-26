@@ -12,6 +12,7 @@ local rgb2hex = require("ccc.output.hex").str
 ---@field is_defined table<string, boolean> #Set. Keys are hexes.
 ---@field ft_filter table<string, boolean>
 ---@field events string[]
+---@field lsp boolean
 ---@field enabled boolean
 local Highlighter = {}
 
@@ -38,6 +39,7 @@ function Highlighter:init()
     end
     self.ft_filter = ft_filter
     self.events = highlighter_config.events
+    self.lsp = highlighter_config.lsp
 end
 
 function Highlighter:enable()
@@ -63,8 +65,8 @@ function Highlighter:update()
         return
     end
     local start_row = fn.line("w0") - 1
-    local end_row = fn.line("w$")
-    for i, line in ipairs(api.nvim_buf_get_lines(0, start_row, end_row, false)) do
+    local end_row = fn.line("w$") - 1
+    for i, line in ipairs(api.nvim_buf_get_lines(0, start_row, end_row + 1, false)) do
         local row = start_row + i - 1
         local init = 1
         while true do
@@ -91,6 +93,38 @@ function Highlighter:update()
             api.nvim_buf_add_highlight(0, self.ns_id, hl_name, row, start - 1, end_)
             init = end_ + 1
         end
+    end
+
+    if self.lsp then
+        local param = { textDocument = vim.lsp.util.make_text_document_params() }
+        vim.lsp.buf_request(0, "textDocument/documentColor", param, function(err, colors)
+            if err or colors == nil then
+                return
+            end
+
+            for _, color_info in pairs(colors) do
+                local range = color_info.range
+                if start_row <= range.start.line or range.start.line <= end_row then
+                    local color = color_info.color
+
+                    local hex = rgb2hex({ color.red, color.green, color.blue })
+                    local hl_name = "CccHighlighter" .. hex:sub(2)
+                    if not self.is_defined[hex] then
+                        local highlight = utils.create_highlight(hex)
+                        api.nvim_set_hl(0, hl_name, highlight)
+                        self.is_defined[hex] = true
+                    end
+                    api.nvim_buf_add_highlight(
+                        0,
+                        self.ns_id,
+                        hl_name,
+                        range.start.line,
+                        range.start.character,
+                        range["end"].character
+                    )
+                end
+            end
+        end)
     end
 end
 

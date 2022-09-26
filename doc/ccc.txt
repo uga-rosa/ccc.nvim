@@ -253,6 +253,15 @@ Default: { "WinScrolled", "TextChanged", "TextChangedI" }
 	Events to update highlighting.
 
 
+                                                    *ccc-option-highlighter-lsp*
+highlighter.lsp ~
+boolean
+Default: false
+	If true, highlight using textDocument/documentColor.
+	Note: even if highlighted by this option, it cannot be picked up
+	by |:CccPick|.
+
+
                                                             *ccc-option-convert*
 convert ~
 table
