@@ -8,8 +8,9 @@
 
 ## Colorizer
 
-- supported colors are `hex`, `rgb()`, `hsl()`, 147 color names, and `textDocument/documentColor` of LSP.
-- Color names and LSP are disabled by default.
+- LSP `textDocument/documentColor` is supported.
+- Highlighting is possible without LSP and supports `hex`, `rgb()`, `hsl()`, 147 color names.
+- Color names are disabled by default.
 
 ![image](https://user-images.githubusercontent.com/430272/192379267-7b069281-021a-4ee5-bc65-58def20f9c0d.png)
 
@@ -27,14 +28,13 @@
 Super powerful color picker plugin.
 
 - Features
-    - RGB, HSL, CMYK, and other color space sliders for color adjustment.
+    - No dependency.
+    - RGB, HSL, CMYK, and other color space sliders for color creation.
     - Dynamic highlighting of sliders.
     - Restore previously used colors.
     - Selectable output formats.
-    - Transparent slider (for css `rgb()`/`hsl()`).
+    - Transparent slider for `rgb()` and `hsl()`.
     - Fast colorizer.
-
-**If you use release version (0.7.2), use branch** `0.7.2`
 
 # Setup
 
@@ -71,12 +71,15 @@ This plugin provides five commands and one mapping.
 - `:CccHighlighterEnable`
 - `:CccHighlighterDisable`
 	- Highlight colors in the buffer.
-    - The colors to be highlighted are those registered in `ccc-option-pickers` and those returned by `textDocument/documentColor` request.
+    - The colors to be highlighted are those returned by textDocument/documentColor request or those registered in `ccc-option-pickers`.
+	- Highlight is managed on a buffer-by-buffer basis, so you must use this command each time to enable highlight on a new buffer.
+    - You can use `ccc-option-highlighter-auto-enable` to enable automatically on `BufEnter`.
 	- The following options are available.
 		- `ccc-option-highlighter-auto-enable`
 		- `ccc-option-highlighter-filetypes`
-		- `ccc-option-highlighter-events`
+		- `ccc-option-highlighter-excludes`
 		- `ccc-option-highlighter-lsp`
+
 
 # Action
 

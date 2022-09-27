@@ -227,7 +227,7 @@ table
 highlighter.auto_enable ~
 boolean
 Default: false
-	Whether to enable at startup.
+	Whether to enable automatically on BufEnter.
 
 
                                               *ccc-option-highlighter-filetypes*
@@ -246,19 +246,13 @@ Default: {}
 	can specify file types to be excludes.
 
 
-                                                 *ccc-option-highlighter-events*
-highlighter.events ~
-string[]
-Default: { "WinScrolled", "TextChanged", "TextChangedI", "BufEnter" }
-	Events to update highlighting.
-
-
                                                     *ccc-option-highlighter-lsp*
 highlighter.lsp ~
 boolean
-Default: false
-	If true, highlight using textDocument/documentColor.
-	Note: even if highlighted by this option, it cannot be picked up
+Default: true
+	If true, highlight using textDocument/documentColor. If LS with the
+	color provider is not attached to a buffer, it falls back to highlight
+	with pickers. The color informations returned by LS are saved and used
 	by |:CccPick|.
 
 
@@ -329,12 +323,16 @@ Command                                                            *ccc-command*
                                                          *:CccHighlighterEnable*
 :CccHighlighterEnable ~
 	Highlight colors in the buffer. The colors to be highlighted are those
-	registered in |ccc-option-pickers| and those returned by
-	textDocument/documentColor request.
+	returned by textDocument/documentColor request or those registered in
+	|ccc-option-pickers|.
+	Highlight is managed on a buffer-by-buffer basis, so you must use this
+	command each time to enable highlight on a new buffer. You can use
+	|ccc-option-highlighter-auto-enable| to enable automatically on
+	|BufEnter|.
 	The following options are available.
 		|ccc-option-highlighter-auto-enable|
 		|ccc-option-highlighter-filetypes|
-		|ccc-option-highlighter-events|
+		|ccc-option-highlighter-excludes|
 		|ccc-option-highlighter-lsp|
 
 

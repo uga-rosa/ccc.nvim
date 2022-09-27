@@ -1,5 +1,4 @@
 local api = vim.api
-local fn = vim.fn
 
 local config = require("ccc.config")
 local utils = require("ccc.utils")
@@ -7,18 +6,18 @@ local rgb2hex = require("ccc.output.hex").str
 
 ---@class Highlighter
 ---@field pickers ColorPicker[]
----@field ns_id integer
----@field aug_id integer
+---@field picker_ns_id integer
+---@field lsp_ns_id integer
 ---@field is_defined table<string, boolean> #Set. Keys are hexes.
 ---@field ft_filter table<string, boolean>
----@field events string[]
 ---@field lsp boolean
----@field enabled boolean
+---@field attached_buffer table<string, boolean>
 local Highlighter = {}
 
 function Highlighter:init()
     self.pickers = config.get("pickers")
-    self.ns_id = api.nvim_create_namespace("ccc-highlighter")
+    self.picker_ns_id = api.nvim_create_namespace("ccc-highlighter-picker")
+    self.lsp_ns_id = api.nvim_create_namespace("ccc-highlighter-lsp")
     self.is_defined = {}
     local highlighter_config = config.get("highlighter")
     local filetypes = highlighter_config.filetypes
@@ -38,35 +37,142 @@ function Highlighter:init()
         end
     end
     self.ft_filter = ft_filter
-    self.events = highlighter_config.events
     self.lsp = highlighter_config.lsp
+    self.attached_buffer = {}
 end
 
-function Highlighter:enable()
+---@param bufnr? integer
+function Highlighter:enable(bufnr)
     if self.pickers == nil then
         self:init()
     end
-    self.enabled = true
 
-    self:update()
-    self.aug_id = api.nvim_create_augroup("ccc-highlighter", {})
-    api.nvim_create_autocmd(self.events, {
-        group = self.aug_id,
-        pattern = "*",
-        callback = function()
-            self:update()
+    if not self.ft_filter[vim.bo.filetype] then
+        return
+    end
+
+    bufnr = utils.resolve_bufnr(bufnr)
+
+    if self.attached_buffer[bufnr] then
+        return
+    end
+    self.attached_buffer[bufnr] = true
+
+    self:start(bufnr)
+
+    api.nvim_buf_attach(bufnr, false, {
+        on_lines = function(_, _, _, first_line, _, last_line)
+            if self.attached_buffer[bufnr] == nil then
+                return true
+            end
+            self:update(bufnr, first_line, last_line)
+        end,
+        on_detach = function()
+            self.attached_buffer[bufnr] = nil
         end,
     })
 end
 
-function Highlighter:update()
-    api.nvim_buf_clear_namespace(0, self.ns_id, 0, -1)
-    if not self.ft_filter[vim.bo.filetype] then
-        return
+---@param bufnr integer
+function Highlighter:start(bufnr)
+    vim.schedule(function()
+        if self.lsp then
+            if not self:update_lsp(bufnr) then
+                -- Wait for LS initialization
+                vim.defer_fn(function()
+                    if not self.attached_buffer[bufnr] then
+                        return
+                    end
+                    if not self:update_lsp(bufnr) then
+                        self:update_picker(bufnr, 0, -1)
+                    end
+                end, 200)
+            end
+        else
+            self:update_picker(bufnr, 0, -1)
+        end
+    end)
+end
+
+---@param bufnr integer
+---@param first_line integer 0-index
+---@param last_line integer 0-index
+function Highlighter:update(bufnr, first_line, last_line)
+    vim.schedule(function()
+        if not (self.lsp and self:update_lsp(bufnr)) then
+            self:update_picker(bufnr, first_line, last_line)
+        end
+    end)
+end
+
+---@param bufnr integer
+---@return boolean available
+function Highlighter:update_lsp(bufnr)
+    local available = false
+    api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, 0, -1)
+
+    for _, client in pairs(vim.lsp.get_active_clients()) do
+        if client.server_capabilities.colorProvider then
+            local param = { textDocument = vim.lsp.util.make_text_document_params() }
+            client.request("textDocument/documentColor", param, function(err, color_informations)
+                if err or color_informations == nil then
+                    return
+                end
+                available = #color_informations > 0
+
+                for _, color_info in ipairs(color_informations) do
+                    local color = color_info.color
+                    local range = color_info.range
+
+                    local hex = rgb2hex({ color.red, color.green, color.blue })
+
+                    local hl_name = "CccHighlighter" .. hex:sub(2)
+                    if not self.is_defined[hex] then
+                        local highlight = utils.create_highlight(hex)
+                        api.nvim_set_hl(0, hl_name, highlight)
+                        self.is_defined[hex] = true
+                    end
+                    api.nvim_buf_add_highlight(
+                        0,
+                        self.lsp_ns_id,
+                        hl_name,
+                        range.start.line,
+                        range.start.character,
+                        range["end"].character
+                    )
+                end
+            end)
+        end
     end
-    local start_row = fn.line("w0") - 1
-    local end_row = fn.line("w$") - 1
-    for i, line in ipairs(api.nvim_buf_get_lines(0, start_row, end_row + 1, false)) do
+
+    return available
+end
+
+---@param range Range
+---@param color Color
+---@return ls_color
+function Highlighter:_create_ls_color(range, color)
+    local row = range.start.line
+    local start = range.start.character
+    local end_ = range["end"].character
+    local rgb = { color.red, color.green, color.blue }
+    local alpha = color.alpha or 1
+    return { row = row, start = start, end_ = end_, rgb = rgb, alpha = alpha }
+end
+
+---@param bufnr? integer
+---@return ls_color[]
+function Highlighter:get_ls_color(bufnr)
+    bufnr = utils.resolve_bufnr(bufnr)
+    return self.ls_colors[bufnr]
+end
+
+---@param bufnr integer
+---@param start_row integer 0-index
+---@param end_row integer 0-index
+function Highlighter:update_picker(bufnr, start_row, end_row)
+    api.nvim_buf_clear_namespace(bufnr, self.picker_ns_id, start_row, end_row)
+    for i, line in ipairs(api.nvim_buf_get_lines(bufnr, start_row, end_row, false)) do
         local row = start_row + i - 1
         local init = 1
         while true do
@@ -90,55 +196,27 @@ function Highlighter:update()
                 api.nvim_set_hl(0, hl_name, highlight)
                 self.is_defined[hex] = true
             end
-            api.nvim_buf_add_highlight(0, self.ns_id, hl_name, row, start - 1, end_)
+            api.nvim_buf_add_highlight(bufnr, self.picker_ns_id, hl_name, row, start - 1, end_)
             init = end_ + 1
         end
     end
-
-    if self.lsp then
-        local param = { textDocument = vim.lsp.util.make_text_document_params() }
-        vim.lsp.buf_request(0, "textDocument/documentColor", param, function(err, colors)
-            if err or colors == nil then
-                return
-            end
-
-            for _, color_info in pairs(colors) do
-                local range = color_info.range
-                if start_row <= range.start.line or range.start.line <= end_row then
-                    local color = color_info.color
-
-                    local hex = rgb2hex({ color.red, color.green, color.blue })
-                    local hl_name = "CccHighlighter" .. hex:sub(2)
-                    if not self.is_defined[hex] then
-                        local highlight = utils.create_highlight(hex)
-                        api.nvim_set_hl(0, hl_name, highlight)
-                        self.is_defined[hex] = true
-                    end
-                    api.nvim_buf_add_highlight(
-                        0,
-                        self.ns_id,
-                        hl_name,
-                        range.start.line,
-                        range.start.character,
-                        range["end"].character
-                    )
-                end
-            end
-        end)
-    end
 end
 
-function Highlighter:disable()
-    self.enabled = false
-    api.nvim_buf_clear_namespace(0, self.ns_id, 0, -1)
-    api.nvim_del_augroup_by_id(self.aug_id)
+---@param bufnr? integer
+function Highlighter:disable(bufnr)
+    bufnr = utils.resolve_bufnr(bufnr)
+    self.attached_buffer[bufnr] = nil
+    api.nvim_buf_clear_namespace(bufnr, self.picker_ns_id, 0, -1)
+    api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, 0, -1)
 end
 
-function Highlighter:toggle()
-    if self.enabled then
-        self:disable()
+---@param bufnr? integer
+function Highlighter:toggle(bufnr)
+    bufnr = utils.resolve_bufnr(bufnr)
+    if self.attached_buffer[bufnr] then
+        self:disable(bufnr)
     else
-        self:enable()
+        self:enable(bufnr)
     end
 end
 

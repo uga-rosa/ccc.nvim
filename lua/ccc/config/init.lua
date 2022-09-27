@@ -1,3 +1,5 @@
+local api = vim.api
+
 local M = {
     config = {},
 }
@@ -35,13 +37,21 @@ function M.setup(opt)
         ["config.highlighter.auto_enable"] = { M.config.highlighter.auto_enable, "b" },
         ["config.highlighter.filetypes"] = { M.config.highlighter.filetypes, "t" },
         ["config.highlighter.excludes"] = { M.config.highlighter.excludes, "t" },
-        ["config.highlighter.events"] = { M.config.highlighter.events, "t" },
+        ["config.highlighter.lsp"] = { M.config.highlighter.lsp, "b" },
         ["config.convert"] = { M.config.convert, "t" },
         ["config.mappings"] = { M.config.mappings, "t" },
     })
 
     if M.config.highlighter.auto_enable then
-        require("ccc.highlighter"):enable()
+        local aug_name = "ccc-highlighter-auto-enable"
+        api.nvim_create_augroup(aug_name, {})
+        api.nvim_create_autocmd("BufEnter", {
+            pattern = "*",
+            group = aug_name,
+            callback = function()
+                require("ccc.highlighter"):enable()
+            end,
+        })
     end
 end
 
