@@ -54,8 +54,8 @@ function M.setup(opt)
     ready = true
 end
 
----@param b_color Color
----@param a_color Color
+---@param b_color CccColor
+---@param a_color CccColor
 ---@param width integer
 ---@return string line
 ---@return integer b_start_col
