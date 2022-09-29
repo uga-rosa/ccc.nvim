@@ -4,6 +4,8 @@ local config = require("ccc.config")
 local utils = require("ccc.utils")
 local rgb2hex = require("ccc.output.hex").str
 
+---@alias ls_color { row: integer, start: integer, end_: integer, rgb: number[], alpha: number }
+
 ---@class Highlighter
 ---@field pickers ColorPicker[]
 ---@field picker_ns_id integer
@@ -12,6 +14,7 @@ local rgb2hex = require("ccc.output.hex").str
 ---@field ft_filter table<string, boolean>
 ---@field lsp boolean
 ---@field attached_buffer table<string, boolean>
+---@field ls_colors table<integer, ls_color[]> #Keys are bufnr
 local Highlighter = {}
 
 function Highlighter:init()
@@ -39,6 +42,7 @@ function Highlighter:init()
     self.ft_filter = ft_filter
     self.lsp = highlighter_config.lsp
     self.attached_buffer = {}
+    self.ls_colors = {}
 end
 
 ---@param bufnr? integer
@@ -111,6 +115,7 @@ function Highlighter:update_lsp(bufnr)
     local available = false
     api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, 0, -1)
 
+    self.ls_colors[bufnr] = {}
     for _, client in pairs(vim.lsp.get_active_clients()) do
         if client.server_capabilities.colorProvider then
             local param = { textDocument = vim.lsp.util.make_text_document_params() }
@@ -124,8 +129,10 @@ function Highlighter:update_lsp(bufnr)
                     local color = color_info.color
                     local range = color_info.range
 
-                    local hex = rgb2hex({ color.red, color.green, color.blue })
+                    local ls_color = self:_create_ls_color(range, color)
+                    table.insert(self.ls_colors[bufnr], ls_color)
 
+                    local hex = rgb2hex(ls_color.rgb)
                     local hl_name = "CccHighlighter" .. hex:sub(2)
                     if not self.is_defined[hex] then
                         local highlight = utils.create_highlight(hex)
@@ -136,9 +143,9 @@ function Highlighter:update_lsp(bufnr)
                         0,
                         self.lsp_ns_id,
                         hl_name,
-                        range.start.line,
-                        range.start.character,
-                        range["end"].character
+                        ls_color.row,
+                        ls_color.start,
+                        ls_color.end_
                     )
                 end
             end)
