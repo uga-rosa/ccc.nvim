@@ -34,7 +34,8 @@ Super powerful color picker plugin.
     - Transparent slider (for css `rgb()`/`hsl()`).
     - Fast colorizer.
 
-**If you use release version (0.7.2), use branch** `0.7.2`
+- Requirement
+    - neovim 0.8 +
 
 # Setup
 
