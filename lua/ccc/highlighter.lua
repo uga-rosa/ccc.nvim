@@ -220,7 +220,7 @@ end
 ---@param bufnr? integer
 function Highlighter:toggle(bufnr)
     bufnr = utils.resolve_bufnr(bufnr)
-    if self.attached_buffer[bufnr] then
+    if self.attached_buffer and self.attached_buffer[bufnr] then
         self:disable(bufnr)
     else
         self:enable(bufnr)
