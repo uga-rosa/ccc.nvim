@@ -27,6 +27,7 @@ local alpha = require("ccc.alpha")
 ---@field is_insert boolean
 ---@field alpha AlphaSlider
 ---@field prev_colors PrevColors
+---@field highlighter_lsp boolean
 local UI = {}
 
 function UI:new()
@@ -44,6 +45,7 @@ function UI:new()
     end
     self.ns_id = api.nvim_create_namespace("ccc-ui")
     self.prev_colors = prev_colors.new(self)
+    self.highlighter_lsp = config.get("highlighter").lsp
 end
 
 function UI:init()
@@ -382,7 +384,23 @@ function UI:set_percent(percent)
 end
 
 function UI:pick()
-    ---@type string
+    if self.highlighter_lsp then
+        local start, end_, RGB, A = require("ccc.picker.lsp").pick()
+        if start then
+            ---@cast end_ integer
+            ---@cast RGB number[]
+            self.start_col = start
+            self.end_col = end_
+            self.color:set_rgb(RGB)
+            self.before_color = self.color
+            if A then
+                self.alpha:set(A)
+                self.alpha:show(true)
+            end
+            return
+        end
+    end
+
     local current_line = api.nvim_get_current_line()
     local cursor_col = utils.col()
     local init = 1

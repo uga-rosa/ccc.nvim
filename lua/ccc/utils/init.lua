@@ -188,4 +188,13 @@ function utils.is_excluded(exclude_pattern, s, init, start, end_)
     return false
 end
 
+---@param bufnr? integer
+---@return integer
+function utils.resolve_bufnr(bufnr)
+    if bufnr == nil or bufnr == 0 then
+        return api.nvim_get_current_buf()
+    end
+    return bufnr
+end
+
 return utils
