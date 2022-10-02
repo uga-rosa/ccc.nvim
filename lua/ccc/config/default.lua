@@ -1,6 +1,8 @@
 local ccc = require("ccc")
 local mapping = ccc.mapping
 
+---@alias hl_mode "fg" | "foreground" | "bg" | "background"
+
 return {
     ---@type string hex
     default_color = "#000000",
@@ -56,15 +58,21 @@ return {
             "{{pattern}}[%w_]",
         },
     },
-    ---@type "fg" | "bg" | "foreground" | "background"
+    ---@type hl_mode
     highlight_mode = "bg",
     ---@type function
     output_line = ccc.output_line,
-    ---@type { auto_enable: boolean, filetypes: string[], excludes: string[], lsp: boolean }
+    ---@type table
     highlighter = {
+        ---@type boolean
         auto_enable = false,
+        ---@type integer
+        max_byte = 50 * 1000 * 1000, -- 50 MB
+        ---@type string[]
         filetypes = {},
+        ---@type string[]
         excludes = {},
+        ---@type boolean
         lsp = true,
     },
     ---@type {[1]: ColorPicker, [2]: ColorOutput}[]

@@ -230,6 +230,14 @@ Default: false
 	Whether to enable automatically on BufEnter.
 
 
+                                               *ccc-option-highlighter-max-byte*
+highlighter.max_byte ~
+integer
+Default: 50,000,000 (50 MB)
+	The maximum buffer size for which highlight is enabled by
+	|ccc-option-highlighter-auto-enable|.
+
+
                                               *ccc-option-highlighter-filetypes*
 highlighter.filetypes ~
 string[]

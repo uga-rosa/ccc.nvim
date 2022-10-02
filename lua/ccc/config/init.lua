@@ -38,6 +38,7 @@ function M.setup(opt)
         ["config.highlighter.filetypes"] = { M.config.highlighter.filetypes, "t" },
         ["config.highlighter.excludes"] = { M.config.highlighter.excludes, "t" },
         ["config.highlighter.lsp"] = { M.config.highlighter.lsp, "b" },
+        ["config.highlighter.max_byte"] = { M.config.highlighter.max_byte, "n" },
         ["config.convert"] = { M.config.convert, "t" },
         ["config.mappings"] = { M.config.mappings, "t" },
     })
@@ -49,6 +50,11 @@ function M.setup(opt)
             pattern = "*",
             group = aug_name,
             callback = function()
+                local bytes = vim.fn.wordcount().bytes
+                local max_byte = M.config.highlighter.max_byte
+                if bytes > max_byte then
+                    return
+                end
                 require("ccc.highlighter"):enable()
             end,
         })

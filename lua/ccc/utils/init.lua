@@ -134,8 +134,6 @@ local function is_bright(HEX)
     return luminance > 127
 end
 
----@alias hl_mode "fg" | "foreground" | "bg" | "background"
-
 ---@param hex string
 ---@param hl_mode hl_mode
 ---@return table
