@@ -353,4 +353,20 @@ function convert.okhsv2rgb(HSV)
     return ok.okhsv_to_srgb({ h, s, v })
 end
 
+---@param RGB number[]
+---@return number[] OKHSL
+function convert.rgb2okhsl(RGB)
+    local HSL = ok.srgb_to_okhsl(RGB)
+    HSL[1] = HSL[1] * 360
+    return HSL
+end
+
+---@param HSL number[]
+---@return number[] RGB
+function convert.okhsl2rgb(HSL)
+    local h, s, l = unpack(HSL)
+    h = h / 360
+    return ok.okhsl_to_srgb({ h, s, l })
+end
+
 return convert

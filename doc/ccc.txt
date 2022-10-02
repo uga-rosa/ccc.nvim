@@ -136,12 +136,13 @@ Default: {
 	startup. Once activated, it will keep the previous input mode.
 	The presets currently available are as follows:
 		- RGB:   ccc.input.rgb
-		- HSL:   ccc.input.hsl
 		- CMYK:  ccc.input.cmyk
+		- HSL:   ccc.input.hsl
+		- HSV:   ccc.input.hsv
+		- XYZ:   ccc.input.xyz
 		- Lab:   ccc.input.lab
 		- HSLuv: ccc.input.hsluv
-		- XYZ:   ccc.input.xyz
-		- HSV:   ccc.input.hsv
+		- OKHSL: ccc.input.okhsl
 		- OKHSV: ccc.input.okhsv
 
 

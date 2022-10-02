@@ -12,6 +12,7 @@ local M = {
         xyz = require("ccc.input.xyz"),
         hsv = require("ccc.input.hsv"),
         okhsv = require("ccc.input.okhsv"),
+        okhsl = require("ccc.input.okhsl"),
     },
     output = {
         hex = require("ccc.output.hex"),
