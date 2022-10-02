@@ -142,6 +142,7 @@ Default: {
 		- HSLuv: ccc.input.hsluv
 		- XYZ:   ccc.input.xyz
 		- HSV:   ccc.input.hsv
+		- OKHSV: ccc.input.okhsv
 
 
                                                             *ccc-option-outputs*

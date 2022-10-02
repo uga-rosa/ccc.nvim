@@ -1,5 +1,6 @@
 local utils = require("ccc.utils")
 local hsluv = require("ccc.utils.hsluv")
+local ok = require("ccc.utils.ok_colorspace")
 
 local convert = {}
 
@@ -334,6 +335,22 @@ function convert.lab2rgb(Lab)
     return vim.tbl_map(function(x)
         return utils.fix_overflow(x, 0, 1)
     end, RGB)
+end
+
+---@param RGB number[]
+---@return number[] OKHSV
+function convert.rgb2okhsv(RGB)
+    local HSV = ok.srgb_to_okhsv(RGB)
+    HSV[1] = HSV[1] * 360
+    return HSV
+end
+
+---@param HSV number[]
+---@return number[] RGB
+function convert.okhsv2rgb(HSV)
+    local h, s, v = unpack(HSV)
+    h = h / 360
+    return ok.okhsv_to_srgb({ h, s, v })
 end
 
 return convert
