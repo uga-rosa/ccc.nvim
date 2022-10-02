@@ -2,7 +2,7 @@ local utils = require("ccc.utils")
 local config = require("ccc.config")
 local hex = require("ccc.output.hex")
 
----@class Color
+---@class CccColor
 ---@field input ColorInput
 ---@field input_idx integer
 ---@field output ColorOutput
@@ -15,7 +15,7 @@ local Color = {}
 ---@param input_mode? string
 ---@param output_mode? string
 ---@param alpha AlphaSlider
----@return Color
+---@return CccColor
 function Color.new(input_mode, output_mode, alpha)
     local self = setmetatable({
         _inputs = config.get("inputs"),
@@ -61,7 +61,7 @@ function Color:set_output(output_mode)
     self.output = self._outputs[self.output_idx]
 end
 
----@return Color
+---@return CccColor
 function Color:copy()
     local new = Color.new(nil, nil, self.alpha)
     new.input_idx = self.input_idx

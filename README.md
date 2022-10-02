@@ -36,6 +36,9 @@ Super powerful color picker plugin.
     - Transparent slider for `rgb()` and `hsl()`.
     - Fast colorizer.
 
+- Requirements
+    - neovim 0.8+
+
 # Setup
 
 If you do not want to change the default setting, there is no need to call `setup` (Empty `setup` is called automatically by plugin/ccc.lua).

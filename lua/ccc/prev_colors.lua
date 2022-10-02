@@ -3,8 +3,8 @@ local sa = require("ccc.utils.safe_array")
 
 ---@class PrevColors
 ---@field ui UI
----@field colors Color[]
----@field selected_color Color
+---@field colors CccColor[]
+---@field selected_color CccColor
 ---@field index integer
 ---@field is_showed boolean
 ---@field prev_pos integer[] #(1,1)-index
@@ -21,7 +21,7 @@ function PrevColors.new(ui)
     return new
 end
 
----@param color Color
+---@param color CccColor
 function PrevColors:add(color)
     table.insert(self.colors, 1, color)
     self.selected_color = color
@@ -32,7 +32,7 @@ function PrevColors:get()
     return self.selected_color
 end
 
----@return Color?
+---@return CccColor?
 function PrevColors:select()
     if not self:get() then
         return

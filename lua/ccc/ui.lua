@@ -11,11 +11,11 @@ local prev_colors = require("ccc.prev_colors")
 local alpha = require("ccc.alpha")
 
 ---@class UI
----@field color Color
+---@field color CccColor
 ---@field input_mode string
 ---@field output_mode string
 ---@field pickers ColorPicker[]
----@field before_color Color #Picked color or default
+---@field before_color CccColor #Picked color or default
 ---@field bufnr integer
 ---@field win_id integer
 ---@field win_height integer
