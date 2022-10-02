@@ -13,6 +13,7 @@ local rgb2hex = require("ccc.output.hex").str
 ---@field is_defined table<string, boolean> #Set. Keys are hexes.
 ---@field ft_filter table<string, boolean>
 ---@field lsp boolean
+---@field hl_mode hl_mode
 ---@field attached_buffer table<string, boolean>
 ---@field ls_colors table<integer, ls_color[]> #Keys are bufnr
 local Highlighter = {}
@@ -41,6 +42,7 @@ function Highlighter:init()
     end
     self.ft_filter = ft_filter
     self.lsp = highlighter_config.lsp
+    self.hl_mode = config.get("highlight_mode")
     self.attached_buffer = {}
     self.ls_colors = {}
 end
@@ -135,7 +137,7 @@ function Highlighter:update_lsp(bufnr)
                     local hex = rgb2hex(ls_color.rgb)
                     local hl_name = "CccHighlighter" .. hex:sub(2)
                     if not self.is_defined[hex] then
-                        local highlight = utils.create_highlight(hex)
+                        local highlight = utils.create_highlight(hex, self.hl_mode)
                         api.nvim_set_hl(0, hl_name, highlight)
                         self.is_defined[hex] = true
                     end
@@ -199,7 +201,7 @@ function Highlighter:update_picker(bufnr, start_row, end_row)
             local hex = rgb2hex(RGB)
             local hl_name = "CccHighlighter" .. hex:sub(2)
             if not self.is_defined[hex] then
-                local highlight = utils.create_highlight(hex)
+                local highlight = utils.create_highlight(hex, self.hl_mode)
                 api.nvim_set_hl(0, hl_name, highlight)
                 self.is_defined[hex] = true
             end

@@ -323,15 +323,16 @@ function UI:highlight()
 
     row = row + 1
 
+    local hl_mode = config.get("highlight_mode")
     local _, b_start_col, b_end_col, a_start_col, a_end_col =
         config.get("output_line")(self.before_color, self.color, self.win_width)
 
     local before_hex = self.before_color:hex()
-    set_hl(self.ns_id, "CccBefore", utils.create_highlight(before_hex))
+    set_hl(self.ns_id, "CccBefore", utils.create_highlight(before_hex, hl_mode))
     add_hl(self.bufnr, self.ns_id, "CccBefore", row, b_start_col, b_end_col)
 
     local after_hex = self.color:hex()
-    set_hl(self.ns_id, "CccAfter", utils.create_highlight(after_hex))
+    set_hl(self.ns_id, "CccAfter", utils.create_highlight(after_hex, hl_mode))
     add_hl(self.bufnr, self.ns_id, "CccAfter", row, a_start_col, a_end_col)
 
     if self.prev_colors.is_showed then
@@ -339,7 +340,7 @@ function UI:highlight()
         local start_prev, end_prev = 0, 7
         for i, color in ipairs(self.prev_colors.colors) do
             local pre_hex = color:hex()
-            set_hl(self.ns_id, "CccPrev" .. i, utils.create_highlight(pre_hex))
+            set_hl(self.ns_id, "CccPrev" .. i, utils.create_highlight(pre_hex, hl_mode))
             add_hl(self.bufnr, self.ns_id, "CccPrev" .. i, row, start_prev, end_prev)
             start_prev = end_prev + 1
             end_prev = start_prev + 7

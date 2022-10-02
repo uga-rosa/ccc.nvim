@@ -1,7 +1,5 @@
 local api = vim.api
 
-local config = require("ccc.config")
-
 local utils = {}
 
 ---@param key string
@@ -136,11 +134,13 @@ local function is_bright(HEX)
     return luminance > 127
 end
 
+---@alias hl_mode "fg" | "foreground" | "bg" | "background"
+
 ---@param hex string
+---@param hl_mode hl_mode
 ---@return table
-function utils.create_highlight(hex)
+function utils.create_highlight(hex, hl_mode)
     local contrast = is_bright(hex) and "#000000" or "#ffffff"
-    local hl_mode = config.get("highlight_mode")
     if hl_mode == "fg" or hl_mode == "foreground" then
         return { fg = hex, bg = contrast }
     else
