@@ -1,3 +1,5 @@
+**Since 0.8.0 has been released, this branch will no longer be updated.**
+
 ## Selectable input/output mode
 
 ![toggle](https://user-images.githubusercontent.com/82267684/190847776-81763c84-2662-4693-97df-b15e8d9115ec.gif)
@@ -30,8 +32,6 @@ Super powerful color picker plugin.
     - Selectable output formats.
     - Transparent slider (for css `rgb()`/`hsl()`)
     - Highlight colors that can be picked up for current buffer.
-
-**If you use release version (0.7.2), use branch** `0.7.2`
 
 # Setup
 
