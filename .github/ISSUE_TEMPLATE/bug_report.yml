@@ -1,0 +1,59 @@
+name: Bug Report
+description: Report a problem in ccc.nvim
+labels: [bug]
+body:
+  - type: checkboxes
+    id: not-question
+    attributes:
+      label: Not a question
+      options:
+        - label: This is not a question. If you have a question, use [discussions](https://github.com/uga-rosa/ccc.nvim/discussions).
+          required: true
+
+  - type: textarea
+    attributes:
+      label: "Description"
+      description: "Describe in detail what happens"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Environments"
+      description: "information such as OS and neovim version"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Minimal reproducible full config"
+      description: |
+        Minimal configuration file that can be used alone to reproduce bugs. Not part of config.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Steps to reproduce"
+      description: "Full reproduction steps. Include a sample file if your issue relates to a specific filetype."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Expected behavior"
+      description: "A description of the behavior you expected."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Actual behavior"
+      description: "A description of the actual behavior."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Additional context"
+      description: "Any other relevant information"
