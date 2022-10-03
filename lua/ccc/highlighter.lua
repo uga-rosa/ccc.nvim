@@ -82,6 +82,7 @@ end
 ---@param bufnr integer
 function Highlighter:start(bufnr)
     vim.schedule(function()
+        bufnr = utils.resolve_bufnr(bufnr)
         if self.lsp then
             if not self:update_lsp(bufnr) then
                 -- Wait for LS initialization

@@ -189,7 +189,8 @@ end
 ---@param bufnr? integer
 ---@return integer
 function utils.resolve_bufnr(bufnr)
-    if bufnr == nil or bufnr == 0 then
+    local ok = pcall(api.nvim_buf_get_name, bufnr)
+    if bufnr == nil or bufnr == 0 or not ok then
         return api.nvim_get_current_buf()
     end
     return bufnr
