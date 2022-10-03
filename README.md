@@ -46,6 +46,9 @@ See `ccc-option` in [doc](./doc/ccc.txt) for the options that can be used.
 You can see the default options [here](./lua/ccc/config/default.lua).
 
 ```lua
+-- Enable true color
+vim.opt.termguicolors = true
+
 local ccc = require("ccc")
 local mapping = ccc.mapping
 ccc.setup({

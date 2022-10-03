@@ -41,6 +41,9 @@ See |ccc-option| for the options that can be used.
 
 
 >
+	-- Enable true color
+	vim.opt.termguicolors = true
+
 	local ccc = require("ccc")
 	local mapping = ccc.mapping
 	
