@@ -114,6 +114,10 @@ end
 ---@param bufnr integer
 ---@return boolean available
 function Highlighter:update_lsp(bufnr)
+    if not api.nvim_buf_is_valid(bufnr) then
+        return false
+    end
+
     local available = false
     api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, 0, -1)
 
@@ -180,6 +184,10 @@ end
 ---@param start_row integer 0-index
 ---@param end_row integer 0-index
 function Highlighter:update_picker(bufnr, start_row, end_row)
+    if not api.nvim_buf_is_valid(bufnr) then
+        return
+    end
+
     api.nvim_buf_clear_namespace(bufnr, self.picker_ns_id, start_row, end_row)
     for i, line in ipairs(api.nvim_buf_get_lines(bufnr, start_row, end_row, false)) do
         local row = start_row + i - 1
