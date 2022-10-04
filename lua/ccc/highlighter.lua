@@ -49,10 +49,6 @@ end
 
 ---@param bufnr? integer
 function Highlighter:enable(bufnr)
-    if self.pickers == nil then
-        self:init()
-    end
-
     if not self.ft_filter[vim.bo.filetype] then
         return
     end
@@ -230,7 +226,7 @@ end
 ---@param bufnr? integer
 function Highlighter:toggle(bufnr)
     bufnr = utils.resolve_bufnr(bufnr)
-    if self.attached_buffer and self.attached_buffer[bufnr] then
+    if self.attached_buffer[bufnr] then
         self:disable(bufnr)
     else
         self:enable(bufnr)

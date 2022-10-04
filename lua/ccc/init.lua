@@ -53,6 +53,9 @@ function M.setup(opt)
     end
     vim.validate({ opt = { opt, "t" } })
     config.setup(opt)
+
+    UI:init()
+    require("ccc.highlighter"):init()
     ready = true
 end
 

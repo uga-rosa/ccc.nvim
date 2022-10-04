@@ -30,7 +30,7 @@ local alpha = require("ccc.alpha")
 ---@field highlighter_lsp boolean
 local UI = {}
 
-function UI:new()
+function UI:init()
     self.alpha = alpha.new(self)
     self.color = Color.new(nil, nil, self.alpha)
     self.input_mode = self.color.input.name
@@ -48,7 +48,7 @@ function UI:new()
     self.highlighter_lsp = config.get("highlighter").lsp
 end
 
-function UI:init()
+function UI:reset()
     if config.get("preserve") then
         self.color = self.color:copy()
     else
@@ -86,14 +86,11 @@ end
 
 ---@param insert boolean
 function UI:open(insert)
-    if self.color == nil then
-        self:new()
-    end
     if self.win_id and api.nvim_win_is_valid(self.win_id) then
         return
     end
 
-    self:init()
+    self:reset()
     self.is_insert = insert
     if insert then
         self.end_col = self.start_col - 1
