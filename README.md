@@ -180,3 +180,7 @@ local mapping = ccc.mapping
     - `mapping.set50()`
     - `mapping.set100()`
     - `ccc.set_percent(integer)`
+
+# Similar plugins
+
+See [awesome-neovim#color](https://github.com/rockerBOO/awesome-neovim#color).
