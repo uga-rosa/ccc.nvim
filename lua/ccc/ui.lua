@@ -28,6 +28,7 @@ local alpha = require("ccc.alpha")
 ---@field alpha AlphaSlider
 ---@field prev_colors PrevColors
 ---@field highlighter_lsp boolean
+---@field auto_close boolean
 local UI = {}
 
 function UI:init()
@@ -46,6 +47,7 @@ function UI:init()
     self.ns_id = api.nvim_create_namespace("ccc-ui")
     self.prev_colors = prev_colors.new(self)
     self.highlighter_lsp = config.get("highlighter").lsp
+    self.auto_close = config.get("auto_close")
 end
 
 function UI:reset()
@@ -102,7 +104,6 @@ function UI:open(insert)
     self:update()
     self:_open()
     utils.cursor_set({ 2, 1 })
-    api.nvim_create_augroup("ccc-on-close", { clear = true })
     api.nvim_create_autocmd("WinClosed", {
         pattern = self.win_id .. "",
         callback = function()
@@ -110,6 +111,16 @@ function UI:open(insert)
         end,
         once = true,
     })
+    if self.auto_close then
+        api.nvim_create_autocmd("WinLeave", {
+            buffer = self.bufnr,
+            callback = function()
+                api.nvim_win_close(self.win_id, false)
+                self:on_close(true)
+            end,
+            once = true,
+        })
+    end
 end
 
 ---@param from_autocmd boolean

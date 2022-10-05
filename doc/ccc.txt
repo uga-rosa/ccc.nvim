@@ -110,6 +110,13 @@ Default: {
 	be specified.
 
 
+                                                         *ccc-option-auto-close*
+auto_close ~
+boolean
+Default: true
+	If true, then leaving the ccc UI will automatically close the window.
+
+
                                                            *ccc-option-preserve*
 preserve ~
 boolean

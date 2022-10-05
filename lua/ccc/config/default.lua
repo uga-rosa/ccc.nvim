@@ -23,6 +23,8 @@ return {
         border = "rounded",
     },
     ---@type boolean
+    auto_close = true,
+    ---@type boolean
     preserve = false,
     ---@type boolean
     save_on_quit = false,
