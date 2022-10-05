@@ -41,7 +41,7 @@ Super powerful color picker plugin.
 
 # Setup
 
-If you do not want to change the default setting, there is no need to call `setup` (Empty `setup` is called automatically by plugin/ccc.lua).
+Even if you do not change the default setting, there is need to call `setup`.
 See `ccc-option` in [doc](./doc/ccc.txt) for the options that can be used.
 You can see the default options [here](./lua/ccc/config/default.lua).
 

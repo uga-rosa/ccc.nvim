@@ -39,24 +39,14 @@ setmetatable(M, {
     end,
 })
 
-local ready = false
-
 ---@param opt table
----@overload fun(from_plugin: boolean)
 function M.setup(opt)
-    if opt == true then
-        -- call from ./plugin/ccc.lua
-        if ready then
-            return
-        end
-        opt = {}
-    end
+    opt = vim.F.if_nil(opt, {})
     vim.validate({ opt = { opt, "t" } })
-    config.setup(opt)
 
+    config.setup(opt)
     UI:init()
     require("ccc.highlighter"):init()
-    ready = true
 end
 
 ---@param b_color CccColor
