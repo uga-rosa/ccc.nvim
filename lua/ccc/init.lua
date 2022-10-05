@@ -45,8 +45,10 @@ function M.setup(opt)
     vim.validate({ opt = { opt, "t" } })
 
     config.setup(opt)
-    UI:init()
-    require("ccc.highlighter"):init()
+    vim.schedule(function()
+        UI:init()
+        require("ccc.highlighter"):init()
+    end)
 end
 
 ---@param b_color CccColor
