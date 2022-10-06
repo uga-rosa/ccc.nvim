@@ -132,9 +132,9 @@ function Highlighter:update_lsp(bufnr)
     api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, 0, -1)
 
     self.ls_colors[bufnr] = {}
-    for _, client in pairs(vim.lsp.get_active_clients()) do
+    for _, client in pairs(vim.lsp.get_active_clients({bufnr = bufnr})) do
         if client.server_capabilities.colorProvider then
-            local param = { textDocument = vim.lsp.util.make_text_document_params() }
+            local param = { textDocument = vim.lsp.util.make_text_document_params(bufnr) }
             client.request("textDocument/documentColor", param, function(err, color_informations)
                 if err or color_informations == nil then
                     return
