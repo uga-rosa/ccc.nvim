@@ -14,7 +14,7 @@ local rgb2hex = require("ccc.output.hex").str
 ---@field ft_filter table<string, boolean>
 ---@field lsp boolean
 ---@field hl_mode hl_mode
----@field attached_buffer table<string, boolean>
+---@field attached_buffer table<integer, boolean>
 ---@field ls_colors table<integer, ls_color[]> #Keys are bufnr
 local Highlighter = {}
 
@@ -49,6 +49,15 @@ function Highlighter:init()
     self.hl_mode = config.get("highlight_mode")
     self.attached_buffer = {}
     self.ls_colors = {}
+
+    api.nvim_create_autocmd("ColorScheme", {
+      callback = function()
+        self.is_defined = {}
+        for bufnr in pairs(self.attached_buffer) do
+          self:update(bufnr, 0, -1)
+        end
+      end,
+    })
 end
 
 ---@param bufnr? integer
