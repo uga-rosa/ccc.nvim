@@ -1,7 +1,13 @@
 local api = vim.api
 local fn = vim.fn
 
-local set_hl = api.nvim_set_hl
+local function set_hl(ns_id, name, val)
+    if val[vim.type_idx] then
+        val[vim.type_idx] = nil
+    end
+    api.nvim_set_hl(ns_id, name, val)
+end
+
 local add_hl = api.nvim_buf_add_highlight
 
 local Color = require("ccc.color")
