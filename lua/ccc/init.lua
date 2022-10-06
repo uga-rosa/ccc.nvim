@@ -39,16 +39,12 @@ setmetatable(M, {
     end,
 })
 
----@param opt table
+---@param opt? table
 function M.setup(opt)
     opt = vim.F.if_nil(opt, {})
     vim.validate({ opt = { opt, "t" } })
 
     config.setup(opt)
-    vim.schedule(function()
-        UI:init()
-        require("ccc.highlighter"):init()
-    end)
 end
 
 ---@param b_color CccColor

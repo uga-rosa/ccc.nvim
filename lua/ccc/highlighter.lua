@@ -19,6 +19,10 @@ local rgb2hex = require("ccc.output.hex").str
 local Highlighter = {}
 
 function Highlighter:init()
+    if self.pickers ~= nil then
+        return
+    end
+
     self.pickers = config.get("pickers")
     self.picker_ns_id = api.nvim_create_namespace("ccc-highlighter-picker")
     self.lsp_ns_id = api.nvim_create_namespace("ccc-highlighter-lsp")
@@ -49,6 +53,7 @@ end
 
 ---@param bufnr? integer
 function Highlighter:enable(bufnr)
+    self:init()
     if not self.ft_filter[vim.bo.filetype] then
         return
     end
@@ -170,10 +175,12 @@ function Highlighter:_create_ls_color(range, color)
 end
 
 ---@param bufnr? integer
----@return ls_color[]
+---@return ls_color[]?
 function Highlighter:get_ls_color(bufnr)
     bufnr = utils.resolve_bufnr(bufnr)
-    return self.ls_colors[bufnr]
+    if self.ls_colors then
+        return self.ls_colors[bufnr]
+    end
 end
 
 ---@param bufnr integer
@@ -217,6 +224,7 @@ end
 
 ---@param bufnr? integer
 function Highlighter:disable(bufnr)
+    self:init()
     bufnr = utils.resolve_bufnr(bufnr)
     self.attached_buffer[bufnr] = nil
     api.nvim_buf_clear_namespace(bufnr, self.picker_ns_id, 0, -1)
@@ -225,6 +233,7 @@ end
 
 ---@param bufnr? integer
 function Highlighter:toggle(bufnr)
+    self:init()
     bufnr = utils.resolve_bufnr(bufnr)
     if self.attached_buffer[bufnr] then
         self:disable(bufnr)

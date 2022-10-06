@@ -9,7 +9,7 @@ local LspPicker = {}
 ---@return integer? alpha
 function LspPicker.pick()
     local ls_colors = highlighter:get_ls_color()
-    if not ls_colors then
+    if ls_colors == nil then
         return
     end
 

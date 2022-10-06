@@ -8,13 +8,14 @@ local utils = require("ccc.utils")
 local Convert = {}
 
 function Convert:init()
+    if self.convert ~= nil then
+        return
+    end
     self.convert = config.get("convert")
 end
 
 function Convert:toggle()
-    if self.convert == nil then
-        self:init()
-    end
+    self:init()
     local line = api.nvim_get_current_line()
     local cursor_col = utils.col()
     for _, v in ipairs(self.convert) do

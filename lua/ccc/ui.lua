@@ -32,6 +32,10 @@ local alpha = require("ccc.alpha")
 local UI = {}
 
 function UI:init()
+    if self.alpha ~= nil then
+        return
+    end
+
     self.alpha = alpha.new(self)
     self.color = Color.new(nil, nil, self.alpha)
     self.input_mode = self.color.input.name
@@ -88,6 +92,7 @@ end
 
 ---@param insert boolean
 function UI:open(insert)
+    self:init()
     if self.win_id and api.nvim_win_is_valid(self.win_id) then
         return
     end
