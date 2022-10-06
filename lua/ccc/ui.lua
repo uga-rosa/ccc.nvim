@@ -144,7 +144,6 @@ function UI:complete()
         end
         return
     end
-    api.nvim_del_augroup_by_name("ccc-on-close")
     api.nvim_win_close(self.win_id, true)
     self:on_close(false)
     if self.is_insert then
