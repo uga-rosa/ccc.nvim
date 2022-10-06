@@ -45,22 +45,20 @@ function M.setup(opt)
     })
 
     if M.config.highlighter.auto_enable then
-        vim.schedule(function()
-            local aug_name = "ccc-highlighter-auto-enable"
-            api.nvim_create_augroup(aug_name, {})
-            api.nvim_create_autocmd("BufEnter", {
-                pattern = "*",
-                group = aug_name,
-                callback = function()
-                    local bytes = vim.fn.wordcount().bytes
-                    local max_byte = M.config.highlighter.max_byte
-                    if bytes > max_byte then
-                        return
-                    end
-                    require("ccc.highlighter"):enable()
-                end,
-            })
-        end)
+        local aug_name = "ccc-highlighter-auto-enable"
+        api.nvim_create_augroup(aug_name, {})
+        api.nvim_create_autocmd("BufEnter", {
+            pattern = "*",
+            group = aug_name,
+            callback = function()
+                local bytes = vim.fn.wordcount().bytes
+                local max_byte = M.config.highlighter.max_byte
+                if bytes > max_byte then
+                    return
+                end
+                require("ccc.highlighter"):enable()
+            end,
+        })
     end
 end
 
