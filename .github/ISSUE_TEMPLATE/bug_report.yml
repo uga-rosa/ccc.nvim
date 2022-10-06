@@ -28,7 +28,9 @@ body:
     attributes:
       label: "Minimal reproducible full config"
       description: |
-        Minimal configuration file that can be used alone to reproduce bugs. Not part of config.
+        You must provide a working config based on [this](https://github.com/uga-rosa/ccc.nvim/blob/main/utils/minimal.vim).
+        The config file should be complete, not partial, and can be used alone to reproduce bugs. 
+        **Don't use packer.nvim for this.**
     validations:
       required: true
 
