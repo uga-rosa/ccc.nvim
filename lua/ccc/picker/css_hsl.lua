@@ -7,6 +7,37 @@ local CssHslPicker = {}
 
 ---@param cap string
 ---@return number?
+local function cap2h(cap)
+    local x
+    if vim.endswith(cap, "deg") then
+        cap = cap:sub(1, -4)
+        x = tonumber(cap)
+    elseif vim.endswith(cap, "grad") then
+        cap = cap:sub(1, -5)
+        x = tonumber(cap)
+        if x then
+            x = x / 400 * 360
+        end
+    elseif vim.endswith(cap, "rad") then
+        cap = cap:sub(1, -4)
+        x = tonumber(cap)
+        if x then
+            x = x / ( 2 * math.pi ) * 360
+        end
+    elseif vim.endswith(cap, "turn") then
+        cap = cap:sub(1, -5)
+        x = tonumber(cap)
+        if x then
+            x = x * 360
+        end
+    else
+        x = tonumber(cap)
+    end
+    return x
+end
+
+---@param cap string
+---@return number?
 local function cap2sl(cap)
     local x = tonumber(cap)
     if x and 0 <= x and x <= 100 then
@@ -36,8 +67,10 @@ local function cap2alpha(cap)
 end
 
 local pattern = {
-    "hsl%(%s*(%d+)%s*,%s*(%d+)%%%s*,%s*(%d+)%%%s*%)",
-    "hsl%(%s*(%d+)%s*,%s*(%d+)%%%s*,%s*(%d+)%%%s*,%s*([%.%d]+%%?)%s*%)",
+    "hsl%(%s*([%.%d]+[a-z]*)%s*,%s*([%.%d]+)%%%s*,%s*([%.%d]+)%%%s*%)",
+    "hsl%(%s*([%.%d]+[a-z]*)%s*,%s*([%.%d]+)%%%s*,%s*([%.%d]+)%%%s*,%s*([%.%d]+%%?)%s*%)",
+    "hsl%(%s*([%.%d]+[a-z]*)%s+([%.%d]+)%%%s+([%.%d]+)%%%s*%)",
+    "hsl%(%s*([%.%d]+[a-z]*)%s+([%.%d]+)%%%s+([%.%d]+)%%%s*/%s*([%.%d]+%%?)%s*%)",
 }
 local exclude_pattern
 
@@ -65,7 +98,7 @@ function CssHslPicker.parse_color(s, init)
         if start == nil then
             return
         end
-        local H = tonumber(cap1)
+        local H = cap2h(cap1)
         local S = cap2sl(cap2)
         local L = cap2sl(cap3)
         if H and S and L then
