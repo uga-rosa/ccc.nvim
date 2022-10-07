@@ -48,7 +48,6 @@ function M.setup(opt)
         local aug_name = "ccc-highlighter-auto-enable"
         api.nvim_create_augroup(aug_name, {})
         api.nvim_create_autocmd("BufEnter", {
-            pattern = "*",
             group = aug_name,
             callback = function()
                 local bytes = vim.fn.wordcount().bytes
