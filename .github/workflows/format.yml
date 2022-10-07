@@ -1,0 +1,24 @@
+name: format
+
+on:
+  push:
+    branches:
+      - main
+      - 'lua/**'
+
+jobs:
+  postprocessing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: "Format with Stylua"
+        uses: JohnnyMorganz/stylua-action@v1.1.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: v0.15.1
+          args: lua/
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Format with stylua"
