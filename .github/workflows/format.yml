@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - main
-      - 'lua/**'
+    paths:
+      - '**.lua'
 
 jobs:
   postprocessing:
@@ -17,7 +18,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: v0.15.1
-          args: lua/
+          args: .
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
