@@ -22,7 +22,7 @@ local function cap2h(cap)
         cap = cap:sub(1, -4)
         x = tonumber(cap)
         if x then
-            x = x / ( 2 * math.pi ) * 360
+            x = x / (2 * math.pi) * 360
         end
     elseif vim.endswith(cap, "turn") then
         cap = cap:sub(1, -5)
