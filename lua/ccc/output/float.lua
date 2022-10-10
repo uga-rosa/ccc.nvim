@@ -3,8 +3,8 @@ local FloatOutput = {
     name = "Float",
 }
 
----@param RGB number[]
----@param A? number
+---@param RGB RGB
+---@param A? Alpha
 ---@return string
 function FloatOutput.str(RGB, A)
     local R, G, B = unpack(RGB)

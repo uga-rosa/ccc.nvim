@@ -16,14 +16,14 @@ function CmykInput.format(n)
     return ("%5.1f%%"):format(math.floor(n * 200) / 2)
 end
 
----@param RGB number[]
----@return number[] CMYK
+---@param RGB RGB
+---@return CMYK
 function CmykInput.from_rgb(RGB)
     return convert.rgb2cmyk(RGB)
 end
 
----@param CMYK number[]
----@return number[] RGB
+---@param CMYK CMYK
+---@return RGB
 function CmykInput.to_rgb(CMYK)
     return convert.cmyk2rgb(CMYK)
 end

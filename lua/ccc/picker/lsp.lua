@@ -5,8 +5,8 @@ local LspPicker = {}
 
 ---@return integer? start
 ---@return integer? end_
----@return integer[]? RGB
----@return integer? alpha
+---@return RGB?
+---@return Alpha?
 function LspPicker.pick()
     local ls_colors = highlighter:get_ls_color()
     if ls_colors == nil then

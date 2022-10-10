@@ -6,8 +6,8 @@
 ---@field delta number[] #Minimum slider movement.
 ---@field bar_name string[] #Align all display widths.
 ---@field format fun(n: number, i: integer): string #String returned must be 6 byte.
----@field from_rgb fun(RGB: number[]): value: number[]
----@field to_rgb fun(value: number[]): RGB: integer[]
+---@field from_rgb fun(RGB: RGB): value: number[]
+---@field to_rgb fun(value: number[]): RGB
 ---@field callback fun(self: ColorInput, new_value: number, index: integer): value: integer[]
 local ColorInput = {}
 
@@ -32,7 +32,7 @@ function ColorInput:set(value)
     self.value = value
 end
 
----@param RGB number[]
+---@param RGB RGB
 function ColorInput:set_rgb(RGB)
     self:set(self.from_rgb(RGB))
 end
@@ -42,7 +42,7 @@ function ColorInput:get()
     return self.value
 end
 
----@return number[] RGB
+---@return RGB
 function ColorInput:get_rgb()
     return self.to_rgb(self:get())
 end

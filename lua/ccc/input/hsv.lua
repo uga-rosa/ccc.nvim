@@ -20,14 +20,14 @@ function HsvInput.format(n, i)
     return ("%6d"):format(n)
 end
 
----@param RGB number[]
----@return number[] HSV
+---@param RGB RGB
+---@return HSV
 function HsvInput.from_rgb(RGB)
     return convert.rgb2hsv(RGB)
 end
 
----@param HSV number[]
----@return number[] RGB
+---@param HSV HSV
+---@return RGB
 function HsvInput.to_rgb(HSV)
     return convert.hsv2rgb(HSV)
 end

@@ -82,12 +82,12 @@ function Color:get()
     return self.input:get()
 end
 
----@param RGB number[]
+---@param RGB RGB
 function Color:set_rgb(RGB)
     self.input:set_rgb(RGB)
 end
 
----@return number[] RGB
+---@return RGB
 function Color:get_rgb()
     return self.input:get_rgb()
 end

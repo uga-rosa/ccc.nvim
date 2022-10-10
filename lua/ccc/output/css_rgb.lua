@@ -5,8 +5,8 @@ local CssRgbOutput = {
     name = "CssRGB",
 }
 
----@param RGB number[]
----@param A? number
+---@param RGB RGB
+---@param A? Alpha
 ---@return string
 function CssRgbOutput.str(RGB, A)
     local R, G, B = convert.rgb_format(RGB)

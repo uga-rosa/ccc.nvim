@@ -6,7 +6,7 @@ local HexShortOutput = {
     name = "HEXshort",
 }
 
----@param RGB number[]
+---@param RGB RGB
 ---@return string
 function HexShortOutput.str(RGB)
     RGB = { convert.rgb_format(RGB) }

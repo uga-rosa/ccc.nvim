@@ -5,8 +5,8 @@ local CssHslOutput = {
     name = "CssHSL",
 }
 
----@param RGB number[]
----@param A? number
+---@param RGB RGB
+---@param A? Alpha
 ---@return string
 function CssHslOutput.str(RGB, A)
     local H, S, L = unpack(convert.rgb2hsl(RGB))

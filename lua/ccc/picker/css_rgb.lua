@@ -59,8 +59,8 @@ local exclude_pattern
 ---@param init? integer
 ---@return integer? start
 ---@return integer? end_
----@return number[]? RGB
----@return number? alpha
+---@return RGB?
+---@return Alpha?
 function CssRgbPicker.parse_color(s, init)
     init = vim.F.if_nil(init, 1)
     if exclude_pattern == nil then

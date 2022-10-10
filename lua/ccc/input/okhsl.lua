@@ -20,14 +20,14 @@ function OkhslInput.format(n, i)
     return ("%6d"):format(n)
 end
 
----@param RGB number[]
----@return number[] OKHSV
+---@param RGB RGB
+---@return OKHSL
 function OkhslInput.from_rgb(RGB)
     return convert.rgb2okhsl(RGB)
 end
 
----@param OKHSL number[]
----@return number[] RGB
+---@param OKHSL OKHSL
+---@return RGB
 function OkhslInput.to_rgb(OKHSL)
     return convert.okhsl2rgb(OKHSL)
 end
