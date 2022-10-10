@@ -144,15 +144,15 @@ Default: {
 	toggles in this order. The first one is the default used at the first
 	startup. Once activated, it will keep the previous input mode.
 	The presets currently available are as follows:
-		- RGB:   ccc.input.rgb
-		- CMYK:  ccc.input.cmyk
-		- HSL:   ccc.input.hsl
-		- HSV:   ccc.input.hsv
-		- XYZ:   ccc.input.xyz
-		- Lab:   ccc.input.lab
-		- HSLuv: ccc.input.hsluv
-		- OKHSL: ccc.input.okhsl
-		- OKHSV: ccc.input.okhsv
+		- RGB    ccc.input.rgb
+		- CMYK   ccc.input.cmyk
+		- HSL    ccc.input.hsl
+		- HSV    ccc.input.hsv
+		- XYZ    ccc.input.xyz
+		- Lab    ccc.input.lab
+		- HSLuv  ccc.input.hsluv
+		- OKHSL  ccc.input.okhsl
+		- OKHSV  ccc.input.okhsv
 
 
                                                             *ccc-option-outputs*
@@ -168,10 +168,11 @@ Default: {
 	toggles in this order. The first one is the default used at the first
 	startup. Once activated, it will keep the previous output mode.
 	The presets currently available are as follows:
-		- HEX:    ccc.output.hex
-		          ccc.output.hex_short
-		- CssRGB: ccc.output.css_rgb
-		- CssHSL: ccc.output.css_hsl
+		- HEX (6digits)  ccc.output.hex
+		      (3digits)  ccc.output.hex_short
+		- CssRGB         ccc.output.css_rgb
+		- CssHSL         ccc.output.css_hsl
+		- Float          ccc.output.float
 
 
                                                             *ccc-option-pickers*
@@ -184,10 +185,10 @@ Default: {
 }
 	List of formats that can be detected by |:CccPick| to be activated.
 	The presets currently available are as follows:
-		- HEX:     ccc.picker.hex
-		- CssRGB:  ccc.picker.css_rgb
-		- CssHSL:  ccc.picker.css_hsl
-		- CssName: ccc.picker.css_name
+		- HEX      ccc.picker.hex
+		- CssRGB   ccc.picker.css_rgb
+		- CssHSL   ccc.picker.css_hsl
+		- CssName  ccc.picker.css_name
 	If it picks up even the parts you do not want picked up, try
 	|ccc-option-exclude-pattern|.
 
