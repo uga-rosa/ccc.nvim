@@ -51,7 +51,6 @@ return {
     exclude_pattern = {
         hex = {
             "[%w_]{{pattern}}",
-            "{{pattern}}[%w_]",
         },
         css_rgb = nil,
         css_hsl = nil,
