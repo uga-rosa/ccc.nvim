@@ -1,4 +1,0 @@
----@alias ColorInformation { range: Range, color: Color }
----@alias Color { red: number, green: number, blue: number, alpha: number }
----@alias Range { start: Position, end: Position }
----@alias Position { line: integer, character: integer }

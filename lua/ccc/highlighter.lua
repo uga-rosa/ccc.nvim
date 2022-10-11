@@ -126,6 +126,8 @@ function Highlighter:update_lsp(bufnr)
     for _, client in pairs(vim.lsp.get_active_clients()) do
         if client.server_capabilities.colorProvider then
             local param = { textDocument = vim.lsp.util.make_text_document_params() }
+            ---@param err any
+            ---@param color_informations lsp.ColorInformation[]
             client.request("textDocument/documentColor", param, function(err, color_informations)
                 if err or color_informations == nil then
                     return
@@ -162,8 +164,8 @@ function Highlighter:update_lsp(bufnr)
     return available
 end
 
----@param range Range
----@param color Color
+---@param range lsp.Range
+---@param color lsp.Color
 ---@return ls_color
 function Highlighter:_create_ls_color(range, color)
     local row = range.start.line
@@ -208,7 +210,7 @@ function Highlighter:update_picker(bufnr, start_row, end_row)
             if start == nil then
                 break
             end
-            ---@cast RGB number[]
+            ---@cast RGB RGB
             local hex = rgb2hex(RGB)
             local hl_name = "CccHighlighter" .. hex:sub(2)
             if not self.is_defined[hex] then

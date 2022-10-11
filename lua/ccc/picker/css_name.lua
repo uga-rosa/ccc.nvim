@@ -1,7 +1,7 @@
 local config = require("ccc.config")
 local utils = require("ccc.utils")
 
----@class NamePicker
+---@class NamePicker: ColorPicker
 local NamePicker = {}
 
 local name_rgb = {
@@ -310,7 +310,7 @@ local exclude_pattern
 ---@param init? integer
 ---@return integer? start
 ---@return integer? end_
----@return number[]? RGB
+---@return RGB?
 function NamePicker.parse_color(s, init)
     init = vim.F.if_nil(init, 1)
     s = s:lower()

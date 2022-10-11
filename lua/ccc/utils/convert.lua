@@ -4,7 +4,7 @@ local ok = require("ccc.utils.ok_colorspace")
 
 local convert = {}
 
----@param RGB number[]
+---@param RGB RGB
 ---@return integer R #0-255
 ---@return integer G #0-255
 ---@return integer B #0-255
@@ -15,20 +15,20 @@ function convert.rgb_format(RGB)
     return unpack(RGB)
 end
 
----@param RGB number[]
----@return number[] HSLuv
+---@param RGB RGB
+---@return HSLuv
 function convert.rgb2hsluv(RGB)
     return hsluv.rgb_to_hsluv(RGB)
 end
 
----@param HSLuv number[]
----@return number[] RGB
+---@param HSLuv HSLuv
+---@return RGB
 function convert.hsluv2rgb(HSLuv)
     return hsluv.hsluv_to_rgb(HSLuv)
 end
 
----@param RGB integer[]
----@return integer[] HSL
+---@param RGB RGB
+---@return HSL
 function convert.rgb2hsl(RGB)
     local R, G, B = unpack(RGB)
     local H, S, L
@@ -61,8 +61,8 @@ function convert.rgb2hsl(RGB)
     return { H, S, L }
 end
 
----@param HSL integer[]
----@return number[] RGB
+---@param HSL HSL
+---@return RGB
 function convert.hsl2rgb(HSL)
     local H, S, L = unpack(HSL)
     local RGB
@@ -95,8 +95,8 @@ function convert.hsl2rgb(HSL)
     return RGB
 end
 
----@param RGB number[]
----@return number[] HSV
+---@param RGB RGB
+---@return HSV
 function convert.rgb2hsv(RGB)
     local R, G, B = unpack(RGB)
     local H, S, V
@@ -129,8 +129,8 @@ function convert.rgb2hsv(RGB)
     return { H, S, V }
 end
 
----@param HSV number[]
----@return number[] RGB
+---@param HSV HSV
+---@return RGB
 function convert.hsv2rgb(HSV)
     local H, S, V = unpack(HSV)
     local RGB
@@ -159,8 +159,8 @@ function convert.hsv2rgb(HSV)
     return RGB
 end
 
----@param RGB number[]
----@return number[] CMYK
+---@param RGB RGB
+---@return CMYK
 function convert.rgb2cmyk(RGB)
     local R, G, B = unpack(RGB)
     local K = 1 - utils.max(R, G, B)
@@ -175,8 +175,8 @@ function convert.rgb2cmyk(RGB)
     }
 end
 
----@param CMYK number[]
----@return number[] RGB
+---@param CMYK CMYK
+---@return RGB
 function convert.cmyk2rgb(CMYK)
     local C, M, Y, K = unpack(CMYK)
     if K == 1 then
@@ -189,8 +189,8 @@ function convert.cmyk2rgb(CMYK)
     }
 end
 
----@param RGB number[]
----@return number[] Linear
+---@param RGB RGB
+---@return linearRGB
 function convert.rgb2linear(RGB)
     return vim.tbl_map(function(x)
         if x <= 0.04045 then
@@ -200,8 +200,8 @@ function convert.rgb2linear(RGB)
     end, RGB)
 end
 
----@param Linear number[]
----@return number[]
+---@param Linear linearRGB
+---@return RGB
 function convert.linear2rgb(Linear)
     return vim.tbl_map(function(x)
         if x <= 0.0031308 then
@@ -250,27 +250,27 @@ local xyz2linear = {
     { 0.055630079696993, -0.20397695888897, 1.056971514242878 },
 }
 
----@param Linear number[]
----@return number[] XYZ
+---@param Linear linearRGB
+---@return XYZ
 function convert.linear2xyz(Linear)
     return product(linear2xyz, Linear)
 end
 
----@param XYZ number[]
----@return number[] Linear
+---@param XYZ XYZ
+---@return linearRGB
 function convert.xyz2linear(XYZ)
     return product(xyz2linear, XYZ)
 end
 
----@param RGB number[]
----@return number[] XYZ
+---@param RGB RGB
+---@return XYZ
 function convert.rgb2xyz(RGB)
     local Linear = convert.rgb2linear(RGB)
     return convert.linear2xyz(Linear)
 end
 
----@param XYZ number[]
----@return number[] RGB
+---@param XYZ XYZ
+---@return RGB
 function convert.xyz2rgb(XYZ)
     local Linear = convert.xyz2linear(XYZ)
     local RGB = convert.linear2rgb(Linear)
@@ -279,8 +279,8 @@ function convert.xyz2rgb(XYZ)
     end, RGB)
 end
 
----@param XYZ number[]
----@return number[] Lab
+---@param XYZ XYZ
+---@return Lab
 function convert.xyz2lab(XYZ)
     local X, Y, Z = unpack(XYZ)
     local Xn, Yn, Zn = 0.9505, 1, 1.089
@@ -297,8 +297,8 @@ function convert.xyz2lab(XYZ)
     }
 end
 
----@param Lab number[]
----@return number[] XYZ
+---@param Lab Lab
+---@return XYZ
 function convert.lab2xyz(Lab)
     local L, a, b = unpack(Lab)
     local Xn, Yn, Zn = 0.9505, 1, 1.089
@@ -318,16 +318,16 @@ function convert.lab2xyz(Lab)
     }
 end
 
----@param RGB number[]
----@return number[] Lab
+---@param RGB RGB
+---@return Lab
 function convert.rgb2lab(RGB)
     local Linear = convert.rgb2linear(RGB)
     local XYZ = convert.linear2xyz(Linear)
     return convert.xyz2lab(XYZ)
 end
 
----@param Lab number[]
----@return number[] RGB
+---@param Lab Lab
+---@return RGB
 function convert.lab2rgb(Lab)
     local XYZ = convert.lab2xyz(Lab)
     local Linear = convert.xyz2linear(XYZ)
@@ -337,36 +337,60 @@ function convert.lab2rgb(Lab)
     end, RGB)
 end
 
----@param RGB number[]
----@return number[] OKHSV
+---@param RGB RGB
+---@return OKHSV
 function convert.rgb2okhsv(RGB)
-    local HSV = ok.srgb_to_okhsv(RGB)
-    HSV[1] = HSV[1] * 360
-    return HSV
+    local OKHSV = ok.srgb_to_okhsv(RGB)
+    OKHSV[1] = OKHSV[1] * 360
+    return OKHSV
 end
 
----@param HSV number[]
----@return number[] RGB
-function convert.okhsv2rgb(HSV)
-    local h, s, v = unpack(HSV)
+---@param OKHSV OKHSV
+---@return RGB
+function convert.okhsv2rgb(OKHSV)
+    local h, s, v = unpack(OKHSV)
     h = h / 360
     return ok.okhsv_to_srgb({ h, s, v })
 end
 
----@param RGB number[]
----@return number[] OKHSL
+---@param RGB RGB
+---@return OKHSL
 function convert.rgb2okhsl(RGB)
-    local HSL = ok.srgb_to_okhsl(RGB)
-    HSL[1] = HSL[1] * 360
-    return HSL
+    local OKHSL = ok.srgb_to_okhsl(RGB)
+    OKHSL[1] = OKHSL[1] * 360
+    return OKHSL
 end
 
----@param HSL number[]
----@return number[] RGB
-function convert.okhsl2rgb(HSL)
-    local h, s, l = unpack(HSL)
+---@param OKHSL OKHSL
+---@return RGB
+function convert.okhsl2rgb(OKHSL)
+    local h, s, l = unpack(OKHSL)
     h = h / 360
     return ok.okhsl_to_srgb({ h, s, l })
+end
+
+---@param RGB RGB
+---@return HWB
+function convert.rgb2hwb(RGB)
+    local HSL = convert.rgb2hsl(RGB)
+    local W = utils.min(unpack(RGB))
+    local B = 1 - utils.max(unpack(RGB))
+    return { HSL[1], W, B }
+end
+
+---@param HWB HWB
+---@return RGB
+function convert.hwb2rgb(HWB)
+    local H, W, B = unpack(HWB)
+    if W + B >= 1 then
+        local gray = W / (W + B)
+        return { gray, gray, gray }
+    end
+    local RGB = convert.hsl2rgb({ H, 1, 0.5 })
+    for i = 1, 3 do
+        RGB[i] = RGB[i] * (1 - W - B) + W
+    end
+    return RGB
 end
 
 return convert

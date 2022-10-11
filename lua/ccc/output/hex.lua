@@ -5,7 +5,7 @@ local HexOutput = {
     name = "HEX",
 }
 
----@param RGB number[]
+---@param RGB RGB
 ---@return string
 function HexOutput.str(RGB)
     local pattern = "#%02x%02x%02x"

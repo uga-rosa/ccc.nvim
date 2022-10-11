@@ -23,14 +23,14 @@ local function copy(t)
     return new
 end
 
----@param RGB number[]
----@return number[] RGB
+---@param RGB RGB
+---@return RGB
 function RgbInput.from_rgb(RGB)
     return copy(RGB)
 end
 
----@param RGB number[]
----@return number[] RGB
+---@param RGB RGB
+---@return RGB
 function RgbInput.to_rgb(RGB)
     return copy(RGB)
 end

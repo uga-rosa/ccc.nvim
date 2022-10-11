@@ -182,6 +182,7 @@ Default: {
 	ccc.picker.hex,
 	ccc.picker.css_rgb,
 	ccc.picker.css_hsl,
+	ccc.picker.css_hwb,
 }
 	List of formats that can be detected by |:CccPick| to be activated.
 	The presets currently available are as follows:
@@ -189,7 +190,10 @@ Default: {
 		  Hex is according to CSS Color Module level 4.
 		- CssRGB   ccc.picker.css_rgb
 		- CssHSL   ccc.picker.css_hsl
+		- CssHWB   ccc.picker.css_hwb
 		- CssName  ccc.picker.css_name
+	Css* conforms to CSS Color Module Level 4.
+	https://www.w3.org/TR/css-color-4/
 	If it picks up even the parts you do not want picked up, try
 	|ccc-option-exclude-pattern|.
 
@@ -200,10 +204,10 @@ table
 Default: {
 	hex = {
 		"[%w_]{{pattern}}",
-		"{{pattern}}[g-zG-Z_]",
 	},
 	css_rgb = nil,
 	css_hsl = nil,
+	css_hwb = nil,
 	css_name = {
 		"[%w_]{{pattern}}",
 		"{{pattern}}[%w_]",

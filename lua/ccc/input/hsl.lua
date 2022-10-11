@@ -20,14 +20,14 @@ function HslInput.format(n, i)
     return ("%6d"):format(n)
 end
 
----@param RGB number[]
----@return number[] HSL
+---@param RGB RGB
+---@return HSL
 function HslInput.from_rgb(RGB)
     return convert.rgb2hsl(RGB)
 end
 
----@param HSL number[]
----@return number[] RGB
+---@param HSL HSL
+---@return RGB
 function HslInput.to_rgb(HSL)
     return convert.hsl2rgb(HSL)
 end

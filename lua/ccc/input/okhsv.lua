@@ -1,7 +1,7 @@
 local ColorInput = require("ccc.input")
 local convert = require("ccc.utils.convert")
 
----@class OkhslInput: ColorInput
+---@class OkhsvInput: ColorInput
 local OkhsvInput = setmetatable({
     name = "OKHSV",
     max = { 360, 1, 1 },
@@ -20,14 +20,14 @@ function OkhsvInput.format(n, i)
     return ("%6d"):format(n)
 end
 
----@param RGB number[]
----@return number[] OKHSV
+---@param RGB RGB
+---@return OKHSV
 function OkhsvInput.from_rgb(RGB)
     return convert.rgb2okhsv(RGB)
 end
 
----@param OKHSV number[]
----@return number[] RGB
+---@param OKHSV OKHSV
+---@return RGB
 function OkhsvInput.to_rgb(OKHSV)
     return convert.okhsv2rgb(OKHSV)
 end

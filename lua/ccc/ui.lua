@@ -407,7 +407,7 @@ function UI:pick()
         local start, end_, RGB, A = require("ccc.picker.lsp").pick()
         if start then
             ---@cast end_ integer
-            ---@cast RGB number[]
+            ---@cast RGB RGB
             self.start_col = start
             self.end_col = end_
             self.color:set_rgb(RGB)
@@ -439,7 +439,7 @@ function UI:pick()
         end
         if start <= cursor_col and cursor_col <= end_ then
             ---@cast end_ integer
-            ---@cast RGB number[]
+            ---@cast RGB RGB
             self.start_col = start
             self.end_col = end_
             self.color:set_rgb(RGB)
