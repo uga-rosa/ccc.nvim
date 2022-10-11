@@ -291,12 +291,8 @@ function UI:highlight()
     -- The specification for ColorInput.format() specifies that it should be 6 bytes.
     local value_len = 6
     local row = 0
-    for i = 1, #self.color:get() do
+    for i, v in ipairs(self.color:get()) do
         row = row + 1
-        -- Using ipairs arises weird problem where v is rewritten to a different value.
-        -- Temporary storage in a variable does the same thing; I have to call self.color:get() twice to avoid it.
-        -- It seems to be caused by processing within self.color:hex(), but it maybe a bug of Lua(jit).
-        local v = self.color:get()[i]
 
         local max = self.color.input.max[i]
         local min = self.color.input.min[i]
@@ -307,11 +303,11 @@ function UI:highlight()
         for j = 1, bar_len do
             end_ = update_end(j == point_idx, start, #bar_char, #point_char)
 
-            local new_value = (j - 0.5) / bar_len * (max - min) + min
             local hex
             if point_color ~= "" and j == point_idx then
                 hex = point_color
             else
+                local new_value = (j - 0.5) / bar_len * (max - min) + min
                 hex = self.color:hex(i, new_value)
             end
             local color_name = "CccBar" .. i .. "_" .. j

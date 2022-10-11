@@ -66,7 +66,7 @@ function Color:copy()
     local new = Color.new(nil, nil, self.alpha)
     new.input_idx = self.input_idx
     new.input = new._inputs[new.input_idx]
-    new:set_rgb(self:get_rgb())
+    new:set(self:get())
     new.output_idx = self.output_idx
     new.output = new._outputs[new.output_idx]
     return new
@@ -77,9 +77,10 @@ function Color:set(value)
     self.input:set(value)
 end
 
+---Return a copy
 ---@return number[] value
 function Color:get()
-    return self.input:get()
+    return { unpack(self.input:get()) }
 end
 
 ---@param RGB RGB
@@ -127,10 +128,10 @@ end
 function Color:hex(index, new_value)
     local RGB
     if index and new_value then
-        local pre = self:get_rgb()
+        local pre = self:get()
         self.input:callback(index, new_value)
-        RGB = self.input:get_rgb()
-        self:set_rgb(pre)
+        RGB = self:get_rgb()
+        self:set(pre)
     else
         RGB = self.input:get_rgb()
     end
