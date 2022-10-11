@@ -1,29 +1,9 @@
 local config = require("ccc.config")
 local utils = require("ccc.utils")
+local parse = require("ccc.utils.parse")
 
 ---@class HexPicker: ColorPicker
 local HexPicker = {}
-
----@param cap string
----@return number?
-local function cap2rgba(cap)
-    if #cap == 1 then
-        cap = cap .. cap
-    end
-    local x = tonumber(cap, 16)
-    if x and 0 <= x and x <= 255 then
-        return x / 255
-    end
-end
-
----@param cap string?
----@return number?
-local function cap2a(cap)
-    if cap == nil then
-        return
-    end
-    return cap2rgba(cap)
-end
 
 -- #RRGGBBAA
 -- #RRGGBB
@@ -61,12 +41,15 @@ function HexPicker.parse_color(s, init)
         if start == nil then
             return
         end
-        local R = cap2rgba(cap1)
-        local G = cap2rgba(cap2)
-        local B = cap2rgba(cap3)
-        local A = cap2a(cap4)
+        local R = parse.hex(cap1)
+        local G = parse.hex(cap2)
+        local B = parse.hex(cap3)
         if R and G and B then
             if not utils.is_excluded(exclude_pattern, s, init, start, end_) then
+                local A
+                if cap4 then
+                    A = parse.hex(cap4)
+                end
                 return start, end_, { R, G, B }, A
             end
         end

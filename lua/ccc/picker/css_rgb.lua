@@ -1,51 +1,9 @@
 local config = require("ccc.config")
 local utils = require("ccc.utils")
+local parse = require("ccc.utils.parse")
 
 ---@class CssRgbPicker: ColorPicker
 local CssRgbPicker = {}
-
----@param cap string
----@return number?
-local function cap2rgb(cap)
-    local x
-    if cap:sub(-1, -1) == "%" then
-        x = tonumber(cap:sub(1, -2))
-        if x == nil then
-            return
-        end
-        x = x / 100
-    else
-        x = tonumber(cap)
-        if x == nil then
-            return
-        end
-        x = x / 255
-    end
-    if 0 <= x and x <= 1 then
-        return x
-    end
-end
-
----@param cap? string
----@return number?
-local function cap2alpha(cap)
-    if cap == nil then
-        return
-    end
-    local x
-    if cap:sub(-1, -1) == "%" then
-        x = tonumber(cap:sub(1, -2))
-        if x == nil then
-            return
-        end
-        x = x / 100
-    else
-        x = tonumber(cap)
-    end
-    if x and 0 <= x and x <= 1 then
-        return x
-    end
-end
 
 local pattern = {
     "rgb%(%s*([%.%d]+%%?)%s*,%s*([%.%d]+%%?)%s*,%s*([%.%d]+%%?)%s*%)",
@@ -67,7 +25,7 @@ function CssRgbPicker.parse_color(s, init)
         local ex_pat = config.get("exclude_pattern")
         exclude_pattern = utils.expand_template(ex_pat.css_rgb, pattern)
     end
-    -- The shortest patten is 10 characters like `rgb(0,0,0)`
+    -- The shortest patten is 10 characters like `rgb(0 0 0)`
     while init < #s - 9 do
         local start, end_, cap1, cap2, cap3, cap4
         for _, pat in ipairs(pattern) do
@@ -79,12 +37,15 @@ function CssRgbPicker.parse_color(s, init)
         if start == nil then
             return
         end
-        local R = cap2rgb(cap1)
-        local G = cap2rgb(cap2)
-        local B = cap2rgb(cap3)
+        local R = parse.percent(cap1, 255)
+        local G = parse.percent(cap2, 255)
+        local B = parse.percent(cap3, 255)
         if R and G and B then
             if not utils.is_excluded(exclude_pattern, s, init, start, end_) then
-                local A = cap2alpha(cap4)
+                local A
+                if cap4 then
+                    A = parse.percent(cap4, 1)
+                end
                 return start, end_, { R, G, B }, A
             end
         end
