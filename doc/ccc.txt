@@ -187,6 +187,7 @@ Default: {
 	List of formats that can be detected by |:CccPick| to be activated.
 	The presets currently available are as follows:
 		- HEX      ccc.picker.hex
+		  Hex is according to CSS Color Module level 4.
 		- CssRGB   ccc.picker.css_rgb
 		- CssHSL   ccc.picker.css_hsl
 		- CssHWB   ccc.picker.css_hwb
