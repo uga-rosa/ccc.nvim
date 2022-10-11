@@ -34,5 +34,9 @@
 ---L ranges from 0 to 100
 ---a and b range from -128 to 128.
 
+---@alias HWB number[]
+---H ranges from 0 to 360.
+---W and B range from 0 to 1.
+
 ---@alias Alpha number
 ---It ranges from 0 to 1.

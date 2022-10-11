@@ -46,6 +46,7 @@ return {
         ccc.picker.hex,
         ccc.picker.css_rgb,
         ccc.picker.css_hsl,
+        ccc.picker.css_hwb,
     },
     ---@type table<string, string[] | string | nil>
     exclude_pattern = {
@@ -55,6 +56,7 @@ return {
         },
         css_rgb = nil,
         css_hsl = nil,
+        css_hwb = nil,
         css_name = {
             "[%w_]{{pattern}}",
             "{{pattern}}[%w_]",

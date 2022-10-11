@@ -13,6 +13,7 @@ local M = {
         hsv = require("ccc.input.hsv"),
         okhsv = require("ccc.input.okhsv"),
         okhsl = require("ccc.input.okhsl"),
+        hwb = require("ccc.input.hwb"),
     },
     output = {
         hex = require("ccc.output.hex"),
@@ -25,6 +26,7 @@ local M = {
         hex = require("ccc.picker.hex"),
         css_rgb = require("ccc.picker.css_rgb"),
         css_hsl = require("ccc.picker.css_hsl"),
+        css_hwb = require("ccc.picker.css_hwb"),
         css_name = require("ccc.picker.css_name"),
     },
     mapping = {},
