@@ -369,4 +369,28 @@ function convert.okhsl2rgb(OKHSL)
     return ok.okhsl_to_srgb({ h, s, l })
 end
 
+---@param RGB RGB
+---@return HWB
+function convert.rgb2hwb(RGB)
+    local HSL = convert.rgb2hsl(RGB)
+    local W = utils.min(unpack(RGB))
+    local B = 1 - utils.max(unpack(RGB))
+    return { HSL[1], W, B }
+end
+
+---@param HWB HWB
+---@return RGB
+function convert.hwb2rgb(HWB)
+    local H, W, B = unpack(HWB)
+    if W + B >= 1 then
+        local gray = W / (W + B)
+        return { gray, gray, gray }
+    end
+    local RGB = convert.hsl2rgb({ H, 1, 0.5 })
+    for i = 1, 3 do
+        RGB[i] = RGB[i] * (1 - W - B) + W
+    end
+    return RGB
+end
+
 return convert

@@ -13,6 +13,7 @@ local M = {
         hsv = require("ccc.input.hsv"),
         okhsv = require("ccc.input.okhsv"),
         okhsl = require("ccc.input.okhsl"),
+        hwb = require("ccc.input.hwb"),
     },
     output = {
         hex = require("ccc.output.hex"),
