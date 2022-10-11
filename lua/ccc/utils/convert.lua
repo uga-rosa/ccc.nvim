@@ -338,6 +338,18 @@ function convert.lab2rgb(Lab)
 end
 
 ---@param RGB RGB
+---@return OKLab
+function convert.rgb2oklab(RGB)
+    return ok.srgb_to_oklab(RGB)
+end
+
+---@param OKLab OKLab
+---@return RGB
+function convert.oklab2rgb(OKLab)
+    return ok.oklab_to_srgb(OKLab)
+end
+
+---@param RGB RGB
 ---@return OKHSV
 function convert.rgb2okhsv(RGB)
     local OKHSV = ok.srgb_to_okhsv(RGB)

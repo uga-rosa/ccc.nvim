@@ -38,5 +38,9 @@
 ---H ranges from 0 to 360.
 ---W and B range from 0 to 1.
 
+---@alias OKLab number[]
+---L ranges from 0 to 1
+---a and b range from -0.4 to 0.4.
+
 ---@alias Alpha number
 ---It ranges from 0 to 1.
