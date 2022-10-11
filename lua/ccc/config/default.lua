@@ -52,7 +52,7 @@ return {
     exclude_pattern = {
         hex = {
             "[%w_]{{pattern}}",
-            "{{pattern}}[g-zG-Z_]"
+            "{{pattern}}[g-zG-Z_]",
         },
         css_rgb = nil,
         css_hsl = nil,
