@@ -1,70 +1,10 @@
 local config = require("ccc.config")
 local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
+local parse = require("ccc.utils.parse")
 
 ---@class CssHslPicker: ColorPicker
 local CssHslPicker = {}
-
----@param cap string
----@return number?
-local function cap2h(cap)
-    local x
-    if vim.endswith(cap, "deg") then
-        cap = cap:sub(1, -4)
-        x = tonumber(cap)
-    elseif vim.endswith(cap, "grad") then
-        cap = cap:sub(1, -5)
-        x = tonumber(cap)
-        if x then
-            x = x / 400 * 360
-        end
-    elseif vim.endswith(cap, "rad") then
-        cap = cap:sub(1, -4)
-        x = tonumber(cap)
-        if x then
-            x = x / (2 * math.pi) * 360
-        end
-    elseif vim.endswith(cap, "turn") then
-        cap = cap:sub(1, -5)
-        x = tonumber(cap)
-        if x then
-            x = x * 360
-        end
-    else
-        x = tonumber(cap)
-    end
-    return x
-end
-
----@param cap string
----@return number?
-local function cap2sl(cap)
-    local x = tonumber(cap)
-    if x and 0 <= x and x <= 100 then
-        return x / 100
-    end
-end
-
----@param cap? string
----@return number?
-local function cap2alpha(cap)
-    if cap == nil then
-        return
-    end
-    local x
-    if cap:sub(-1, -1) == "%" then
-        x = tonumber(cap:sub(1, -2))
-        if x == nil then
-            return
-        end
-        x = x / 100
-    else
-        x = tonumber(cap)
-    end
-    if x and 0 <= x and x <= 1 then
-        return x
-    end
-end
 
 local pattern = {
     "hsl%(%s*([%.%d]+[a-z]*)%s*,%s*([%.%d]+)%%%s*,%s*([%.%d]+)%%%s*%)",
@@ -86,7 +26,7 @@ function CssHslPicker.parse_color(s, init)
         local ex_pat = config.get("exclude_pattern")
         exclude_pattern = utils.expand_template(ex_pat.css_hsl, pattern)
     end
-    -- The shortest patten is 12 characters like `hsl(0,0%,0%)`
+    -- The shortest patten is 12 characters like `hsl(0 0% 0%)`
     while init <= #s - 11 do
         local start, end_, cap1, cap2, cap3, cap4
         for _, pat in ipairs(pattern) do
@@ -98,13 +38,16 @@ function CssHslPicker.parse_color(s, init)
         if start == nil then
             return
         end
-        local H = cap2h(cap1)
-        local S = cap2sl(cap2)
-        local L = cap2sl(cap3)
+        local H = parse.hue(cap1)
+        local S = parse.percent(cap2, 100)
+        local L = parse.percent(cap3, 100)
         if H and S and L then
             if not utils.is_excluded(exclude_pattern, s, init, start, end_) then
                 local RGB = convert.hsl2rgb({ H, S, L })
-                local A = cap2alpha(cap4)
+                local A
+                if cap4 then
+                    A = parse.percent(cap4)
+                end
                 return start, end_, RGB, A
             end
         end
