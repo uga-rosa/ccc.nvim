@@ -44,7 +44,7 @@ function CssRgbPicker.parse_color(s, init)
             if not utils.is_excluded(exclude_pattern, s, init, start, end_) then
                 local A
                 if cap4 then
-                    A = parse.percent(cap4, 1)
+                    A = parse.percent(cap4)
                 end
                 return start, end_, { R, G, B }, A
             end

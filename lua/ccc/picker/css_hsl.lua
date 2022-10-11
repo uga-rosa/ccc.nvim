@@ -7,10 +7,10 @@ local parse = require("ccc.utils.parse")
 local CssHslPicker = {}
 
 local pattern = {
-    "hsl%(%s*([%.%d]+[a-z]*)%s*,%s*([%.%d]+)%%%s*,%s*([%.%d]+)%%%s*%)",
-    "hsla?%(%s*([%.%d]+[a-z]*)%s*,%s*([%.%d]+)%%%s*,%s*([%.%d]+)%%%s*,%s*([%.%d]+%%?)%s*%)",
-    "hsl%(%s*([%.%d]+[a-z]*)%s+([%.%d]+)%%%s+([%.%d]+)%%%s*%)",
-    "hsla?%(%s*([%.%d]+[a-z]*)%s+([%.%d]+)%%%s+([%.%d]+)%%%s*/%s*([%.%d]+%%?)%s*%)",
+    "hsl%(%s*([%.%d]+[a-z]*)%s*,%s*([%.%d]+%%)%s*,%s*([%.%d]+%%)%s*%)",
+    "hsla?%(%s*([%.%d]+[a-z]*)%s*,%s*([%.%d]+%%)%s*,%s*([%.%d]+%%)%s*,%s*([%.%d]+%%?)%s*%)",
+    "hsl%(%s*([%.%d]+[a-z]*)%s+([%.%d]+%%)%s+([%.%d]+%%)%s*%)",
+    "hsla?%(%s*([%.%d]+[a-z]*)%s+([%.%d]+%%)%s+([%.%d]+%%)%s*/%s*([%.%d]+%%?)%s*%)",
 }
 local exclude_pattern
 
@@ -39,8 +39,8 @@ function CssHslPicker.parse_color(s, init)
             return
         end
         local H = parse.hue(cap1)
-        local S = parse.percent(cap2, 100)
-        local L = parse.percent(cap3, 100)
+        local S = parse.percent(cap2)
+        local L = parse.percent(cap3)
         if H and S and L then
             if not utils.is_excluded(exclude_pattern, s, init, start, end_) then
                 local RGB = convert.hsl2rgb({ H, S, L })
