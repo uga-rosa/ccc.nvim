@@ -85,4 +85,16 @@ function parse.percent(str, ratio)
     end
 end
 
-return parse
+---Check if the first argument is nil.
+return setmetatable({}, {
+    __index = function(_, key)
+        if parse[key] then
+            return function(...)
+                if select(1, ...) == nil then
+                    return
+                end
+                return parse[key](...)
+            end
+        end
+    end,
+})
