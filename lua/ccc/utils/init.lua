@@ -114,7 +114,7 @@ end
 ---@param min integer
 ---@param max integer
 ---@return integer
-function utils.fix_overflow(int, min, max)
+function utils.clamp(int, min, max)
     if int < min then
         return min
     elseif int > max then

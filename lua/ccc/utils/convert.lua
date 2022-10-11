@@ -275,7 +275,7 @@ function convert.xyz2rgb(XYZ)
     local Linear = convert.xyz2linear(XYZ)
     local RGB = convert.linear2rgb(Linear)
     return vim.tbl_map(function(n)
-        return utils.fix_overflow(n, 0, 1)
+        return utils.clamp(n, 0, 1)
     end, RGB)
 end
 
@@ -333,7 +333,7 @@ function convert.lab2rgb(Lab)
     local Linear = convert.xyz2linear(XYZ)
     local RGB = convert.linear2rgb(Linear)
     return vim.tbl_map(function(x)
-        return utils.fix_overflow(x, 0, 1)
+        return utils.clamp(x, 0, 1)
     end, RGB)
 end
 

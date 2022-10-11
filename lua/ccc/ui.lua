@@ -373,11 +373,11 @@ function UI:delta(d)
     if 1 <= index and index <= #input.value then
         local value = input.value[index]
         local delta = input.delta[index] * d
-        local new_value = utils.fix_overflow(value + delta, input.min[index], input.max[index])
+        local new_value = utils.clamp(value + delta, input.min[index], input.max[index])
         input:callback(index, new_value)
     elseif self.alpha.is_showed and index == #input.value + 1 then
         local value = self.alpha:get()
-        local new_value = utils.fix_overflow(value + d / 100, 0, 1)
+        local new_value = utils.clamp(value + d / 100, 0, 1)
         self.alpha:set(new_value)
     else
         return
