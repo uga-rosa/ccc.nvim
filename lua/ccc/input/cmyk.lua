@@ -1,7 +1,7 @@
 local ColorInput = require("ccc.input")
 local convert = require("ccc.utils.convert")
 
----@class HslInput: ColorInput
+---@class CmykInput: ColorInput
 local CmykInput = setmetatable({
     name = "CMYK",
     max = { 1, 1, 1, 1 },

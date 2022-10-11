@@ -1,7 +1,7 @@
 local ColorInput = require("ccc.input")
 local convert = require("ccc.utils.convert")
 
----@class OkhslInput: ColorInput
+---@class OkhsvInput: ColorInput
 local OkhsvInput = setmetatable({
     name = "OKHSV",
     max = { 360, 1, 1 },
