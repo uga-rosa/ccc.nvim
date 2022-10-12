@@ -38,7 +38,7 @@ function CssHwbPicker:parse_color(s, init)
         local B = parse.percent(cap3)
         if H and W and B then
             if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
-                local RGB = convert.hsl2rgb({ H, W, B })
+                local RGB = convert.hwb2rgb({ H, W, B })
                 local A = parse.percent(cap4)
                 return start, end_, RGB, A
             end

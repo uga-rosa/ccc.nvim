@@ -15,7 +15,7 @@ local function test(module, str, expect_rgb, expect_alpha)
     assert.equals(#str - 1, end_)
     ---@cast rgb RGB
     for i = 1, 3 do
-        local diff = rgb[i] - expect_rgb[i] / 255
+        local diff = math.abs(rgb[i] - expect_rgb[i] / 255)
         assert.is_true(diff < 1 / 255, diff)
     end
     if expect_alpha == nil then
@@ -100,6 +100,23 @@ describe("Color detection test", function()
             test(css_hsl, " hsla(200grad, 50%, 50%, 0.8) ", { 63, 191, 191 }, 0.8)
             test(css_hsl, " hsla(3.14rad, 50%, 50%) ", { 63, 191, 191 }, nil)
             test(css_hsl, " hsla(0.5turn, 50%, 50%) ", { 63, 191, 191 }, nil)
+        end)
+    end)
+
+    describe("HWB Colors: hwb() function", function()
+        it("hwb() without alpha", function()
+            test(css_hwb, " hwb(180 30% 30%) ", { 77, 179, 179 }, nil)
+            test(css_hwb, " hwb(180deg 30% 30%) ", { 77, 179, 179 }, nil)
+            test(css_hwb, " hwb(200grad 30% 30%) ", { 77, 179, 179 }, nil)
+            test(css_hwb, " hwb(3.14rad 30% 30%) ", { 77, 179, 179 }, nil)
+            test(css_hwb, " hwb(0.5turn 30% 30%) ", { 77, 179, 179 }, nil)
+        end)
+        it("hwb() with alpha", function()
+            test(css_hwb, " hwb(180 30% 30% / 0.8) ", { 77, 179, 179 }, 0.8)
+            test(css_hwb, " hwb(180deg 30% 30% / 0.8) ", { 77, 179, 179 }, 0.8)
+            test(css_hwb, " hwb(200grad 30% 30% / 0.8) ", { 77, 179, 179 }, 0.8)
+            test(css_hwb, " hwb(3.14rad 30% 30% / 80%) ", { 77, 179, 179 }, 0.8)
+            test(css_hwb, " hwb(0.5turn 30% 30% / 80%) ", { 77, 179, 179 }, 0.8)
         end)
     end)
 end)
