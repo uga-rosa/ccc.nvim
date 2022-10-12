@@ -86,7 +86,13 @@ function parse.percent(str, ratio)
 end
 
 ---Check if the first argument is nil.
-return setmetatable({}, {
+---@class StringParser
+---@field number function
+---@field angle function
+---@field hue function
+---@field hex function
+---@field percent function
+local _parse = setmetatable({}, {
     __index = function(_, key)
         if parse[key] then
             return function(...)
@@ -98,3 +104,5 @@ return setmetatable({}, {
         end
     end,
 })
+
+return _parse
