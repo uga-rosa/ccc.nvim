@@ -48,7 +48,7 @@ function CssHslPicker:parse_color(s, init)
         if H and S and L then
             if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
                 local RGB = convert.hsl2rgb({ H, S, L })
-                local A = parse.percent(cap4)
+                local A = parse.alpha(cap4)
                 return start, end_, RGB, A
             end
         end

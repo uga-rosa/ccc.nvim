@@ -38,10 +38,8 @@ function CssLchPicker:parse_color(s, init)
         local H = parse.hue(cap3)
         if L and C and H then
             if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
-                L = L * 100
-                C = C * 150
                 local RGB = convert.lch2rgb({ L, C, H })
-                local A = parse.percent(cap4)
+                local A = parse.alpha(cap4)
                 return start, end_, RGB, A
             end
         end
