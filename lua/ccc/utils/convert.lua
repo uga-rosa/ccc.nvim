@@ -405,4 +405,37 @@ function convert.hwb2rgb(HWB)
     return RGB
 end
 
+---@param Lab Lab
+---@return LCH
+function convert.lab2lch(Lab)
+    local L, a, b = unpack(Lab)
+    local H = math.atan2(b, a)
+    local C = math.sqrt(a ^ 2 + b ^ 2)
+    H = H / (2 * math.pi) * 360 -- [rad] -> [deg]
+    H = H % 360
+    return { L, C, H }
+end
+
+---@param LCH LCH
+---@return Lab
+function convert.lch2lab(LCH)
+    local L, C, H = unpack(LCH)
+    H = H / 360 * (2 * math.pi) -- [deg] -> [rad]
+    local a = C * math.cos(H)
+    local b = C * math.sin(H)
+    return { L, a, b }
+end
+
+---@param RGB RGB
+---@return LCH
+function convert.rgb2lch(RGB)
+    return convert.lab2lch(convert.rgb2lab(RGB))
+end
+
+---@param LCH LCH
+---@return RGB
+function convert.lch2rgb(LCH)
+    return convert.lab2rgb(convert.lch2lab(LCH))
+end
+
 return convert
