@@ -2,6 +2,8 @@ local hex = require("ccc.picker.hex")
 local css_rgb = require("ccc.picker.css_rgb")
 local css_hsl = require("ccc.picker.css_hsl")
 local css_hwb = require("ccc.picker.css_hwb")
+local css_lab = require("ccc.picker.css_lab")
+local css_lch = require("ccc.picker.css_lch")
 local css_oklab = require("ccc.picker.css_oklab")
 local css_name = require("ccc.picker.css_name")
 
@@ -16,7 +18,17 @@ local function test(module, str, expect_rgb, expect_alpha)
     ---@cast rgb RGB
     for i = 1, 3 do
         local diff = math.abs(rgb[i] - expect_rgb[i] / 255)
-        assert.is_true(diff < 1 / 255, diff)
+        assert.is_true(
+            diff < 1 / 255,
+            ("expect: rgb(%0.3f %0.3f %0.3f), actual: rgb(%0.3f %0.3f %0.3f)"):format(
+                expect_rgb[1] / 255,
+                expect_rgb[2] / 255,
+                expect_rgb[3] / 255,
+                rgb[1],
+                rgb[2],
+                rgb[3]
+            )
+        )
     end
     if expect_alpha == nil then
         assert.is_nil(alpha)
@@ -117,6 +129,34 @@ describe("Color detection test", function()
             test(css_hwb, " hwb(200grad 30% 30% / 0.8) ", { 77, 179, 179 }, 0.8)
             test(css_hwb, " hwb(3.14rad 30% 30% / 80%) ", { 77, 179, 179 }, 0.8)
             test(css_hwb, " hwb(0.5turn 30% 30% / 80%) ", { 77, 179, 179 }, 0.8)
+        end)
+    end)
+
+    describe("Lab Color: lab() function", function()
+        it("lab() without alpha", function()
+            test(css_lab, " lab(60% 40% -20%) ", { 209, 109, 190 }, nil)
+            test(css_lab, " lab(60 50 -25) ", { 209, 109, 190 }, nil)
+        end)
+        it("lab() with alpha", function()
+            test(css_lab, " lab(60% 40% -20% / 80%) ", { 209, 109, 190 }, 0.8)
+            test(css_lab, " lab(60 50 -25 / 0.8) ", { 209, 109, 190 }, 0.8)
+        end)
+    end)
+
+    describe("LCH Color: lch() function", function()
+        it("lch() without alpha", function()
+            test(css_lch, " lch(60% 20% 270) ", { 108, 147, 197 }, nil)
+            test(css_lch, " lch(60 30 270deg) ", { 108, 147, 197 }, nil)
+            test(css_lch, " lch(60 30 300grad) ", { 108, 147, 197 }, nil)
+            test(css_lch, " lch(60 30 4.71rad) ", { 108, 147, 197 }, nil)
+            test(css_lch, " lch(60 30 0.75turn) ", { 108, 147, 197 }, nil)
+        end)
+        it("lch() with alpha", function()
+            test(css_lch, " lch(60% 20% 270 / 80%) ", { 108, 147, 197 }, 0.8)
+            test(css_lch, " lch(60 30 270deg / 0.8) ", { 108, 147, 197 }, 0.8)
+            test(css_lch, " lch(60 30 300grad / 0.8) ", { 108, 147, 197 }, 0.8)
+            test(css_lch, " lch(60 30 4.71rad / 0.8) ", { 108, 147, 197 }, 0.8)
+            test(css_lch, " lch(60 30 0.75turn / 0.8) ", { 108, 147, 197 }, 0.8)
         end)
     end)
 
