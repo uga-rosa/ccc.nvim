@@ -1,12 +1,12 @@
 local convert = require("ccc.utils.convert")
 
----@class HexOutput: ColorOutput
+---@class HexShortOutput: ColorOutput
 local HexShortOutput = {
     name = "HEXshort",
 }
 
 ---@param RGB RGB
----@param A Alpha
+---@param A? Alpha
 ---@return string
 function HexShortOutput.str(RGB, A)
     local R, G, B = convert.rgb_format(RGB)

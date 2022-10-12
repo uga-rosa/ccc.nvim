@@ -6,7 +6,7 @@ local HexOutput = {
 }
 
 ---@param RGB RGB
----@param A Alpha
+---@param A? Alpha
 ---@return string
 function HexOutput.str(RGB, A)
     local R, G, B = convert.rgb_format(RGB)
