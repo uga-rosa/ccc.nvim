@@ -13,10 +13,10 @@ function CssHslOutput.str(RGB, A)
     S = S * 100
     L = L * 100
     if A then
-        local pattern = "hsl(%d,%d%%,%d%%,%d%%)"
+        local pattern = "hsl(%d %d%% %d%% / %d%%)"
         return pattern:format(H, S, L, A * 100)
     else
-        local pattern = "hsl(%d,%d%%,%d%%)"
+        local pattern = "hsl(%d %d%% %d%%)"
         return pattern:format(H, S, L)
     end
 end

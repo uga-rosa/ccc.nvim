@@ -145,14 +145,18 @@ Default: {
 	startup. Once activated, it will keep the previous input mode.
 	The presets currently available are as follows:
 		- RGB    ccc.input.rgb
-		- CMYK   ccc.input.cmyk
 		- HSL    ccc.input.hsl
-		- HSV    ccc.input.hsv
-		- XYZ    ccc.input.xyz
+		- HWB    ccc.input.hwb
 		- Lab    ccc.input.lab
+		- LCH    ccc.input.lch
+		- OKLab  ccc.input.oklab
+		- OKLCH  ccc.input.oklch
+		- CMYK   ccc.input.cmyk
 		- HSLuv  ccc.input.hsluv
 		- OKHSL  ccc.input.okhsl
+		- HSV    ccc.input.hsv
 		- OKHSV  ccc.input.okhsv
+		- XYZ    ccc.input.xyz
 
 
                                                             *ccc-option-outputs*
@@ -168,11 +172,16 @@ Default: {
 	toggles in this order. The first one is the default used at the first
 	startup. Once activated, it will keep the previous output mode.
 	The presets currently available are as follows:
-		- HEX (6digits)  ccc.output.hex
-		      (3digits)  ccc.output.hex_short
-		- CssRGB         ccc.output.css_rgb
-		- CssHSL         ccc.output.css_hsl
-		- Float          ccc.output.float
+		- HEX (6/8 digits)  ccc.output.hex
+		      (3/4 digits)  ccc.output.hex_short
+		- CssRGB            ccc.output.css_rgb
+		- CssHSL            ccc.output.css_hsl
+		- CssHWB            ccc.output.css_hwb
+		- CssLab            ccc.output.css_lab
+		- CssLCH            ccc.output.css_lch
+		- CssOKLab          ccc.output.css_oklab
+		- CssOKLCH          ccc.output.css_oklch
+		- Float             ccc.output.float
 
 
                                                             *ccc-option-pickers*
@@ -183,15 +192,22 @@ Default: {
 	ccc.picker.css_rgb,
 	ccc.picker.css_hsl,
 	ccc.picker.css_hwb,
+	ccc.picker.css_lab,
+	ccc.picker.css_lch,
+	ccc.picker.css_oklab,
+	ccc.picker.css_oklch,
 }
 	List of formats that can be detected by |:CccPick| to be activated.
 	The presets currently available are as follows:
-		- HEX      ccc.picker.hex
-		  Hex is according to CSS Color Module level 4.
-		- CssRGB   ccc.picker.css_rgb
-		- CssHSL   ccc.picker.css_hsl
-		- CssHWB   ccc.picker.css_hwb
-		- CssName  ccc.picker.css_name
+		- HEX       ccc.picker.hex
+		- CssRGB    ccc.picker.css_rgb
+		- CssHSL    ccc.picker.css_hsl
+		- CssHWB    ccc.picker.css_hwb
+		- CssLab    ccc.picker.css_lab,
+		- CssLCH    ccc.picker.css_lch,
+		- CssOKLab  ccc.picker.css_oklab,
+		- CssOKLCH  ccc.picker.css_oklch,
+		- CssName   ccc.picker.css_name
 	Css* conforms to CSS Color Module Level 4.
 	https://www.w3.org/TR/css-color-4/
 	If it picks up even the parts you do not want picked up, try

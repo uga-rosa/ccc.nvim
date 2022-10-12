@@ -47,6 +47,10 @@ return {
         ccc.picker.css_rgb,
         ccc.picker.css_hsl,
         ccc.picker.css_hwb,
+        ccc.picker.css_lab,
+        ccc.picker.css_lch,
+        ccc.picker.css_oklab,
+        ccc.picker.css_oklch,
     },
     ---@type table<string, string[] | string | nil>
     exclude_pattern = {
