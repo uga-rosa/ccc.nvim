@@ -23,6 +23,11 @@ local M = {
         hex_short = require("ccc.output.hex_short"),
         css_rgb = require("ccc.output.css_rgb"),
         css_hsl = require("ccc.output.css_hsl"),
+        css_hwb = require("ccc.output.css_hwb"),
+        css_lab = require("ccc.output.css_lab"),
+        css_lch = require("ccc.output.css_lch"),
+        css_oklab = require("ccc.output.css_oklab"),
+        css_oklch = require("ccc.output.css_oklch"),
         float = require("ccc.output.float"),
     },
     picker = {
