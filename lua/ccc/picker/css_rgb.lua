@@ -12,16 +12,16 @@ function CssRgbPicker:init()
     end
     self.pattern = {
         pattern.create(
-            "rgba?( [<number>|none]  [<number>|none]  [<number>|none]%[ / [<alpha-value>|none]]? )"
+            "rgba?( [<number>|none]  [<number>|none]  [<number>|none] %[/ [<alpha-value>|none]]? )"
         ),
         pattern.create(
-            "rgba?( [<percentage>|none]  [<percentage>|none]  [<percentage>|none]%[ / [<alpha-value>|none]]? )"
+            "rgba?( [<percentage>|none]  [<percentage>|none]  [<percentage>|none] %[/ [<alpha-value>|none]]? )"
         ),
         pattern.create(
-            "rgba?( [<number>|none] , [<number>|none] , [<number>|none]%[ , [<alpha-value>|none]]? )"
+            "rgba?( [<number>|none] , [<number>|none] , [<number>|none] %[, [<alpha-value>|none]]? )"
         ),
         pattern.create(
-            "rgba?( [<percentage>|none] , [<percentage>|none] , [<percentage>|none]%[ , [<alpha-value>|none]]? )"
+            "rgba?( [<percentage>|none] , [<percentage>|none] , [<percentage>|none] %[, [<alpha-value>|none]]? )"
         ),
     }
     local ex_pat = config.get("exclude_pattern")
@@ -49,12 +49,12 @@ function CssRgbPicker:parse_color(s, init)
         if not (start and end_ and cap1 and cap2 and cap3) then
             return
         end
-        local R = parse.percent(cap1, 255)
-        local G = parse.percent(cap2, 255)
-        local B = parse.percent(cap3, 255)
+        local R = parse.percent(cap1, 255, true)
+        local G = parse.percent(cap2, 255, true)
+        local B = parse.percent(cap3, 255, true)
         if R and G and B then
             if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
-                local A = parse.percent(cap4)
+                local A = parse.alpha(cap4)
                 return start, end_, { R, G, B }, A
             end
         end

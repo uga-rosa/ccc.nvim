@@ -1,4 +1,5 @@
 ---@alias RGB number[]
+---sRGB (D65)
 ---All values range from 0 to 1.
 
 ---@alias linearRGB number[]
@@ -28,19 +29,25 @@
 ---S and V range from 0 to 1.
 
 ---@alias XYZ number[]
+---XYZ (D50)
 ---All values range from 0 to 1.
 
 ---@alias Lab number[]
----L ranges from 0 to 100
----a and b range from -128 to 128.
+---CIE Lab (D50)
+---L ranges from 0 to 100.
+---a and b range from -125 to 125.
 
 ---@alias HWB number[]
 ---H ranges from 0 to 360.
 ---W and B range from 0 to 1.
 
 ---@alias OKLab number[]
----L ranges from 0 to 1
+---L ranges from 0 to 1.
 ---a and b range from -0.4 to 0.4.
+
+---@alias LCH number[]
+---L ranges from 0 to 100.
+---C and H range from 0 to 150.
 
 ---@alias Alpha number
 ---It ranges from 0 to 1.

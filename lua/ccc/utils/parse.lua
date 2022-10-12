@@ -51,14 +51,13 @@ function parse.hue(str)
     end
 end
 
----@param str string
+---@param str? string
 ---@return number? #Normalized to the range in [0-1] instead of [0-255].
 function parse.hex(str)
-    if #str == 1 then
-        str = str .. str
-    end
-    if #str ~= 2 then
+    if str == nil or #str > 2 then
         return
+    elseif #str == 1 then
+        str = str .. str
     end
     local num = tonumber(str, 16)
     if num then
@@ -68,41 +67,41 @@ end
 
 ---@param str string
 ---@param ratio? number #Default: 1
----@return number? number #Range in [0-1]
-function parse.percent(str, ratio)
+---@param percent? boolean #Default: false. If true, return range is corrected to [0-1]
+---@return number?
+function parse.percent(str, ratio, percent)
+    ratio = vim.F.if_nil(ratio, 1)
+    percent = vim.F.if_nil(percent, false)
+
+    local result
     if str:sub(-1, -1) == "%" then
         str = str:sub(1, -2)
         local num = tonumber(str)
         if num then
-            return num / 100
+            result = num / 100
         end
     else
         ratio = vim.F.if_nil(ratio, 1)
         local num = tonumber(str)
         if num then
-            return num / ratio
+            result = num / ratio
         end
     end
+
+    if not percent then
+        result = result * ratio
+    end
+
+    return result
 end
 
----Check if the first argument is nil.
----@class StringParser
----@field number function
----@field angle function
----@field hue function
----@field hex function
----@field percent function
-local _parse = setmetatable({}, {
-    __index = function(_, key)
-        if parse[key] then
-            return function(...)
-                if select(1, ...) == nil then
-                    return
-                end
-                return parse[key](...)
-            end
-        end
-    end,
-})
+---@param str? string
+---@return number? #Range in [0-1]
+function parse.alpha(str)
+    if str == nil then
+        return
+    end
+    return parse.percent(str)
+end
 
-return _parse
+return parse
