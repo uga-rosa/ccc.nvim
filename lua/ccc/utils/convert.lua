@@ -438,4 +438,16 @@ function convert.lch2rgb(LCH)
     return convert.lab2rgb(convert.lch2lab(LCH))
 end
 
+---@param RGB RGB
+---@return OKLCH
+function convert.rgb2oklch(RGB)
+    return convert.lab2lch(convert.rgb2oklab(RGB))
+end
+
+---@param OKLCH OKLCH
+---@return RGB
+function convert.oklch2rgb(OKLCH)
+    return convert.oklab2rgb(convert.lch2lab(OKLCH))
+end
+
 return convert

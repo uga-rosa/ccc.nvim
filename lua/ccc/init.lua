@@ -10,6 +10,7 @@ local M = {
         lab = require("ccc.input.lab"),
         lch = require("ccc.input.lch"),
         oklab = require("ccc.input.oklab"),
+        oklch = require("ccc.input.oklch"),
         cmyk = require("ccc.input.cmyk"),
         hsluv = require("ccc.input.hsluv"),
         okhsl = require("ccc.input.okhsl"),

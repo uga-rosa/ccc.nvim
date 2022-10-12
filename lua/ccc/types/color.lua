@@ -49,5 +49,10 @@
 ---L ranges from 0 to 100.
 ---C and H range from 0 to 150.
 
+---@alias OKLCH number[]
+---L ranges from 0 to 1.
+---C ranges from 0 to 0.4.
+---H ranges from 0 to 360.
+
 ---@alias Alpha number
 ---It ranges from 0 to 1.
