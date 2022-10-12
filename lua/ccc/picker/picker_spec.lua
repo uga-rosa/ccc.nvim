@@ -43,6 +43,10 @@ describe("Color detection test", function()
         require("ccc").setup({})
     end)
 
+    it("none", function()
+        test(css_rgb, " rgb(255 none 255) ", { 255, 0, 255 }, nil)
+    end)
+
     describe("hex", function()
         it("6 digits", function()
             test(hex, " #ffff00 ", { 255, 255, 0 }, nil)

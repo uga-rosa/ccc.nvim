@@ -45,6 +45,9 @@ end
 ---@param str string
 ---@return number? deg #Normalized degree in the range [0-360].
 function parse.hue(str)
+    if str == "none" then
+        return 0
+    end
     local num = parse.number(str) or parse.angle(str)
     if num then
         return num % 360
@@ -70,6 +73,10 @@ end
 ---@param percent? boolean #Default: false. If true, return range is corrected to [0-1]
 ---@return number?
 function parse.percent(str, ratio, percent)
+    if str == "none" then
+        return 0
+    end
+
     ratio = vim.F.if_nil(ratio, 1)
     percent = vim.F.if_nil(percent, false)
 
@@ -98,7 +105,9 @@ end
 ---@param str? string
 ---@return number? #Range in [0-1]
 function parse.alpha(str)
-    if str == nil then
+    if str == "none" then
+        return 0
+    elseif str == nil then
         return
     end
     return parse.percent(str)
