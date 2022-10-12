@@ -104,6 +104,8 @@ function convert.rgb2hsv(RGB)
     local MAX = utils.max(R, G, B)
     local MIN = utils.min(R, G, B)
 
+    V = MAX
+
     if MAX == MIN then
         H = 0
         S = 0
@@ -123,8 +125,6 @@ function convert.rgb2hsv(RGB)
             S = (MAX - MIN) / MAX
         end
     end
-
-    V = MAX
 
     return { H, S, V }
 end

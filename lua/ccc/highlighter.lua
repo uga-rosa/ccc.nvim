@@ -138,7 +138,7 @@ function Highlighter:update_lsp(bufnr)
                     local color = color_info.color
                     local range = color_info.range
 
-                    local ls_color = self:_create_ls_color(range, color)
+                    local ls_color = self._create_ls_color(range, color)
                     table.insert(self.ls_colors[bufnr], ls_color)
 
                     local hex = rgb2hex(ls_color.rgb)
@@ -167,7 +167,7 @@ end
 ---@param range lsp.Range
 ---@param color lsp.Color
 ---@return ls_color
-function Highlighter:_create_ls_color(range, color)
+function Highlighter._create_ls_color(range, color)
     local row = range.start.line
     local start = range.start.character
     local end_ = range["end"].character
