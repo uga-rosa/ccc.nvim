@@ -13,9 +13,9 @@ function CssHslPicker:init()
     end
     self.pattern = {
         pattern.create(
-            "hsla?( [<hue>|none]  [<percentage>|none]  [<percentage>|none]%[ / [<alpha-value>|none]]? )"
+            "hsla?( [<hue>|none]  [<percentage>|none]  [<percentage>|none] %[/ [<alpha-value>|none]]? )"
         ),
-        pattern.create("hsla?( [<hue>] , [<percentage>] , [<percentage>][ , <alpha-value>]? )"),
+        pattern.create("hsla?( [<hue>] , [<percentage>] , [<percentage>] %[, [<alpha-value>]]? )"),
     }
     local ex_pat = config.get("exclude_pattern")
     self.exclude_pattern = utils.expand_template(ex_pat.css_hsl, self.pattern)
