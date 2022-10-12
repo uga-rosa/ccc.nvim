@@ -34,10 +34,12 @@ function CssOklabPicker:parse_color(s, init)
             return
         end
         local L = parse.percent(cap1)
-        local a = parse.percent(cap2)
-        local b = parse.percent(cap3)
+        local a = parse.percent(cap2, 0.4)
+        local b = parse.percent(cap3, 0.4)
         if L and a and b then
             if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
+                a = a * 0.4
+                b = b * 0.4
                 local RGB = convert.oklab2rgb({ L, a, b })
                 local A = parse.percent(cap4)
                 return start, end_, RGB, A
