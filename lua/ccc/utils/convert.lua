@@ -104,6 +104,8 @@ function convert.rgb2hsv(RGB)
     local MAX = utils.max(R, G, B)
     local MIN = utils.min(R, G, B)
 
+    V = MAX
+
     if MAX == MIN then
         H = 0
         S = 0
@@ -123,8 +125,6 @@ function convert.rgb2hsv(RGB)
             S = (MAX - MIN) / MAX
         end
     end
-
-    V = MAX
 
     return { H, S, V }
 end
@@ -335,6 +335,18 @@ function convert.lab2rgb(Lab)
     return vim.tbl_map(function(x)
         return utils.clamp(x, 0, 1)
     end, RGB)
+end
+
+---@param RGB RGB
+---@return OKLab
+function convert.rgb2oklab(RGB)
+    return ok.srgb_to_oklab(RGB)
+end
+
+---@param OKLab OKLab
+---@return RGB
+function convert.oklab2rgb(OKLab)
+    return ok.oklab_to_srgb(OKLab)
 end
 
 ---@param RGB RGB

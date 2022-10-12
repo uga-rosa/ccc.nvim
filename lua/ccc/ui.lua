@@ -77,7 +77,7 @@ end
 
 function UI:set_default_color()
     local default_color = config.get("default_color")
-    local _, _, RGB = require("ccc.picker.hex").parse_color(default_color)
+    local _, _, RGB = require("ccc.picker.hex"):parse_color(default_color)
     assert(RGB, "default_color must be HEX format (#ffffff)")
     self.color:set_rgb(RGB)
 end
@@ -422,7 +422,7 @@ function UI:pick()
     while true do
         local start, end_, RGB, A
         for _, picker in ipairs(config.get("pickers")) do
-            local s_, e_, rgb, a = picker.parse_color(current_line, init)
+            local s_, e_, rgb, a = picker:parse_color(current_line, init)
             if s_ and (start == nil or s_ < start) then
                 start = s_
                 end_ = e_

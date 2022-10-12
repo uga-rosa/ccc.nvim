@@ -448,16 +448,13 @@ function M.srgb_to_okhsv(rgb)
     local L_v = t * L
     local C_v = t * C
 
-    L_vt = toe_inv(L_v)
-    C_vt = C_v * L_vt / L_v
+    local L_vt = toe_inv(L_v)
+    local C_vt = C_v * L_vt / L_v
 
     local rgb_scale = M.oklab_to_linear({ L_vt, a_ * C_vt, b_ * C_vt })
     local scale_L = cbrt(1 / (max(rgb_scale[1], rgb_scale[2], rgb_scale[3], 0)))
 
     L = L / scale_L
-    C = C / scale_L
-
-    C = C * toe(L) / L
     L = toe(L)
 
     local v = L / L_v

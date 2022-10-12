@@ -24,7 +24,7 @@ function Convert:toggle()
         local init = 1
         local start, end_, rgb
         while true do
-            start, end_, rgb = picker.parse_color(line, init)
+            start, end_, rgb = picker:parse_color(line, init)
             if start == nil then
                 break
             elseif start <= cursor_col and cursor_col <= end_ then

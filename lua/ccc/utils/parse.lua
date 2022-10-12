@@ -67,22 +67,42 @@ function parse.hex(str)
 end
 
 ---@param str string
----@param max? number #Default: 1
+---@param ratio? number #Default: 1
 ---@return number? number #Range in [0-1]
-function parse.percent(str, max)
+function parse.percent(str, ratio)
     if str:sub(-1, -1) == "%" then
         str = str:sub(1, -2)
         local num = tonumber(str)
-        if num and 0 <= num and num <= 100 then
+        if num then
             return num / 100
         end
     else
-        max = vim.F.if_nil(max, 1)
+        ratio = vim.F.if_nil(ratio, 1)
         local num = tonumber(str)
-        if num and 0 <= num and num <= max then
-            return num / max
+        if num then
+            return num / ratio
         end
     end
 end
 
-return parse
+---Check if the first argument is nil.
+---@class StringParser
+---@field number function
+---@field angle function
+---@field hue function
+---@field hex function
+---@field percent function
+local _parse = setmetatable({}, {
+    __index = function(_, key)
+        if parse[key] then
+            return function(...)
+                if select(1, ...) == nil then
+                    return
+                end
+                return parse[key](...)
+            end
+        end
+    end,
+})
+
+return _parse

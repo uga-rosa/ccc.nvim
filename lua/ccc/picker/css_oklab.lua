@@ -4,15 +4,15 @@ local convert = require("ccc.utils.convert")
 local parse = require("ccc.utils.parse")
 local pattern = require("ccc.utils.pattern")
 
----@class CssHwbPicker: ColorPicker
-local CssHwbPicker = {}
+---@class CssOklabPicker: ColorPicker
+local CssOklabPicker = {}
 
-function CssHwbPicker:init()
+function CssOklabPicker:init()
     if self.pattern then
         return
     end
     self.pattern = pattern.create(
-        "hwb( [<hue>|none]  [<percentage>|none]  [<percentage>|none]%[ / [<alpha-value>|none]]? )"
+        "oklab( [<per-num>|none]  [<per-num>|none]  [<per-num>|none]%[ / [<alpha-value>|none]]? )"
     )
     local ex_pat = config.get("exclude_pattern")
     self.exclude_pattern = utils.expand_template(ex_pat.css_hsl, pattern)
@@ -24,21 +24,23 @@ end
 ---@return integer? end_
 ---@return RGB?
 ---@return Alpha?
-function CssHwbPicker:parse_color(s, init)
+function CssOklabPicker:parse_color(s, init)
     self:init()
     init = vim.F.if_nil(init, 1)
-    -- The shortest patten is 12 characters like `hwb(0 0% 0%)`
+    -- The shortest patten is 12 characters like `oklab(0 0% 0%)`
     while init <= #s - 11 do
         local start, end_, cap1, cap2, cap3, cap4 = pattern.find(s, self.pattern, init)
         if not (start and end_ and cap1 and cap2 and cap3) then
             return
         end
-        local H = parse.hue(cap1)
-        local W = parse.percent(cap2)
-        local B = parse.percent(cap3)
-        if H and W and B then
+        local L = parse.percent(cap1)
+        local a = parse.percent(cap2, 0.4)
+        local b = parse.percent(cap3, 0.4)
+        if L and a and b then
             if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
-                local RGB = convert.hwb2rgb({ H, W, B })
+                a = a * 0.4
+                b = b * 0.4
+                local RGB = convert.oklab2rgb({ L, a, b })
                 local A = parse.percent(cap4)
                 return start, end_, RGB, A
             end
@@ -47,4 +49,4 @@ function CssHwbPicker:parse_color(s, init)
     end
 end
 
-return CssHwbPicker
+return CssOklabPicker
