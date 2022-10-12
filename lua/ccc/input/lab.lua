@@ -4,8 +4,8 @@ local convert = require("ccc.utils.convert")
 ---@class LabInput: ColorInput
 local LabInput = setmetatable({
     name = "Lab",
-    max = { 100, 128, 128 },
-    min = { 0, -128, -128 },
+    max = { 100, 125, 125 },
+    min = { 0, -125, -125 },
     delta = { 1, 1, 1 },
     bar_name = { "L*", "a*", "b*" },
 }, { __index = ColorInput })
