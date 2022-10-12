@@ -29,6 +29,7 @@ local M = {
         css_rgb = require("ccc.picker.css_rgb"),
         css_hsl = require("ccc.picker.css_hsl"),
         css_hwb = require("ccc.picker.css_hwb"),
+        css_lch = require("ccc.picker.css_lch"),
         css_name = require("ccc.picker.css_name"),
     },
     mapping = {},
