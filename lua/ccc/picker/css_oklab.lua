@@ -12,7 +12,7 @@ function CssOklabPicker:init()
         return
     end
     self.pattern = pattern.create(
-        "oklab( [<per-num>|none]  [<per-num>|none]  [<per-num>|none]%[ / [<alpha-value>|none]]? )"
+        "oklab( [<per-num>|none]  [<per-num>|none]  [<per-num>|none] %[/ [<alpha-value>|none]]? )"
     )
     local ex_pat = config.get("exclude_pattern")
     self.exclude_pattern = utils.expand_template(ex_pat.css_oklab, pattern)

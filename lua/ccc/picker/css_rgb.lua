@@ -12,16 +12,16 @@ function CssRgbPicker:init()
     end
     self.pattern = {
         pattern.create(
-            "rgba?( [<number>|none]  [<number>|none]  [<number>|none]%[ / [<alpha-value>|none]]? )"
+            "rgba?( [<number>|none]  [<number>|none]  [<number>|none] %[/ [<alpha-value>|none]]? )"
         ),
         pattern.create(
-            "rgba?( [<percentage>|none]  [<percentage>|none]  [<percentage>|none]%[ / [<alpha-value>|none]]? )"
+            "rgba?( [<percentage>|none]  [<percentage>|none]  [<percentage>|none] %[/ [<alpha-value>|none]]? )"
         ),
         pattern.create(
-            "rgba?( [<number>|none] , [<number>|none] , [<number>|none]%[ , [<alpha-value>|none]]? )"
+            "rgba?( [<number>|none] , [<number>|none] , [<number>|none] %[, [<alpha-value>|none]]? )"
         ),
         pattern.create(
-            "rgba?( [<percentage>|none] , [<percentage>|none] , [<percentage>|none]%[ , [<alpha-value>|none]]? )"
+            "rgba?( [<percentage>|none] , [<percentage>|none] , [<percentage>|none] %[, [<alpha-value>|none]]? )"
         ),
     }
     local ex_pat = config.get("exclude_pattern")
