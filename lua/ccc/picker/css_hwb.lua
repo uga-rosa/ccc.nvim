@@ -15,7 +15,7 @@ function CssHwbPicker:init()
         "hwb( [<hue>|none]  [<percentage>|none]  [<percentage>|none]%[ / [<alpha-value>|none]]? )"
     )
     local ex_pat = config.get("exclude_pattern")
-    self.exclude_pattern = utils.expand_template(ex_pat.css_hsl, pattern)
+    self.exclude_pattern = utils.expand_template(ex_pat.css_hwb, pattern)
 end
 
 ---@param s string

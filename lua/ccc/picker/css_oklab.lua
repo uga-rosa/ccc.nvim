@@ -15,7 +15,7 @@ function CssOklabPicker:init()
         "oklab( [<per-num>|none]  [<per-num>|none]  [<per-num>|none]%[ / [<alpha-value>|none]]? )"
     )
     local ex_pat = config.get("exclude_pattern")
-    self.exclude_pattern = utils.expand_template(ex_pat.css_hsl, pattern)
+    self.exclude_pattern = utils.expand_template(ex_pat.css_oklab, pattern)
 end
 
 ---@param s string
@@ -27,7 +27,7 @@ end
 function CssOklabPicker:parse_color(s, init)
     self:init()
     init = vim.F.if_nil(init, 1)
-    -- The shortest patten is 12 characters like `oklab(0 0% 0%)`
+    -- The shortest patten is 12 characters like `oklab(0 0 0)`
     while init <= #s - 11 do
         local start, end_, cap1, cap2, cap3, cap4 = pattern.find(s, self.pattern, init)
         if not (start and end_ and cap1 and cap2 and cap3) then
