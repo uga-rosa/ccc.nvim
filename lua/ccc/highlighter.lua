@@ -51,12 +51,21 @@ function Highlighter:init()
     self.ls_colors = {}
 
     api.nvim_create_autocmd("ColorScheme", {
-      callback = function()
-        self.is_defined = {}
-        for bufnr in pairs(self.attached_buffer) do
-          self:update(bufnr, 0, -1)
-        end
-      end,
+        callback = function()
+            -- Re-highlight only visible buffers.
+            local visible_buf = {}
+            for _, win in ipairs(api.nvim_list_wins()) do
+                visible_buf[api.nvim_win_get_buf(win)] = true
+            end
+            self.is_defined = {}
+            for bufnr in pairs(self.attached_buffer) do
+                if visible_buf[bufnr] then
+                    self:update(bufnr, 0, -1)
+                else
+                    self:disable(bufnr)
+                end
+            end
+        end,
     })
 end
 
@@ -87,6 +96,26 @@ function Highlighter:enable(bufnr)
             self.attached_buffer[bufnr] = nil
         end,
     })
+end
+
+---@param bufnr? integer
+function Highlighter:disable(bufnr)
+    self:init()
+    bufnr = utils.resolve_bufnr(bufnr)
+    self.attached_buffer[bufnr] = nil
+    api.nvim_buf_clear_namespace(bufnr, self.picker_ns_id, 0, -1)
+    api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, 0, -1)
+end
+
+---@param bufnr? integer
+function Highlighter:toggle(bufnr)
+    self:init()
+    bufnr = utils.resolve_bufnr(bufnr)
+    if self.attached_buffer[bufnr] then
+        self:disable(bufnr)
+    else
+        self:enable(bufnr)
+    end
 end
 
 ---@param bufnr integer
@@ -124,14 +153,14 @@ end
 ---@param rgb number[]
 ---@return string hl_name
 function Highlighter:_get_or_create_hl(rgb)
-  local hex = rgb2hex(rgb)
-  local hl_name = "CccHighlighter" .. hex:sub(2)
-  if not self.is_defined[hex] then
-    local highlight = utils.create_highlight(hex, self.hl_mode)
-    api.nvim_set_hl(0, hl_name, highlight)
-    self.is_defined[hex] = true
-  end
-  return hl_name
+    local hex = rgb2hex(rgb)
+    local hl_name = "CccHighlighter" .. hex:sub(2)
+    if not self.is_defined[hex] then
+        local highlight = utils.create_highlight(hex, self.hl_mode)
+        api.nvim_set_hl(0, hl_name, highlight)
+        self.is_defined[hex] = true
+    end
+    return hl_name
 end
 
 ---@param bufnr integer
@@ -145,7 +174,7 @@ function Highlighter:update_lsp(bufnr)
     api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, 0, -1)
 
     self.ls_colors[bufnr] = {}
-    for _, client in pairs(vim.lsp.get_active_clients({bufnr = bufnr})) do
+    for _, client in pairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
         if client.server_capabilities.colorProvider then
             local param = { textDocument = vim.lsp.util.make_text_document_params(bufnr) }
             client.request("textDocument/documentColor", param, function(err, color_informations)
@@ -228,26 +257,6 @@ function Highlighter:update_picker(bufnr, start_row, end_row)
             api.nvim_buf_add_highlight(bufnr, self.picker_ns_id, hl_name, row, start - 1, end_)
             init = end_ + 1
         end
-    end
-end
-
----@param bufnr? integer
-function Highlighter:disable(bufnr)
-    self:init()
-    bufnr = utils.resolve_bufnr(bufnr)
-    self.attached_buffer[bufnr] = nil
-    api.nvim_buf_clear_namespace(bufnr, self.picker_ns_id, 0, -1)
-    api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, 0, -1)
-end
-
----@param bufnr? integer
-function Highlighter:toggle(bufnr)
-    self:init()
-    bufnr = utils.resolve_bufnr(bufnr)
-    if self.attached_buffer[bufnr] then
-        self:disable(bufnr)
-    else
-        self:enable(bufnr)
     end
 end
 
