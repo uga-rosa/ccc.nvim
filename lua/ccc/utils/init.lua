@@ -212,4 +212,18 @@ function utils.valid_range(value, min, max)
     end
 end
 
+---@param tbl table
+---@param ... unknown
+---@return any
+function utils.resolve_tree(tbl, ...)
+    for i = 1, select("#", ...) do
+        local key = select(i, ...)
+        tbl = tbl[key]
+        if tbl == nil then
+            return
+        end
+    end
+    return tbl
+end
+
 return utils

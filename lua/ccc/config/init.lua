@@ -41,6 +41,7 @@ function M.setup(opt)
         ["config.highlighter.excludes"] = { M.config.highlighter.excludes, "t" },
         ["config.highlighter.lsp"] = { M.config.highlighter.lsp, "b" },
         ["config.convert"] = { M.config.convert, "t" },
+        ["config.recognize"] = { M.config.recognize, "t" },
         ["config.mappings"] = { M.config.mappings, "t" },
     })
 

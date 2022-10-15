@@ -26,13 +26,12 @@ function Color.new(input_mode, output_mode, alpha)
         self._inputs[i] = input:new()
     end
 
-    if input_mode and output_mode then
-        self:set_input(input_mode)
-        self:set_output(output_mode)
-    else
+    if input_mode == nil or not self:set_input(input_mode) then
         self.input_idx = 1
-        self.output_idx = 1
         self.input = self._inputs[1]
+    end
+    if output_mode == nil or not self:set_output(output_mode) then
+        self.output_idx = 1
         self.output = self._outputs[1]
     end
 
@@ -44,21 +43,25 @@ local function get_name(x)
 end
 
 ---@param input_mode string
+---@return boolean is_valid_name
 function Color:set_input(input_mode)
-    self.input_idx = assert(
-        utils.search_idx(self._inputs, input_mode, get_name),
-        "Invalid input mode: " .. input_mode
-    )
-    self.input = self._inputs[self.input_idx]
+    local index = utils.search_idx(self._inputs, input_mode, get_name)
+    if index then
+        self.input_idx = index
+        self.input = self._inputs[self.input_idx]
+    end
+    return index ~= nil
 end
 
 ---@param output_mode string
+---@return boolean is_valid_name
 function Color:set_output(output_mode)
-    self.output_idx = assert(
-        utils.search_idx(self._outputs, output_mode, get_name),
-        "Invalid output mode: " .. output_mode
-    )
-    self.output = self._outputs[self.output_idx]
+    local index = utils.search_idx(self._outputs, output_mode, get_name)
+    if index then
+        self.output_idx = index
+        self.output = self._outputs[self.output_idx]
+    end
+    return index ~= nil
 end
 
 ---@return CccColor
