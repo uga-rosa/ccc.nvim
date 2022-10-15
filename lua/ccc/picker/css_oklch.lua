@@ -36,7 +36,7 @@ function CssOklchPicker:parse_color(s, init)
         local L = parse.percent(cap1, 1)
         local C = parse.percent(cap2, 0.4)
         local H = parse.hue(cap3)
-        if L and C and H then
+        if utils.valid_range(L, 0, 1) and utils.valid_range(C, 0, 0.4) and H then
             if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
                 local RGB = convert.oklch2rgb({ L, C, H })
                 local A = parse.alpha(cap4)

@@ -36,7 +36,7 @@ function CssOklabPicker:parse_color(s, init)
         local L = parse.percent(cap1)
         local a = parse.percent(cap2, 0.4)
         local b = parse.percent(cap3, 0.4)
-        if L and a and b then
+        if utils.valid_range(L, 0, 1) and utils.valid_range({ a, b }, -0.4, 0.4) then
             if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
                 local RGB = convert.oklab2rgb({ L, a, b })
                 local A = parse.alpha(cap4)

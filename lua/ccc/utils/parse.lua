@@ -68,6 +68,7 @@ function parse.hex(str)
     end
 end
 
+---Since the range of value is unknown, use utils.valid_range() later.
 ---@param str string
 ---@param ratio? number #Default: 1
 ---@param percent? boolean #Default: false. If true, return range is corrected to [0-1]

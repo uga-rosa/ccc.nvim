@@ -195,4 +195,21 @@ function utils.resolve_bufnr(bufnr)
     return bufnr
 end
 
+---@param value? number|number[]
+---@param min number
+---@param max number
+---@return boolean
+function utils.valid_range(value, min, max)
+    if type(value) == "table" then
+        for _, v in ipairs(value) do
+            if v < min or max < v then
+                return false
+            end
+        end
+        return true
+    else
+        return value ~= nil and min <= value and value <= max
+    end
+end
+
 return utils

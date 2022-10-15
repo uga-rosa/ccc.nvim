@@ -36,7 +36,7 @@ function CssLabPicker:parse_color(s, init)
         local L = parse.percent(cap1, 100)
         local a = parse.percent(cap2, 125)
         local b = parse.percent(cap3, 125)
-        if L and a and b then
+        if utils.valid_range(L, 0, 100) and utils.valid_range({ a, b }, -125, 125) then
             if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
                 local RGB = convert.lab2rgb({ L, a, b })
                 local A = parse.alpha(cap4)

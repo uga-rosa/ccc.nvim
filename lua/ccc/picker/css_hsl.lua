@@ -45,7 +45,7 @@ function CssHslPicker:parse_color(s, init)
         local H = parse.hue(cap1)
         local S = parse.percent(cap2)
         local L = parse.percent(cap3)
-        if H and S and L then
+        if H and utils.valid_range({ S, L }, 0, 1) then
             if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
                 local RGB = convert.hsl2rgb({ H, S, L })
                 local A = parse.alpha(cap4)
