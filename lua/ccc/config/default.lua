@@ -75,7 +75,7 @@ return {
         ---@type boolean
         auto_enable = false,
         ---@type integer
-        max_byte = 50 * 1000 * 1000, -- 50 MB
+        max_byte = 100 * 1024, -- 100 KB
         ---@type string[]
         filetypes = {},
         ---@type string[]

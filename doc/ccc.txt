@@ -267,7 +267,7 @@ Default: false
                                                *ccc-option-highlighter-max-byte*
 highlighter.max_byte ~
 integer
-Default: 50,000,000 (50 MB)
+Default: 100 * 1024 (100 KB)
 	The maximum buffer size for which highlight is enabled by
 	|ccc-option-highlighter-auto-enable|.
 
