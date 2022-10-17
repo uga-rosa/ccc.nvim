@@ -50,10 +50,10 @@ function M.setup(opt)
         api.nvim_create_autocmd("BufEnter", {
             pattern = "*",
             group = aug_name,
-            callback = function()
-                local bytes = vim.fn.wordcount().bytes
+            callback = function(args)
                 local max_byte = M.config.highlighter.max_byte
-                if bytes > max_byte then
+                local ok, stats = pcall(vim.loop.fs_stat, args.file)
+                if ok and stats and stats.size > max_byte then
                     return
                 end
                 require("ccc.highlighter"):enable()
