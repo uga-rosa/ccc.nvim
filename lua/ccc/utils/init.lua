@@ -32,7 +32,7 @@ end
 ---@param pos integer[]
 function utils.cursor_set(pos)
     pos[2] = pos[2] - 1
-    api.nvim_win_set_cursor(0, pos)
+    pcall(api.nvim_win_set_cursor, 0, pos)
 end
 
 ---1-index

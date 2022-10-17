@@ -482,7 +482,6 @@ toggle_alpha ~
 mapping.toggle_alpha()
 Default mapping: a
 	Toggle show/hide alpha (transparency) slider.
-	Transparency is used only when output mode is css_rgb or css_hsl.
 
 
                                                  *ccc-action-toggle-prev-colors*

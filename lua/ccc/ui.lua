@@ -77,9 +77,20 @@ end
 
 function UI:set_default_color()
     local default_color = config.get("default_color")
-    local _, _, RGB = require("ccc.picker.hex"):parse_color(default_color)
-    assert(RGB, "default_color must be HEX format (#ffffff)")
+    local _, _, RGB, A = require("ccc.picker.hex"):parse_color(default_color)
+    assert(RGB, "default_color must be HEX format (e.g. #ffffff)")
     self.color:set_rgb(RGB)
+    self:alpha_set(A)
+end
+
+---@param A? Alpha
+function UI:alpha_set(A)
+    if A then
+        self.alpha:set(A)
+        self.alpha.is_showed = true
+    else
+        self.alpha.is_showed = false
+    end
 end
 
 function UI:_open()
@@ -408,10 +419,7 @@ function UI:pick()
             self.end_col = end_
             self.color:set_rgb(RGB)
             self.before_color = self.color
-            if A then
-                self.alpha:set(A)
-                self.alpha:show(true)
-            end
+            self:alpha_set(A)
             return
         end
     end
@@ -440,10 +448,7 @@ function UI:pick()
             self.end_col = end_
             self.color:set_rgb(RGB)
             self.before_color = self.color
-            if A then
-                self.alpha:set(A)
-                self.alpha:show(true)
-            end
+            self:alpha_set(A)
             return
         end
         init = end_ + 1
