@@ -14,9 +14,6 @@ function LspPicker.pick()
     end
 
     local row, col = unpack(utils.cursor())
-    -- (1,1) => (0,0)
-    row = row - 1
-    col = col - 1
     for _, ls_color in ipairs(ls_colors) do
         if ls_color.row == row and ls_color.start <= col and col <= ls_color.end_ then
             return ls_color.start, ls_color.end_, ls_color.rgb, ls_color.alpha

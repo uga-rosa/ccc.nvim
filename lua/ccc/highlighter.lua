@@ -197,8 +197,8 @@ function Highlighter:update_lsp(bufnr)
                         0,
                         self.lsp_ns_id,
                         hl_name,
-                        ls_color.row,
-                        ls_color.start,
+                        ls_color.row - 1,
+                        ls_color.start - 1,
                         ls_color.end_
                     )
                 end
@@ -213,8 +213,9 @@ end
 ---@param color lsp.Color
 ---@return ls_color
 function Highlighter._create_ls_color(range, color)
-    local row = range.start.line
-    local start = range.start.character
+    -- To end-included 1-index
+    local row = range.start.line + 1
+    local start = range.start.character + 1
     local end_ = range["end"].character
     local rgb = { color.red, color.green, color.blue }
     local alpha = color.alpha or 1
