@@ -36,7 +36,7 @@ return {
     ---@type boolean
     save_on_quit = false,
     ---@type show_mode
-    alpha_show = "show",
+    alpha_show = "auto",
     ---@type ColorInput[]
     inputs = {
         input.rgb,
