@@ -312,6 +312,47 @@ Default: {
 	format.
 
 
+                                                          *ccc-option-recognise*
+recognize ~
+table
+	These are settings for recognize color format.
+
+
+                                                    *ccc-option-recognise-input*
+recognize.input ~
+boolean
+Default: false
+	If true, doing |:CccPick|, it recognizes the color format and
+	automatically adjusts the input to it. If that format is not
+	registered in |ccc-option-inputs|, it will fall back to the first one.
+
+
+                                                   *ccc-option-recognise-output*
+recognize.output ~
+boolean
+Default: false
+	If true, doing |:CccPick|, it recognizes the color format and
+	automatically adjusts the output to it. If that format is not
+	registered in |ccc-option-outputs|, it will fall back to the first one.
+
+
+                                                  *ccc-option-recognise-pattern*
+recognize.pattern ~
+table
+Default: {
+	[picker.css_rgb]   = { input.rgb,   output.rgb       },
+	[picker.css_name]  = { input.rgb,   output.rgb       },
+	[picker.hex]       = { input.rgb,   output.hex       },
+	[picker.css_hsl]   = { input.hsl,   output.css_hsl   },
+	[picker.css_hwb]   = { input.hwb,   output.css_hwb   },
+	[picker.css_lab]   = { input.lab,   output.css_lab   },
+	[picker.css_lch]   = { input.lch,   output.css_lch   },
+	[picker.css_oklab] = { input.oklab, output.css_oklab },
+	[picker.css_oklch] = { input.oklch, output.css_oklch },
+}
+	Define the correspondence between the picker and input, output.
+
+
                                            *ccc-option-disable-default-mappings*
 disable_default_mappings ~
 boolean
