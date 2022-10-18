@@ -312,13 +312,13 @@ Default: {
 	format.
 
 
-                                                          *ccc-option-recognise*
+                                                          *ccc-option-recognize*
 recognize ~
 table
 	These are settings for recognize color format.
 
 
-                                                    *ccc-option-recognise-input*
+                                                    *ccc-option-recognize-input*
 recognize.input ~
 boolean
 Default: false
@@ -327,7 +327,7 @@ Default: false
 	registered in |ccc-option-inputs|, it will fall back to the first one.
 
 
-                                                   *ccc-option-recognise-output*
+                                                   *ccc-option-recognize-output*
 recognize.output ~
 boolean
 Default: false
@@ -336,7 +336,7 @@ Default: false
 	registered in |ccc-option-outputs|, it will fall back to the first one.
 
 
-                                                  *ccc-option-recognise-pattern*
+                                                  *ccc-option-recognize-pattern*
 recognize.pattern ~
 table
 Default: {
