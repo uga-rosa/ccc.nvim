@@ -115,8 +115,7 @@ return {
             [picker.css_lch]   = { input.lch,   output.css_lch   },
             [picker.css_oklab] = { input.oklab, output.css_oklab },
             [picker.css_oklch] = { input.oklch, output.css_oklch },
-        }
-,
+        },
     },
     ---@type table<string, function>
     mappings = {
