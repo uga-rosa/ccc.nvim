@@ -8,11 +8,13 @@
 
 ## Colorizer
 
-- LSP `textDocument/documentColor` is supported.
-- Highlighting is possible without LSP and supports `hex`, `rgb()`, `hsl()`, 147 color names.
-- Color names are disabled by default.
+- LSP `textDocument/documentColor` is supported (Requires neovim built-in LSP client).
 
 ![image](https://user-images.githubusercontent.com/430272/192379267-7b069281-021a-4ee5-bc65-58def20f9c0d.png)
+
+- Many color formats conforming to CSS Color Module level4 can be highlighted without LSP.
+
+![image](https://user-images.githubusercontent.com/82267684/196505445-fac76002-7344-47f7-84cb-710c3ecbb717.png)
 
 ## Use multiple color spaces simultaneously
 
@@ -33,7 +35,7 @@ Super powerful color picker plugin.
     - Dynamic highlighting of sliders.
     - Restore previously used colors.
     - Selectable output formats.
-    - Transparent slider for `rgb()` and `hsl()`.
+    - Transparent slider for css functions (e.g. `rgb()`, `hsl()`)
     - Fast colorizer.
 
 - Requirements
