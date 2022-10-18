@@ -5,6 +5,10 @@ local output = ccc.output
 local picker = ccc.picker
 
 ---@alias hl_mode "fg" | "foreground" | "bg" | "background"
+---@alias show_mode
+---| "auto"
+---| "show"
+---| "hide"
 
 return {
     ---@type string hex
@@ -31,6 +35,8 @@ return {
     preserve = false,
     ---@type boolean
     save_on_quit = false,
+    ---@type show_mode
+    alpha_show = "show",
     ---@type ColorInput[]
     inputs = {
         input.rgb,

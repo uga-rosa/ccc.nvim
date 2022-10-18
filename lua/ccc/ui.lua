@@ -36,6 +36,7 @@ local alpha = require("ccc.alpha")
 ---@field highlighter_lsp boolean
 ---@field auto_close boolean
 ---@field recognize { input: boolean, output: boolean, pattern: RecognizePattern }
+---@field alpha_show show_mode
 local UI = {}
 
 function UI:init()
@@ -61,6 +62,7 @@ function UI:init()
     self.highlighter_lsp = config.get("highlighter").lsp
     self.auto_close = config.get("auto_close")
     self.recognize = config.get("recognize")
+    self.alpha_show = config.get("alpha_show")
 end
 
 function UI:reset()
@@ -124,6 +126,11 @@ function UI:open(insert)
         utils.feedkey("<Esc>")
     else
         self:pick()
+    end
+    if self.alpha_show == "show" then
+        self.alpha.is_showed = true
+    elseif self.alpha_show == "hide" then
+        self.alpha.is_showed = false
     end
     self.before_color = self.color:copy()
     self:update()
