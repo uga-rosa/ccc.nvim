@@ -1,5 +1,8 @@
 local ccc = require("ccc")
 local mapping = ccc.mapping
+local input = ccc.input
+local output = ccc.output
+local picker = ccc.picker
 
 ---@alias hl_mode "fg" | "foreground" | "bg" | "background"
 
@@ -30,27 +33,27 @@ return {
     save_on_quit = false,
     ---@type ColorInput[]
     inputs = {
-        ccc.input.rgb,
-        ccc.input.hsl,
-        ccc.input.cmyk,
+        input.rgb,
+        input.hsl,
+        input.cmyk,
     },
     ---@type ColorOutput[]
     outputs = {
-        ccc.output.hex,
-        ccc.output.hex_short,
-        ccc.output.css_rgb,
-        ccc.output.css_hsl,
+        output.hex,
+        output.hex_short,
+        output.css_rgb,
+        output.css_hsl,
     },
     ---@type ColorPicker[]
     pickers = {
-        ccc.picker.hex,
-        ccc.picker.css_rgb,
-        ccc.picker.css_hsl,
-        ccc.picker.css_hwb,
-        ccc.picker.css_lab,
-        ccc.picker.css_lch,
-        ccc.picker.css_oklab,
-        ccc.picker.css_oklch,
+        picker.hex,
+        picker.css_rgb,
+        picker.css_hsl,
+        picker.css_hwb,
+        picker.css_lab,
+        picker.css_lch,
+        picker.css_oklab,
+        picker.css_oklch,
     },
     ---@type table<string, string[] | string | nil>
     exclude_pattern = {
@@ -83,11 +86,30 @@ return {
         ---@type boolean
         lsp = true,
     },
+    -- stylua: ignore
     ---@type {[1]: ColorPicker, [2]: ColorOutput}[]
     convert = {
-        { ccc.picker.hex, ccc.output.css_rgb },
-        { ccc.picker.css_rgb, ccc.output.css_hsl },
-        { ccc.picker.css_hsl, ccc.output.hex },
+        { picker.hex,     output.css_rgb },
+        { picker.css_rgb, output.css_hsl },
+        { picker.css_hsl, output.hex     },
+    },
+    recognize = {
+        input = false,
+        output = false,
+        -- stylua: ignore
+        ---@alias RecognizePattern table<ColorPicker, {[1]: ColorInput, [2]: ColorOutput}>
+        ---@type RecognizePattern
+        pattern = {
+            [picker.css_rgb]   = { input.rgb,   output.rgb       },
+            [picker.css_name]  = { input.rgb,   output.rgb       },
+            [picker.hex]       = { input.rgb,   output.hex       },
+            [picker.css_hsl]   = { input.hsl,   output.css_hsl   },
+            [picker.css_hwb]   = { input.hwb,   output.css_hwb   },
+            [picker.css_lab]   = { input.lab,   output.css_lab   },
+            [picker.css_lch]   = { input.lch,   output.css_lch   },
+            [picker.css_oklab] = { input.oklab, output.css_oklab },
+            [picker.css_oklch] = { input.oklch, output.css_oklch },
+        }
     },
     ---@type table<string, function>
     mappings = {

@@ -35,6 +35,7 @@ local alpha = require("ccc.alpha")
 ---@field prev_colors PrevColors
 ---@field highlighter_lsp boolean
 ---@field auto_close boolean
+---@field recognize { input: boolean, output: boolean, pattern: RecognizePattern }
 local UI = {}
 
 function UI:init()
@@ -46,6 +47,7 @@ function UI:init()
     self.color = Color.new(nil, nil, self.alpha)
     self.input_mode = self.color.input.name
     self.output_mode = self.color.output.name
+    self.pickers = config.get("pickers")
     self.bufnr = api.nvim_create_buf(false, true)
     api.nvim_buf_set_option(self.bufnr, "buftype", "nofile")
     api.nvim_buf_set_option(self.bufnr, "modifiable", false)
@@ -58,6 +60,7 @@ function UI:init()
     self.prev_colors = prev_colors.new(self)
     self.highlighter_lsp = config.get("highlighter").lsp
     self.auto_close = config.get("auto_close")
+    self.recognize = config.get("recognize")
 end
 
 function UI:reset()
@@ -77,9 +80,20 @@ end
 
 function UI:set_default_color()
     local default_color = config.get("default_color")
-    local _, _, RGB = require("ccc.picker.hex"):parse_color(default_color)
-    assert(RGB, "default_color must be HEX format (#ffffff)")
+    local _, _, RGB, A = require("ccc.picker.hex"):parse_color(default_color)
+    assert(RGB, "default_color must be HEX format (e.g. #ffffff)")
     self.color:set_rgb(RGB)
+    self:alpha_set(A)
+end
+
+---@param A? Alpha
+function UI:alpha_set(A)
+    if A then
+        self.alpha:set(A)
+        self.alpha.is_showed = true
+    else
+        self.alpha.is_showed = false
+    end
 end
 
 function UI:_open()
@@ -398,52 +412,88 @@ function UI:set_percent(percent)
     self:update()
 end
 
+---@param input? ColorInput
+function UI:_set_input(input)
+    if input and self.recognize.input and self.color:set_input(input.name) then
+        self.input_mode = input.name
+    end
+end
+
+---@param output? ColorOutput
+function UI:_set_output(output)
+    if output and self.recognize.output and self.color:set_output(output.name) then
+        self.output_mode = output.name
+    end
+end
+
+---@param picker ColorPicker
+---@return ColorInput?
+---@return ColorOutput?
+function UI:_recognize(picker)
+    local t = utils.resolve_tree(self, "recognize", "pattern", picker)
+    if t then
+        return unpack(t)
+    end
+end
+
 function UI:pick()
+    local current_line = api.nvim_get_current_line()
+
     if self.highlighter_lsp then
         local start, end_, RGB, A = require("ccc.picker.lsp").pick()
         if start then
+            if self.recognize.input or self.recognize.output then
+                local raw_color = current_line:sub(start, end_)
+                for _, picker in ipairs(self.pickers) do
+                    local _, picker_end = picker:parse_color(raw_color, 1)
+                    if picker_end == #raw_color then
+                        local input, output = self:_recognize(picker)
+                        self:_set_input(input)
+                        self:_set_output(output)
+                        break
+                    end
+                end
+            end
             ---@cast end_ integer
             ---@cast RGB RGB
             self.start_col = start
             self.end_col = end_
             self.color:set_rgb(RGB)
             self.before_color = self.color
-            if A then
-                self.alpha:set(A)
-                self.alpha:show(true)
-            end
+            self:alpha_set(A)
             return
         end
     end
 
-    local current_line = api.nvim_get_current_line()
     local cursor_col = utils.col()
     local init = 1
     while true do
-        local start, end_, RGB, A
-        for _, picker in ipairs(config.get("pickers")) do
+        local start, end_, RGB, A, input, output
+        for _, picker in ipairs(self.pickers) do
             local s_, e_, rgb, a = picker:parse_color(current_line, init)
             if s_ and (start == nil or s_ < start) then
                 start = s_
                 end_ = e_
                 RGB = rgb
                 A = a
+                if self.recognize.input or self.recognize.output then
+                    input, output = self:_recognize(picker)
+                end
             end
         end
         if start == nil then
             break
         end
         if start <= cursor_col and cursor_col <= end_ then
+            self:_set_input(input)
+            self:_set_output(output)
             ---@cast end_ integer
             ---@cast RGB RGB
             self.start_col = start
             self.end_col = end_
             self.color:set_rgb(RGB)
             self.before_color = self.color
-            if A then
-                self.alpha:set(A)
-                self.alpha:show(true)
-            end
+            self:alpha_set(A)
             return
         end
         init = end_ + 1

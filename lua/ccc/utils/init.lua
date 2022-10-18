@@ -32,7 +32,7 @@ end
 ---@param pos integer[]
 function utils.cursor_set(pos)
     pos[2] = pos[2] - 1
-    api.nvim_win_set_cursor(0, pos)
+    pcall(api.nvim_win_set_cursor, 0, pos)
 end
 
 ---1-index
@@ -193,6 +193,37 @@ function utils.resolve_bufnr(bufnr)
         return api.nvim_get_current_buf()
     end
     return bufnr
+end
+
+---@param value? number|number[]
+---@param min number
+---@param max number
+---@return boolean
+function utils.valid_range(value, min, max)
+    if type(value) == "table" then
+        for _, v in ipairs(value) do
+            if v < min or max < v then
+                return false
+            end
+        end
+        return true
+    else
+        return value ~= nil and min <= value and value <= max
+    end
+end
+
+---@param tbl table
+---@param ... unknown
+---@return any
+function utils.resolve_tree(tbl, ...)
+    for i = 1, select("#", ...) do
+        local key = select(i, ...)
+        tbl = tbl[key]
+        if tbl == nil then
+            return
+        end
+    end
+    return tbl
 end
 
 return utils

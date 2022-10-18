@@ -52,7 +52,7 @@ function CssRgbPicker:parse_color(s, init)
         local R = parse.percent(cap1, 255, true)
         local G = parse.percent(cap2, 255, true)
         local B = parse.percent(cap3, 255, true)
-        if R and G and B then
+        if utils.valid_range({ R, G, B }, 0, 1) then
             if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
                 local A = parse.alpha(cap4)
                 return start, end_, { R, G, B }, A
