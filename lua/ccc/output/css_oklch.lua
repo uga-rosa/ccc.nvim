@@ -12,10 +12,10 @@ function CssOklchOutput.str(RGB, A)
     local L, C, H = unpack(convert.rgb2oklch(RGB))
     L = L * 100
     if A then
-        local pattern = "oklab(%d%% %d %d / %d%%)"
+        local pattern = "oklch(%d%% %d %d / %d%%)"
         return pattern:format(L, C, H, A * 100)
     else
-        local pattern = "oklab(%d%% %d %d)"
+        local pattern = "oklch(%d%% %d %d)"
         return pattern:format(L, C, H)
     end
 end
