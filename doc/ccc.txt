@@ -132,6 +132,15 @@ Default: false
 	Whether to add colors to prev_colors when quit (|ccc-action-quit|).
 
 
+                                                         *ccc-option-alpha-show*
+alpha_show ~
+"auto" | "show" | "hide"
+Default: "auto"
+	This option determines whether the alpha slider is displayed when the
+	UI is opened. "show" and "hide" mean as they are. "auto" makes the
+	slider appear only when the alpha value can be picked up.
+
+
                                                              *ccc-option-inputs*
 inputs ~
 table

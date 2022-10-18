@@ -28,6 +28,7 @@ function M.setup(opt)
         ["config.auto_close"] = { M.config.auto_close, "b" },
         ["config.preserve"] = { M.config.preserve, "b" },
         ["config.save_on_quit"] = { M.config.save_on_quit, "b" },
+        ["config.alpha_show"] = { M.config.alpha_show, "s" },
         ["config.inputs"] = { M.config.inputs, "t" },
         ["config.outputs"] = { M.config.outputs, "t" },
         ["config.pickers"] = { M.config.pickers, "t" },
