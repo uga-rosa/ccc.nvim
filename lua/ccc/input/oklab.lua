@@ -20,6 +20,7 @@ function OklabInput.format(n, i)
     else
         n = n * 250
     end
+    n = utils.round(n)
     return ("%5d%%"):format(n)
 end
 

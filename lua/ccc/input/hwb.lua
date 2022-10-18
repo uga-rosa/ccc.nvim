@@ -1,4 +1,5 @@
 local ColorInput = require("ccc.input")
+local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
 ---@class HwbInput: ColorInput
@@ -17,6 +18,7 @@ function HwbInput.format(n, i)
     if i > 1 then
         n = n * 100
     end
+    n = utils.round(n)
     return ("%6d"):format(n)
 end
 

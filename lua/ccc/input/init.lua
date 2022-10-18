@@ -1,3 +1,5 @@
+local utils = require("ccc.utils")
+
 ---@class ColorInput
 ---@field name string
 ---@field value number[]
@@ -14,7 +16,9 @@ local ColorInput = {}
 ---@param n number
 ---@return string
 function ColorInput.format(n, _)
-    return ("%6d"):format(n):sub(1, 6)
+    assert(#n == 6)
+    n = utils.round(n)
+    return ("%6d"):format(n)
 end
 
 function ColorInput:new()

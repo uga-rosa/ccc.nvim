@@ -11,7 +11,7 @@ local XyzInput = setmetatable({
 }, { __index = ColorInput })
 
 function XyzInput.format(n)
-    return ("%5.1f%%"):format(n * 100)
+    return ("%5.1f%%"):format(math.floor(n * 200) / 2)
 end
 
 ---@param RGB RGB

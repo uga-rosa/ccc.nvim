@@ -1,4 +1,5 @@
 local ColorInput = require("ccc.input")
+local utils = require("ccc.utils")
 
 ---@class RgbInput: ColorInput
 local RgbInput = setmetatable({
@@ -12,7 +13,8 @@ local RgbInput = setmetatable({
 ---@param n number
 ---@return string
 function RgbInput.format(n)
-    return ("%6d"):format(n * 255)
+    n = utils.round(n * 255)
+    return ("%6d"):format(n)
 end
 
 local function copy(t)

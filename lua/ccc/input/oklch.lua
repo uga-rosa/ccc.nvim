@@ -16,10 +16,12 @@ local OklchInput = setmetatable({
 ---@return string
 function OklchInput.format(n, i)
     if i == 1 then
-        return ("%5d%%"):format(n * 100)
+        n = utils.round(n * 100)
+        return ("%5d%%"):format(n)
     elseif i == 2 then
         return ("%6.3f"):format(n)
     else
+        n = utils.round(n)
         return ("%6d"):format(n)
     end
 end
