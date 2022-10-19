@@ -10,6 +10,14 @@ body:
         - label: This is not a question. If you have a question, use [discussions](https://github.com/uga-rosa/ccc.nvim/discussions).
           required: true
 
+  - type: checkboxes
+    id: investigate
+    attributes:
+      label: I investigated.
+      options:
+        - label: I have read README.md, help documentation, and searched past issues but no solution.
+          required: true
+
   - type: textarea
     attributes:
       label: "Description"
@@ -28,9 +36,13 @@ body:
     attributes:
       label: "Minimal reproducible full config"
       description: |
-        You must provide a working config based on [this](https://github.com/uga-rosa/ccc.nvim/blob/main/utils/minimal.vim).
-        The config file should be complete, not partial, and can be used alone to reproduce bugs. 
-        **Don't use packer.nvim for this.**
+        **If there are deficiencies here, the issue will not be respond. Please understand that this is the most important section.**
+        You must provide a working config based on [this](https://github.com/uga-rosa/ccc.nvim/blob/main/utils/minimal.vim). Not part of config.
+        Users of packer.nvim should check to see if there any plugins left in `~/.local/share/nvim/site/pack/packer`.
+        1. Copy the base minimal config to the `~/ccc-repro.vim`.
+        2. Edit `~/ccc-repro.vim` for reproducing the issue.
+        3. Open `nvim -u ~/ccc-repro.vim`.
+        4. Check steps to reproduce.
     validations:
       required: true
 
