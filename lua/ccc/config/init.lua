@@ -16,7 +16,7 @@ function M.setup(opt)
             end
         end
     end
-    M.config = vim.tbl_deep_extend("force", M.config, default, opt)
+    M.config = vim.tbl_deep_extend("force", default, M.config, opt)
 
     vim.validate({
         ["config.default_color"] = { M.config.default_color, "s" },
