@@ -16,39 +16,39 @@ local ColorInput = {}
 ---@param n number
 ---@return string
 function ColorInput.format(n, _)
-    assert(#n == 6)
-    n = utils.round(n)
-    return ("%6d"):format(n)
+  assert(#n == 6)
+  n = utils.round(n)
+  return ("%6d"):format(n)
 end
 
 function ColorInput:new()
-    return setmetatable({}, { __index = self })
+  return setmetatable({}, { __index = self })
 end
 
 ---@param index integer
 ---@param new_value number
 function ColorInput:callback(index, new_value)
-    self.value[index] = new_value
+  self.value[index] = new_value
 end
 
 ---@param value number[]
 function ColorInput:set(value)
-    self.value = value
+  self.value = value
 end
 
 ---@param RGB RGB
 function ColorInput:set_rgb(RGB)
-    self:set(self.from_rgb(RGB))
+  self:set(self.from_rgb(RGB))
 end
 
 ---@return number[] value
 function ColorInput:get()
-    return self.value
+  return self.value
 end
 
 ---@return RGB
 function ColorInput:get_rgb()
-    return self.to_rgb(self:get())
+  return self.to_rgb(self:get())
 end
 
 return ColorInput
