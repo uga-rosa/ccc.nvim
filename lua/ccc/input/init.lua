@@ -10,13 +10,12 @@ local utils = require("ccc.utils")
 ---@field format fun(n: number, i: integer): string #String returned must be 6 byte.
 ---@field from_rgb fun(RGB: RGB): value: number[]
 ---@field to_rgb fun(value: number[]): RGB
----@field callback fun(self: ColorInput, new_value: number, index: integer): value: integer[]
+---@field callback fun(self: ColorInput, new_value: number, index: integer)
 local ColorInput = {}
 
 ---@param n number
 ---@return string
 function ColorInput.format(n, _)
-  assert(#n == 6)
   n = utils.round(n)
   return ("%6d"):format(n)
 end
