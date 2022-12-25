@@ -40,7 +40,7 @@ local alpha = require("ccc.alpha")
 local UI = {}
 
 function UI:init()
-  if self.alpha ~= nil and api.nvim_buf_is_valid(self.bufnr) then
+  if self.bufnr and api.nvim_buf_is_valid(self.bufnr) then
     return
   end
 

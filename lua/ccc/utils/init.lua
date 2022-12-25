@@ -52,9 +52,6 @@ end
 ---@param end_ integer
 ---@param lines string[]
 function utils.set_lines(bufnr, start, end_, lines)
-  if not api.nvim_buf_is_valid(bufnr) then
-    return
-  end
   api.nvim_buf_set_option(bufnr, "modifiable", true)
   api.nvim_buf_set_lines(bufnr, start, end_, false, lines)
   api.nvim_buf_set_option(bufnr, "modifiable", false)
