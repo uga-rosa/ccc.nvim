@@ -14,7 +14,7 @@ function pattern.create(str)
   str = str:gsub("<per%-num>", [[<number>%%\?]])
   str = str:gsub("<percentage>", [[<number>%%]])
   str = str:gsub("<hue>", [[<number>\%%(deg\|grad\|rad\|turn\)\?]])
-  str = str:gsub("<number>", [=[\[+-\]\?\%%(\d\+.\?\d\*\|.\d\+\)]=])
+  str = str:gsub("<number>", [=[\[+-]\?\%%(\d\+.\?\d\*\|.\d\+\)]=])
   return "\\V" .. str
 end
 
