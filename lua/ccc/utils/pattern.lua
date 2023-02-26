@@ -29,11 +29,12 @@ end
 
 ---@param str string
 ---@param pat string
+---@param init number
 ---@return integer?
 ---@return integer?
 ---@return string? ...
 function pattern.find(str, pat, init)
-  local result = vim.fn.matchlist(str, pat)
+  local result = vim.fn.matchlist(str:sub(init), pat)
   if #result == 10 then
     local start, end_ = str:find(result[1], init, true)
     table.remove(result, 1)
