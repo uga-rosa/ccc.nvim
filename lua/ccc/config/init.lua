@@ -58,7 +58,7 @@ function M.setup(opt)
         if ok and stats and stats.size > max_byte then
           return
         end
-        require("ccc.highlighter"):enable()
+        require("ccc.highlighter"):enable(0, true)
       end,
     })
   end

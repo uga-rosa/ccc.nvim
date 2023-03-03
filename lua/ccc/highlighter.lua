@@ -30,7 +30,11 @@ function Highlighter:init()
   local highlighter_config = config.get("highlighter")
   local filetypes = highlighter_config.filetypes
   local ft_filter = {}
-  if #filetypes == 0 then
+  if #filetypes > 0 then
+    for _, v in ipairs(filetypes) do
+      ft_filter[v] = true
+    end
+  else
     for _, v in ipairs(highlighter_config.excludes) do
       ft_filter[v] = false
     end
@@ -39,10 +43,6 @@ function Highlighter:init()
         return true
       end,
     })
-  else
-    for _, v in ipairs(filetypes) do
-      ft_filter[v] = true
-    end
   end
   self.ft_filter = ft_filter
   self.lsp = highlighter_config.lsp
@@ -70,9 +70,10 @@ function Highlighter:init()
 end
 
 ---@param bufnr? integer
-function Highlighter:enable(bufnr)
+---@param filter? boolean
+function Highlighter:enable(bufnr, filter)
   self:init()
-  if not self.ft_filter[vim.bo.filetype] then
+  if filter and not self.ft_filter[vim.bo.filetype] then
     return
   end
 

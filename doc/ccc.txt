@@ -285,8 +285,9 @@ Default: 100 * 1024 (100 KB)
 highlighter.filetypes ~
 string[]
 Default: {}
-	File types for which highlighting is enabled. An empty table means all
-	file types.
+	File types for which highlighting is enabled. It is only used for
+	automatic highlighting by |ccc-option-highlighter-auto-enable|, and is
+	ignored for manual activation. An empty table means all file types.
 
 
                                                *ccc-option-highlighter-excludes*
