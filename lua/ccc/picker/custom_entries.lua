@@ -2,15 +2,15 @@ local config = require("ccc.config")
 local utils = require("ccc.utils")
 local parse = require("ccc.utils.parse")
 
----@class CustomTable: ColorPicker
+---@class CustomEntries: ColorPicker
 ---@field rgb { [string]: integer[] }
 ---@field re { match_str: function } vim.regex instance
 ---@field min_length integer
-local CustomTable = {}
+local CustomEntries = {}
 
 ---@param color_table { [string]: string }
----@return CustomTable
-CustomTable.new = function(color_table)
+---@return CustomEntries
+CustomEntries.new = function(color_table)
   local self = { rgb = {} }
   ---@type string[]
   local names = {}
@@ -29,11 +29,11 @@ CustomTable.new = function(color_table)
   self.re = vim.regex(self.pattern[1])
   local ex_pat = config.get("exclude_pattern")
   self.exclude_pattern = utils.expand_template(ex_pat.custom_table, self.pattern)
-  return setmetatable(self, { __index = CustomTable })
+  return setmetatable(self, { __index = CustomEntries })
 end
 
 -- dummy
-function CustomTable:init() end
+function CustomEntries:init() end
 
 ---@param s string
 ---@param init? integer
@@ -41,7 +41,7 @@ function CustomTable:init() end
 ---@return integer? end_
 ---@return number[]? RGB
 ---@return number? alpha
-function CustomTable:parse_color(s, init)
+function CustomEntries:parse_color(s, init)
   init = vim.F.if_nil(init, 1) --[[@as integer]]
   local target = s:sub(init)
   if #target < self.min_length then
@@ -61,4 +61,4 @@ function CustomTable:parse_color(s, init)
   end
 end
 
-return CustomTable.new
+return CustomEntries.new
