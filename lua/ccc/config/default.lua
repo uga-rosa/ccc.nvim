@@ -71,6 +71,7 @@ return {
       "[%w_]{{pattern}}",
       "{{pattern}}[%w_]",
     },
+    custom_entries = nil,
   },
   ---@type hl_mode
   highlight_mode = "bg",
