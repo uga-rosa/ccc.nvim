@@ -222,6 +222,27 @@ Default: {
 	If it picks up even the parts you do not want picked up, try
 	|ccc-option-exclude-pattern|.
 
+					     *ccc-option-pickers-custom_entries*
+	There is a special picker named `ccc.picker.custom_entries`. You can
+	define a table to convert from any word to a specific RGB color.
+>
+	ccc.setup({
+	  pickers = {
+	    require("ccc.picker.custom_entries")({
+	      red = "#ff0000",
+	      green = "#00ff00",
+	    }),
+	  },
+	})
+<
+	This makes it highlight words both `red` and `green` to supplied RGB
+	colors. Also you can use them in |:CccPick|.
+
+	It detects word boundaries not to highlight words including supplied
+	characters. So it does not highlight `red` in `Alfred`.
+
+	You cannot use any special character for RegExp patterns. When you use
+	them such as `%`, `[]`, and `^$`, it detects the character as they are.
 
                                                     *ccc-option-exclude-pattern*
 exclude_pattern ~
