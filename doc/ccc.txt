@@ -242,7 +242,7 @@ Default: {
 	characters. So it does not highlight `red` in `Alfred`.
 
 	You cannot use any special character for RegExp patterns. When you use
-	them such as `%`, `[]`, and `^$`, it detects the character as they are.
+	them such as `%`, `[]`, and `^$`, it detects the characters as they are.
 
                                                     *ccc-option-exclude-pattern*
 exclude_pattern ~
