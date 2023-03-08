@@ -146,46 +146,6 @@ function utils.create_highlight(hex, hl_mode)
   end
 end
 
----@param exclude_pattern nil | string | string[]
----@param pattern string[]
----@return string[]
-function utils.expand_template(exclude_pattern, pattern)
-  if exclude_pattern == nil then
-    exclude_pattern = {}
-  elseif type(exclude_pattern) == "string" then
-    exclude_pattern = { exclude_pattern }
-  end
-  local new = {}
-  for _, ex in pairs(exclude_pattern) do
-    if ex:find("{{pattern}}", 1, true) then
-      for _, pat in pairs(pattern) do
-        pat = pat:gsub("%%", "%%%%")
-        local expanded = ex:gsub("{{pattern}}", pat)
-        table.insert(new, expanded)
-      end
-    else
-      table.insert(new, ex)
-    end
-  end
-  return new
-end
-
----@param exclude_pattern string[]
----@param s string
----@param init integer
----@param start integer
----@param end_ integer
----@return boolean
-function utils.is_excluded(exclude_pattern, s, init, start, end_)
-  for _, ex in pairs(exclude_pattern) do
-    local ex_start, ex_end = s:find(ex, init)
-    if ex_start and ex_start <= start and end_ <= ex_end then
-      return true
-    end
-  end
-  return false
-end
-
 ---@param bufnr? integer
 ---@return integer
 function utils.resolve_bufnr(bufnr)

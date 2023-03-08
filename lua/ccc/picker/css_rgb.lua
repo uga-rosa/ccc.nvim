@@ -1,4 +1,3 @@
-local config = require("ccc.config")
 local utils = require("ccc.utils")
 local parse = require("ccc.utils.parse")
 local pattern = require("ccc.utils.pattern")
@@ -18,8 +17,6 @@ function CssRgbPicker:init()
       "rgba?( [<percentage>|none] , [<percentage>|none] , [<percentage>|none] %[, [<alpha-value>|none]]? )"
     ),
   }
-  local ex_pat = config.get("exclude_pattern")
-  self.exclude_pattern = utils.expand_template(ex_pat.css_rgb, self.pattern)
 end
 
 ---@param s string
@@ -47,10 +44,8 @@ function CssRgbPicker:parse_color(s, init)
     local G = parse.percent(cap2, 255, true)
     local B = parse.percent(cap3, 255, true)
     if utils.valid_range({ R, G, B }, 0, 1) then
-      if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
-        local A = parse.alpha(cap4)
-        return start, end_, { R, G, B }, A
-      end
+      local A = parse.alpha(cap4)
+      return start, end_, { R, G, B }, A
     end
     init = end_ + 1
   end

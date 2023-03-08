@@ -58,8 +58,6 @@ return {
     picker.css_oklab,
     picker.css_oklch,
   },
-  ---@type table<string, string[] | string | nil>
-  exclude_pattern = {},
   ---@type hl_mode
   highlight_mode = "bg",
   ---@type function
