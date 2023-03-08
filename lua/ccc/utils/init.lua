@@ -160,16 +160,17 @@ end
 ---@param max number
 ---@return boolean
 function utils.valid_range(value, min, max)
-  if type(value) == "table" then
+  if type(value) == "number" then
+    return min <= value and value <= max
+  elseif type(value) == "table" then
     for _, v in ipairs(value) do
       if v < min or max < v then
         return false
       end
     end
     return true
-  else
-    return value ~= nil and min <= value and value <= max
   end
+  return false
 end
 
 ---@param tbl table
