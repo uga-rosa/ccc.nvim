@@ -1,13 +1,10 @@
-local config = require("ccc.config")
-local utils = require("ccc.utils")
-
 ---@class NamePicker: ColorPicker
 ---@field colorname table<string, number[]>
----@field name_lst string[] #Sorted by string length.
+---@field regexp userdata return value of vim.regex()
 local NamePicker = {}
 
 function NamePicker:init()
-  if self.exclude_pattern then
+  if self.regexp then
     return
   end
   -- https://www.w3.org/TR/css-color-4/#named-colors
@@ -162,19 +159,13 @@ function NamePicker:init()
     yellowgreen = { 154, 205, 50 },
   }
 
-  self.name_lst = {}
   for name, rgb in pairs(self.colorname) do
     self.colorname[name] = vim.tbl_map(function(x)
       return x / 255
     end, rgb)
-    table.insert(self.name_lst, name)
   end
-  table.sort(self.name_lst, function(a, b)
-    return #a > #b
-  end)
 
-  local ex_pat = config.get("exclude_pattern")
-  self.exclude_pattern = utils.expand_template(ex_pat.css_name, self.name_lst)
+  self.regexp = vim.regex([[\<\%(]] .. table.concat(vim.tbl_keys(self.colorname), [[\|]]) .. [[\)\>]])
 end
 
 ---@param s string
@@ -186,24 +177,16 @@ function NamePicker:parse_color(s, init)
   self:init()
   init = vim.F.if_nil(init, 1)
   s = s:lower()
-  -- The shortest patten is 3 characters like `red`
-  while init < #s - 2 do
-    local start, end_, RGB
-    for _, name in ipairs(self.name_lst) do
-      local s_, e_ = s:find(name, init, true)
-      if s_ and (start == nil or s_ < start) then
-        start = s_
-        end_ = e_
-        RGB = self.colorname[name]
-      end
-    end
-    if not (start and end_ and RGB) then
-      return
-    end
-    if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
-      return start, end_, RGB
-    end
-    init = end_ + 1
+  -- byte index
+  ---@type integer, integer
+  local start, end_ = self.regexp:match_str(s:sub(init))
+  if start then
+    start = start + init
+    end_ = end_ + init - 1
+    local name = s:sub(start, end_)
+    -- By the generation rule of self.regexp, self.colorname[name] is always found.
+    local RGB = self.colorname[name]
+    return start, end_, RGB
   end
 end
 
