@@ -59,19 +59,7 @@ return {
     picker.css_oklch,
   },
   ---@type table<string, string[] | string | nil>
-  exclude_pattern = {
-    hex = {
-      "[%w_]{{pattern}}",
-      "{{pattern}}[g-zG-Z_]",
-    },
-    css_rgb = nil,
-    css_hsl = nil,
-    css_hwb = nil,
-    css_name = {
-      "[%w_]{{pattern}}",
-      "{{pattern}}[%w_]",
-    },
-  },
+  exclude_pattern = {},
   ---@type hl_mode
   highlight_mode = "bg",
   ---@type function
