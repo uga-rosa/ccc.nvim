@@ -1,6 +1,5 @@
-local config = require("ccc.config")
-local utils = require("ccc.utils")
 local parse = require("ccc.utils.parse")
+local pattern = require("ccc.utils.pattern")
 
 ---@class HexPicker: ColorPicker
 local HexPicker = {}
@@ -9,18 +8,16 @@ function HexPicker:init()
   if self.pattern then
     return
   end
-  -- #RRGGBBAA
   -- #RRGGBB
-  -- #RGBA
   -- #RGB
+  -- #RRGGBBAA
+  -- #RGBA
   self.pattern = {
-    "#(%x%x)(%x%x)(%x%x)(%x%x)",
-    "#(%x%x)(%x%x)(%x%x)",
-    "#(%x)(%x)(%x)(%x)",
-    "#(%x)(%x)(%x)",
+    [[\v%(^|[^\k])\zs#(\x\x)(\x\x)(\x\x)>]],
+    [[\v%(^|[^\k])\zs#(\x)(\x)(\x)>]],
+    [[\v%(^|[^\k])\zs#(\x\x)(\x\x)(\x\x)(\x\x)>]],
+    [[\v%(^|[^\k])\zs#(\x)(\x)(\x)(\x)>]],
   }
-  local ex_pat = config.get("exclude_pattern")
-  self.exclude_pattern = utils.expand_template(ex_pat.hex, self.pattern)
 end
 
 ---@param s string
@@ -36,7 +33,7 @@ function HexPicker:parse_color(s, init)
   while init <= #s - 3 do
     local start, end_, cap1, cap2, cap3, cap4
     for _, pat in ipairs(self.pattern) do
-      start, end_, cap1, cap2, cap3, cap4 = s:find(pat, init)
+      start, end_, cap1, cap2, cap3, cap4 = pattern.find(s, pat, init)
       if start then
         break
       end
@@ -48,10 +45,8 @@ function HexPicker:parse_color(s, init)
     local G = parse.hex(cap2)
     local B = parse.hex(cap3)
     if R and G and B then
-      if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
-        local A = parse.hex(cap4)
-        return start, end_, { R, G, B }, A
-      end
+      local A = parse.hex(cap4)
+      return start, end_, { R, G, B }, A
     end
     init = end_ + 1
   end
