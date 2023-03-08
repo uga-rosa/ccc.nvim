@@ -219,29 +219,6 @@ Default: {
 		- CssName   ccc.picker.css_name
 	Css* conforms to CSS Color Module Level 4.
 	https://www.w3.org/TR/css-color-4/
-	If it picks up even the parts you do not want picked up, try
-	|ccc-option-exclude-pattern|.
-
-
-                                                    *ccc-option-exclude-pattern*
-exclude_pattern ~
-table
-Default: {
-	hex = {
-		"[%w_]{{pattern}}",
-		"{{pattern}}[g-zG-Z_]",
-	},
-	css_rgb = nil,
-	css_hsl = nil,
-	css_hwb = nil,
-	css_name = {
-		"[%w_]{{pattern}}",
-		"{{pattern}}[%w_]",
-	},
-}
-	Define exclude patterns for each picker. `{{pattern}}` is expanded to
-	the pattern defined in each picker. For example, default option of hex
-	excludes 'foo#add' in the vim script.
 
 
                                                      *ccc-option-highlight-mode*
