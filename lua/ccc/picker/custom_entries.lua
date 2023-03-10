@@ -1,5 +1,3 @@
-local config = require("ccc.config")
-local utils = require("ccc.utils")
 local parse = require("ccc.utils.parse")
 local pattern = require("ccc.utils.pattern")
 
@@ -7,13 +5,12 @@ local pattern = require("ccc.utils.pattern")
 ---@field rgb { [string]: integer[] }
 ---@field min_length integer
 ---@field color_table { [string]: string }
----@field exclude_pattern_option string[]|string
 local CustomEntries = {}
 
 ---@param color_table { [string]: string }
 ---@return CustomEntries
 CustomEntries.new = function(color_table)
-  return setmetatable({ color_table = color_table, rgb = {}, exclude_pattern = {} }, { __index = CustomEntries })
+  return setmetatable({ color_table = color_table, rgb = {}, min_length = 0 }, { __index = CustomEntries })
 end
 
 function CustomEntries:init()
@@ -39,7 +36,6 @@ function CustomEntries:init()
     return v.vim
   end, patterns)
   self.pattern = [[\V\<\%(]] .. table.concat(vim_patterns, [[\|]]) .. [[\)\>]]
-  self.exclude_pattern_option = config.get("exclude_pattern").custom_entries
 end
 
 ---@param s string
@@ -59,11 +55,7 @@ function CustomEntries:parse_color(s, init)
     local name = s:sub(start, end_)
     local rgb = self.rgb[name]
     if rgb then
-      local escaped = name:gsub("[$^()%%.%[%]*+-?]", "%%%0")
-      local exclude_pattern = utils.expand_template(self.exclude_pattern_option, { escaped })
-      if not utils.is_excluded(exclude_pattern, s, init, start, end_) then
-        return start, end_, rgb
-      end
+      return start, end_, rgb
     end
   end
 end
