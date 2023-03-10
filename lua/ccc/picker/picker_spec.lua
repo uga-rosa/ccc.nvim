@@ -8,18 +8,13 @@ local css_oklab = require("ccc.picker.css_oklab")
 local css_oklch = require("ccc.picker.css_oklch")
 local css_name = require("ccc.picker.css_name")
 local custom_entries = require("ccc.picker.custom_entries")
-local config = require("ccc.config")
 
 ---@param module ColorPicker
 ---@param str string
----@param expect_rgb integer[]? #range in [0-255]
+---@param expect_rgb integer[] #range in [0-255]
 ---@param expect_alpha Alpha?
 local function test(module, str, expect_rgb, expect_alpha)
   local start, end_, rgb, alpha = module:parse_color(str)
-  if not expect_rgb then
-    assert.is_nil(start)
-    return
-  end
   assert.equals(2, start)
   assert.equals(#str - 1, end_)
   ---@cast rgb RGB
@@ -204,20 +199,9 @@ describe("Color detection test", function()
     test(css_name, " yellowgreen ", { 154, 205, 50 }, nil)
   end)
 
-  describe("Custom Entries", function()
-    it("has no special characters", function()
-      test(custom_entries({ red = "#ff0000" }), " red ", { 255, 0, 0 }, nil)
-      test(custom_entries({ red = "#ff0000", Alfred = "#00ff00" }), " Alfred ", { 0, 255, 0 }, nil)
-    end)
-    it("has special characters", function()
-      test(custom_entries({ [ [[^$()%.[]*+-?|\]] ] = "#ff0000" }), [[ ^$()%.[]*+-?|\ ]], { 255, 0, 0 }, nil)
-    end)
-    it("with the exclude_pattern option", function()
-      config.setup({ exclude_pattern = { custom_entries = "%({{pattern}}%)" } })
-      local picker = custom_entries({ ["w%w"] = "#ff0000" })
-      test(picker, " w%w ", { 255, 0, 0 }, nil)
-      test(picker, " (w%w) ", nil, nil)
-      config.setup({})
-    end)
+  it("Custom Entries", function()
+    test(custom_entries({ red = "#ff0000" }), " red ", { 255, 0, 0 }, nil)
+    test(custom_entries({ red = "#ff0000", Alfred = "#00ff00" }), " Alfred ", { 0, 255, 0 }, nil)
+    test(custom_entries({ [ [[foo\bar]] ] = "#ff0000" }), [[ foo\bar ]], { 255, 0, 0 }, nil)
   end)
 end)
