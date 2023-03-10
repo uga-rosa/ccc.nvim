@@ -228,7 +228,7 @@ Default: {
 >
 	ccc.setup({
 	  pickers = {
-	    require("ccc.picker.custom_entries")({
+	    ccc.picker.custom_entries({
 	      red = "#ff0000",
 	      green = "#00ff00",
 	    }),
