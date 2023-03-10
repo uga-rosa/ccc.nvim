@@ -239,7 +239,8 @@ Default: {
 	colors. Also you can use them in |:CccPick|.
 
 	It detects word boundaries not to highlight words including supplied
-	characters. So it does not highlight `red` in `Alfred`.
+	characters. So it does not highlight `red` in `Alfred`. This is achieved
+	by Vim's |/\<| and |/\>| patterns, so it is affected by |'iskeyword'|.
 
 	You cannot use any special character for RegExp patterns. When you use
 	them such as `%`, `[]`, and `^$`, it detects the characters as they are.
