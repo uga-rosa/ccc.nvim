@@ -1,10 +1,10 @@
 local config = require("ccc.config")
 local utils = require("ccc.utils")
 local parse = require("ccc.utils.parse")
+local pattern = require("ccc.utils.pattern")
 
 ---@class CustomEntries: ColorPicker
 ---@field rgb { [string]: integer[] }
----@field re { match_str: function } vim.regex instance
 ---@field min_length integer
 ---@field color_table { [string]: string }
 ---@field exclude_pattern_option string[]|string
@@ -13,14 +13,11 @@ local CustomEntries = {}
 ---@param color_table { [string]: string }
 ---@return CustomEntries
 CustomEntries.new = function(color_table)
-  return setmetatable(
-    { color_table = color_table, rgb = {}, pattern = {}, exclude_pattern = {} },
-    { __index = CustomEntries }
-  )
+  return setmetatable({ color_table = color_table, rgb = {}, exclude_pattern = {} }, { __index = CustomEntries })
 end
 
 function CustomEntries:init()
-  if self.re then
+  if self.pattern then
     return
   end
   ---@type { plain: string, vim: string }[]
@@ -41,9 +38,8 @@ function CustomEntries:init()
   local vim_patterns = vim.tbl_map(function(v)
     return v.vim
   end, patterns)
-  local pattern = [[\V\<\%(]] .. table.concat(vim_patterns, [[\|]]) .. [[\)\>]]
+  self.pattern = [[\V\<\%(]] .. table.concat(vim_patterns, [[\|]]) .. [[\)\>]]
   self.exclude_pattern_option = config.get("exclude_pattern").custom_entries
-  self.re = vim.regex(pattern) --[[@as { match_str: function }]]
 end
 
 ---@param s string
@@ -55,17 +51,14 @@ end
 function CustomEntries:parse_color(s, init)
   self:init()
   init = vim.F.if_nil(init, 1) --[[@as integer]]
-  local target = s:sub(init)
-  if #target < self.min_length then
+  if #s - init + 1 < self.min_length then
     return
   end
-  local target_start, target_end = self.re:match_str(target)
-  if target_start then
-    local name = target:sub(target_start + 1, target_end)
+  local start, end_ = pattern.find(s, self.pattern, init)
+  if start and end_ then
+    local name = s:sub(start, end_)
     local rgb = self.rgb[name]
     if rgb then
-      local start = target_start + init
-      local end_ = target_end + init - 1
       local escaped = name:gsub("[$^()%%.%[%]*+-?]", "%%%0")
       local exclude_pattern = utils.expand_template(self.exclude_pattern_option, { escaped })
       if not utils.is_excluded(exclude_pattern, s, init, start, end_) then
