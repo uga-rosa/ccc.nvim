@@ -1,4 +1,3 @@
-local config = require("ccc.config")
 local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 local parse = require("ccc.utils.parse")
@@ -12,8 +11,6 @@ function CssOklchPicker:init()
     return
   end
   self.pattern = pattern.create("oklch( [<per-num>|none]  [<per-num>|none]  [<hue>|none] %[/ [<alpha-value>|none]]? )")
-  local ex_pat = config.get("exclude_pattern")
-  self.exclude_pattern = utils.expand_template(ex_pat.css_lch, pattern)
 end
 
 ---@param s string
@@ -35,11 +32,9 @@ function CssOklchPicker:parse_color(s, init)
     local C = parse.percent(cap2, 0.4)
     local H = parse.hue(cap3)
     if utils.valid_range(L, 0, 1) and utils.valid_range(C, 0, 0.4) and H then
-      if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
-        local RGB = convert.oklch2rgb({ L, C, H })
-        local A = parse.alpha(cap4)
-        return start, end_, RGB, A
-      end
+      local RGB = convert.oklch2rgb({ L, C, H })
+      local A = parse.alpha(cap4)
+      return start, end_, RGB, A
     end
     init = end_ + 1
   end

@@ -32,7 +32,6 @@ function M.setup(opt)
     ["config.inputs"] = { M.config.inputs, "t" },
     ["config.outputs"] = { M.config.outputs, "t" },
     ["config.pickers"] = { M.config.pickers, "t" },
-    ["config.exclude_pattern"] = { M.config.exclude_pattern, "t" },
     ["config.highlight_mode"] = { M.config.highlight_mode, "s" },
     ["config.output_line"] = { M.config.output_line, "f" },
     ["config.highlighter"] = { M.config.highlighter, "t" },
@@ -58,7 +57,7 @@ function M.setup(opt)
         if ok and stats and stats.size > max_byte then
           return
         end
-        require("ccc.highlighter"):enable()
+        require("ccc.highlighter"):enable(0, true)
       end,
     })
   end

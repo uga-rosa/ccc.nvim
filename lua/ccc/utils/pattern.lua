@@ -30,9 +30,9 @@ end
 ---@param str string
 ---@param pat string
 ---@param init number
----@return integer?
----@return integer?
----@return string? ...
+---@return integer? start
+---@return integer? end
+---@return string? ... submatches
 function pattern.find(str, pat, init)
   local result = vim.fn.matchlist(str:sub(init), pat)
   if #result == 10 then

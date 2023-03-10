@@ -1,4 +1,3 @@
-local config = require("ccc.config")
 local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 local parse = require("ccc.utils.parse")
@@ -13,8 +12,6 @@ function CssOklabPicker:init()
   end
   self.pattern =
     pattern.create("oklab( [<per-num>|none]  [<per-num>|none]  [<per-num>|none] %[/ [<alpha-value>|none]]? )")
-  local ex_pat = config.get("exclude_pattern")
-  self.exclude_pattern = utils.expand_template(ex_pat.css_oklab, pattern)
 end
 
 ---@param s string
@@ -36,11 +33,9 @@ function CssOklabPicker:parse_color(s, init)
     local a = parse.percent(cap2, 0.4)
     local b = parse.percent(cap3, 0.4)
     if utils.valid_range(L, 0, 1) and utils.valid_range({ a, b }, -0.4, 0.4) then
-      if not utils.is_excluded(self.exclude_pattern, s, init, start, end_) then
-        local RGB = convert.oklab2rgb({ L, a, b })
-        local A = parse.alpha(cap4)
-        return start, end_, RGB, A
-      end
+      local RGB = convert.oklab2rgb({ L, a, b })
+      local A = parse.alpha(cap4)
+      return start, end_, RGB, A
     end
     init = end_ + 1
   end

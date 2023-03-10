@@ -219,8 +219,7 @@ Default: {
 		- CssName   ccc.picker.css_name
 	Css* conforms to CSS Color Module Level 4.
 	https://www.w3.org/TR/css-color-4/
-	If it picks up even the parts you do not want picked up, try
-	|ccc-option-exclude-pattern|.
+
 
 					     *ccc-option-pickers-custom_entries*
 	There is a special picker named `ccc.picker.custom_entries`. You can
@@ -244,26 +243,6 @@ Default: {
 
 	You cannot use any special character for RegExp patterns. When you use
 	them such as `%`, `[]`, and `^$`, it detects the characters as they are.
-
-                                                    *ccc-option-exclude-pattern*
-exclude_pattern ~
-table
-Default: {
-	hex = {
-		"[%w_]{{pattern}}",
-		"{{pattern}}[g-zG-Z_]",
-	},
-	css_rgb = nil,
-	css_hsl = nil,
-	css_hwb = nil,
-	css_name = {
-		"[%w_]{{pattern}}",
-		"{{pattern}}[%w_]",
-	},
-}
-	Define exclude patterns for each picker. `{{pattern}}` is expanded to
-	the pattern defined in each picker. For example, default option of hex
-	excludes 'foo#add' in the vim script.
 
 
                                                      *ccc-option-highlight-mode*
@@ -307,8 +286,9 @@ Default: 100 * 1024 (100 KB)
 highlighter.filetypes ~
 string[]
 Default: {}
-	File types for which highlighting is enabled. An empty table means all
-	file types.
+	File types for which highlighting is enabled. It is only used for
+	automatic highlighting by |ccc-option-highlighter-auto-enable|, and is
+	ignored for manual activation. An empty table means all file types.
 
 
                                                *ccc-option-highlighter-excludes*
