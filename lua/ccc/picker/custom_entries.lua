@@ -41,7 +41,7 @@ function CustomEntries:init()
   local vim_patterns = vim.tbl_map(function(v)
     return v.vim
   end, patterns)
-  local pattern = [[\V\<\(]] .. table.concat(vim_patterns, [[\|]]) .. [[\)\>]]
+  local pattern = [[\V\<\%(]] .. table.concat(vim_patterns, [[\|]]) .. [[\)\>]]
   self.exclude_pattern_option = config.get("exclude_pattern").custom_entries
   self.re = vim.regex(pattern) --[[@as { match_str: function }]]
 end
