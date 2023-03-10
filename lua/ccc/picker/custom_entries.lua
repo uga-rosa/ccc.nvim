@@ -50,8 +50,8 @@ end
 ---@param init? integer
 ---@return integer? start
 ---@return integer? end_
----@return number[]? RGB
----@return number? alpha
+---@return RGB?
+---@return Alpha?
 function CustomEntries:parse_color(s, init)
   self:init()
   init = vim.F.if_nil(init, 1) --[[@as integer]]
