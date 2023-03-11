@@ -12,11 +12,11 @@ local hex = require("ccc.output.hex")
 ---@field alpha AlphaSlider
 local Color = {}
 
----@param input_mode? string
----@param output_mode? string
+---@param input_name? string
+---@param output_name? string
 ---@param alpha AlphaSlider
 ---@return CccColor
-function Color.new(input_mode, output_mode, alpha)
+function Color.new(input_name, output_name, alpha)
   local self = setmetatable({
     _inputs = config.get("inputs"),
     _outputs = config.get("outputs"),
@@ -26,13 +26,11 @@ function Color.new(input_mode, output_mode, alpha)
     self._inputs[i] = input:new()
   end
 
-  if input_mode == nil or not self:set_input(input_mode) then
-    self.input_idx = 1
-    self.input = self._inputs[1]
+  if input_name then
+    self:set_input(input_name)
   end
-  if output_mode == nil or not self:set_output(output_mode) then
-    self.output_idx = 1
-    self.output = self._outputs[1]
+  if output_name then
+    self:set_output(output_name)
   end
 
   return self
@@ -42,36 +40,34 @@ local function get_name(x)
   return x.name
 end
 
----@param input_mode string
----@return boolean is_valid_name
-function Color:set_input(input_mode)
-  local index = utils.search_idx(self._inputs, input_mode, get_name)
+---@param input_name string
+function Color:set_input(input_name)
+  local index = utils.search_idx(self._inputs, input_name, get_name)
   if index then
     self.input_idx = index
     self.input = self._inputs[self.input_idx]
+  else
+    self.input_idx = 1
+    self.input = self._inputs[1]
   end
-  return index ~= nil
 end
 
----@param output_mode string
----@return boolean is_valid_name
-function Color:set_output(output_mode)
-  local index = utils.search_idx(self._outputs, output_mode, get_name)
+---@param output_name string
+function Color:set_output(output_name)
+  local index = utils.search_idx(self._outputs, output_name, get_name)
   if index then
     self.output_idx = index
     self.output = self._outputs[self.output_idx]
+  else
+    self.output_idx = 1
+    self.output = self._outputs[1]
   end
-  return index ~= nil
 end
 
 ---@return CccColor
 function Color:copy()
-  local new = Color.new(nil, nil, self.alpha)
-  new.input_idx = self.input_idx
-  new.input = new._inputs[new.input_idx]
+  local new = Color.new(self.input.name, self.output.name, self.alpha)
   new:set(self:get())
-  new.output_idx = self.output_idx
-  new.output = new._outputs[new.output_idx]
   return new
 end
 

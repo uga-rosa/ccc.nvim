@@ -419,14 +419,16 @@ end
 
 ---@param input? ColorInput
 function UI:_set_input(input)
-  if input and self.recognize.input and self.color:set_input(input.name) then
+  if input and self.recognize.input then
+    self.color:set_input(input.name)
     self.input_mode = input.name
   end
 end
 
 ---@param output? ColorOutput
 function UI:_set_output(output)
-  if output and self.recognize.output and self.color:set_output(output.name) then
+  if output and self.recognize.output then
+    self.color:set_output(output.name)
     self.output_mode = output.name
   end
 end
@@ -446,21 +448,7 @@ function UI:pick()
 
   if self.highlighter_lsp then
     local start, end_, RGB, A = require("ccc.picker.lsp").pick()
-    if start then
-      if self.recognize.input or self.recognize.output then
-        local raw_color = current_line:sub(start, end_)
-        for _, picker in ipairs(self.pickers) do
-          local _, picker_end = picker:parse_color(raw_color, 1)
-          if picker_end == #raw_color then
-            local input, output = self:_recognize(picker)
-            self:_set_input(input)
-            self:_set_output(output)
-            break
-          end
-        end
-      end
-      ---@cast end_ integer
-      ---@cast RGB RGB
+    if start and end_ and RGB then
       self.start_col = start
       self.end_col = end_
       self.color:set_rgb(RGB)
