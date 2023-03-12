@@ -26,12 +26,8 @@ function Color.new(input_name, output_name, alpha)
     self._inputs[i] = input:new()
   end
 
-  if input_name then
-    self:set_input(input_name)
-  end
-  if output_name then
-    self:set_output(output_name)
-  end
+  self:set_input(input_name)
+  self:set_output(output_name)
 
   return self
 end
@@ -40,7 +36,7 @@ local function get_name(x)
   return x.name
 end
 
----@param input_name string
+---@param input_name? string
 function Color:set_input(input_name)
   local index = utils.search_idx(self._inputs, input_name, get_name)
   if index then
@@ -52,7 +48,7 @@ function Color:set_input(input_name)
   end
 end
 
----@param output_name string
+---@param output_name? string
 function Color:set_output(output_name)
   local index = utils.search_idx(self._outputs, output_name, get_name)
   if index then
