@@ -1,4 +1,4 @@
-local utils = require "ccc.utils"
+local utils = require("ccc.utils")
 
 ---@class FloatOutput: ColorOutput
 local FloatOutput = {

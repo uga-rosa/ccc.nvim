@@ -1,4 +1,4 @@
-local utils   = require("ccc.utils")
+local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
 ---@class CssRgbOutput: ColorOutput
