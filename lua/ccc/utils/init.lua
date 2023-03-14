@@ -84,9 +84,14 @@ function utils.min(...)
 end
 
 ---@param float number
+---@param digit? integer
 ---@return integer
-function utils.round(float)
-  return math.floor(float + 0.5)
+function utils.round(float, digit)
+  if digit then
+    return math.floor(float * 10 ^ digit + 0.5) / 10 ^ digit
+  else
+    return math.floor(float + 0.5)
+  end
 end
 
 ---@param array any[]
