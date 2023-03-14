@@ -56,7 +56,7 @@ setmetatable(M, {
 
 ---@param opt? table
 function M.setup(opt)
-  vim.validate({ opt = { opt, "t", true} })
+  vim.validate({ opt = { opt, "t", true } })
   config.setup(opt or {})
 end
 
