@@ -165,6 +165,8 @@ function NamePicker:init()
     end, rgb)
   end
 
+  -- The color names are all alphabetical and be included in iskeyword.
+  -- Therefore, sorting is not necessary.
   self.regexp = vim.regex([[\<\%(]] .. table.concat(vim.tbl_keys(self.colorname), [[\|]]) .. [[\)\>]])
 end
 
