@@ -56,10 +56,8 @@ setmetatable(M, {
 
 ---@param opt? table
 function M.setup(opt)
-  opt = vim.F.if_nil(opt, {})
-  vim.validate({ opt = { opt, "t" } })
-
-  config.setup(opt)
+  vim.validate({ opt = { opt, "t", true} })
+  config.setup(opt or {})
 end
 
 ---@param b_color CccColor

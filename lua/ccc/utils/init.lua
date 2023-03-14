@@ -86,7 +86,6 @@ end
 ---@param float number
 ---@return integer
 function utils.round(float)
-  vim.validate({ float = { float, "n" } })
   return math.floor(float + 0.5)
 end
 
@@ -95,10 +94,6 @@ end
 ---@param func? function
 ---@return integer?
 function utils.search_idx(array, value, func)
-  vim.validate({
-    array = { array, "t" },
-    func = { func, "f", true },
-  })
   func = vim.F.if_nil(func, function(x)
     return x
   end)
