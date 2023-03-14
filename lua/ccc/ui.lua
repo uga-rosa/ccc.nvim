@@ -307,7 +307,7 @@ function UI:highlight()
   local point_color = config.get("point_color")
   local bar_len = config.get("bar_len")
   local bar_name_len = #self.color.input.bar_name[1]
-  -- The specification for ColorInput.format() specifies that it should be 6 bytes.
+  -- ColorInput.format() must return string of 6 bytes.
   local value_len = 6
   local row = 0
   for i, v in ipairs(self.color:get()) do
