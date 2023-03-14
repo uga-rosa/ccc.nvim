@@ -1,5 +1,4 @@
 local utils = require("ccc.utils")
-local sa = require("ccc.utils.safe_array")
 
 ---@class PrevColors
 ---@field ui UI
@@ -56,12 +55,12 @@ function PrevColors:show()
   ui.win_height = ui.win_height + 1
   ui:refresh()
 
-  local line = sa.new(self.colors)
-    :map(function(color)
-      return color:hex()
-    end)
-    :concat(" ")
-  utils.set_lines(ui.bufnr, ui.win_height - 1, ui.win_height, { line })
+  local colors = {}
+  for i, color in ipairs(self.colors) do
+    colors[i] = color:hex()
+  end
+
+  utils.set_lines(ui.bufnr, ui.win_height - 1, ui.win_height, { table.concat(colors, " ") })
 
   self.prev_pos = utils.cursor()
   if self:get() then
