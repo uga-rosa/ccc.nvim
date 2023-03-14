@@ -35,10 +35,7 @@ end
 ---@param OKLCH OKLCH
 ---@return RGB
 function OklchInput.to_rgb(OKLCH)
-  local RGB = convert.oklch2rgb(OKLCH)
-  return vim.tbl_map(function(x)
-    return utils.clamp(x, 0, 1)
-  end, RGB)
+  return convert.oklch2rgb(OKLCH)
 end
 
 return OklchInput

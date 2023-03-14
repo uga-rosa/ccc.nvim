@@ -5,6 +5,14 @@ local ok = require("ccc.utils.ok_colorspace")
 local convert = {}
 
 ---@param RGB RGB
+---@return RGB
+local function rgb_clamp(RGB)
+  return vim.tbl_map(function(x)
+    return utils.clamp(x, 0, 1)
+  end, RGB)
+end
+
+---@param RGB RGB
 ---@return integer R #0-255
 ---@return integer G #0-255
 ---@return integer B #0-255
@@ -24,7 +32,8 @@ end
 ---@param HSLuv HSLuv
 ---@return RGB
 function convert.hsluv2rgb(HSLuv)
-  return hsluv.hsluv_to_rgb(HSLuv)
+  local RGB = (hsluv.hsluv_to_rgb(HSLuv))
+  return rgb_clamp(RGB)
 end
 
 ---@param RGB RGB
@@ -92,7 +101,7 @@ function convert.hsl2rgb(HSL)
     RGB = { MAX, MIN, f(360 - H) }
   end
 
-  return RGB
+  return rgb_clamp(RGB)
 end
 
 ---@param RGB RGB
@@ -156,7 +165,7 @@ function convert.hsv2rgb(HSV)
     RGB = { MAX, MIN, f(360 - H) }
   end
 
-  return RGB
+  return rgb_clamp(RGB)
 end
 
 ---@param RGB RGB
@@ -182,11 +191,12 @@ function convert.cmyk2rgb(CMYK)
   if K == 1 then
     return { 0, 0, 0 }
   end
-  return {
+  local RGB = {
     (1 - C) * (1 - K),
     (1 - M) * (1 - K),
     (1 - Y) * (1 - K),
   }
+  return rgb_clamp(RGB)
 end
 
 ---@param RGB RGB
@@ -203,13 +213,14 @@ end
 ---@param Linear linearRGB
 ---@return RGB
 function convert.linear2rgb(Linear)
-  return vim.tbl_map(function(x)
+  local RGB = vim.tbl_map(function(x)
     if x <= 0.0031308 then
       return 12.92 * x
     else
       return 1.055 * x ^ (1 / 2.4) - 0.055
     end
   end, Linear)
+  return rgb_clamp(RGB)
 end
 
 ---@alias matrix number[][]
@@ -274,9 +285,7 @@ end
 function convert.xyz2rgb(XYZ)
   local Linear = convert.xyz2linear(XYZ)
   local RGB = convert.linear2rgb(Linear)
-  return vim.tbl_map(function(n)
-    return utils.clamp(n, 0, 1)
-  end, RGB)
+  return rgb_clamp(RGB)
 end
 
 ---@param XYZ XYZ
@@ -332,9 +341,7 @@ function convert.lab2rgb(Lab)
   local XYZ = convert.lab2xyz(Lab)
   local Linear = convert.xyz2linear(XYZ)
   local RGB = convert.linear2rgb(Linear)
-  return vim.tbl_map(function(x)
-    return utils.clamp(x, 0, 1)
-  end, RGB)
+  return rgb_clamp(RGB)
 end
 
 ---@param RGB RGB
@@ -346,7 +353,8 @@ end
 ---@param OKLab OKLab
 ---@return RGB
 function convert.oklab2rgb(OKLab)
-  return ok.oklab_to_srgb(OKLab)
+  local RGB = ok.oklab_to_srgb(OKLab)
+  return rgb_clamp(RGB)
 end
 
 ---@param RGB RGB
@@ -362,7 +370,8 @@ end
 function convert.okhsv2rgb(OKHSV)
   local h, s, v = unpack(OKHSV)
   h = h / 360
-  return ok.okhsv_to_srgb({ h, s, v })
+  local RGB = ok.okhsv_to_srgb({ h, s, v })
+  return rgb_clamp(RGB)
 end
 
 ---@param RGB RGB
@@ -378,7 +387,8 @@ end
 function convert.okhsl2rgb(OKHSL)
   local h, s, l = unpack(OKHSL)
   h = h / 360
-  return ok.okhsl_to_srgb({ h, s, l })
+  local RGB = ok.okhsl_to_srgb({ h, s, l })
+  return rgb_clamp(RGB)
 end
 
 ---@param RGB RGB
@@ -402,7 +412,7 @@ function convert.hwb2rgb(HWB)
   for i = 1, 3 do
     RGB[i] = RGB[i] * (1 - W - B) + W
   end
-  return RGB
+  return rgb_clamp(RGB)
 end
 
 ---@param Lab Lab
@@ -429,25 +439,31 @@ end
 ---@param RGB RGB
 ---@return LCH
 function convert.rgb2lch(RGB)
-  return convert.lab2lch(convert.rgb2lab(RGB))
+  local Lab = convert.rgb2lab(RGB)
+  return convert.lab2lch(Lab)
 end
 
 ---@param LCH LCH
 ---@return RGB
 function convert.lch2rgb(LCH)
-  return convert.lab2rgb(convert.lch2lab(LCH))
+  local Lab = convert.lch2lab(LCH)
+  local RGB = convert.lab2rgb(Lab)
+  return rgb_clamp(RGB)
 end
 
 ---@param RGB RGB
 ---@return OKLCH
 function convert.rgb2oklch(RGB)
-  return convert.lab2lch(convert.rgb2oklab(RGB))
+  local Lab = convert.rgb2oklab(RGB)
+  return convert.lab2lch(Lab)
 end
 
 ---@param OKLCH OKLCH
 ---@return RGB
 function convert.oklch2rgb(OKLCH)
-  return convert.oklab2rgb(convert.lch2lab(OKLCH))
+  local Lab = convert.lch2lab(OKLCH)
+  local RGB = convert.oklab2rgb(Lab)
+  return rgb_clamp(RGB)
 end
 
 return convert
