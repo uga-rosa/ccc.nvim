@@ -4,6 +4,7 @@ local M = {
   config = {},
 }
 
+---@param opt table
 function M.setup(opt)
   local default = require("ccc.config.default")
   if opt.disable_default_mappings then
@@ -46,11 +47,9 @@ function M.setup(opt)
   })
 
   if M.config.highlighter.auto_enable then
-    local aug_name = "ccc-highlighter-auto-enable"
-    api.nvim_create_augroup(aug_name, {})
     api.nvim_create_autocmd("BufEnter", {
       pattern = "*",
-      group = aug_name,
+      group = api.nvim_create_augroup("ccc-highlighter-auto-enable", {}),
       callback = function(args)
         local max_byte = M.config.highlighter.max_byte
         local ok, stats = pcall(vim.loop.fs_stat, args.file)
