@@ -1,3 +1,4 @@
+local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
 ---@class CssHslOutput: ColorOutput
@@ -10,14 +11,14 @@ local CssHslOutput = {
 ---@return string
 function CssHslOutput.str(RGB, A)
   local H, S, L = unpack(convert.rgb2hsl(RGB))
-  S = S * 100
-  L = L * 100
+  H = utils.round(H)
+  S = utils.round(S * 100)
+  L = utils.round(L * 100)
   if A then
-    local pattern = "hsl(%d %d%% %d%% / %d%%)"
-    return pattern:format(H, S, L, A * 100)
+    A = utils.round(A * 100)
+    return ("hsl(%d %d%% %d%% / %d%%)"):format(H, S, L, A)
   else
-    local pattern = "hsl(%d %d%% %d%%)"
-    return pattern:format(H, S, L)
+    return ("hsl(%d %d%% %d%%)"):format(H, S, L)
   end
 end
 

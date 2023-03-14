@@ -1,3 +1,4 @@
+local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
 ---@class CssOklchOutput: ColorOutput
@@ -10,13 +11,14 @@ local CssOklchOutput = {
 ---@return string
 function CssOklchOutput.str(RGB, A)
   local L, C, H = unpack(convert.rgb2oklch(RGB))
-  L = L * 100
+  L = utils.round(L * 100)
+  C = utils.round(C, 2)
+  H = utils.round(H)
   if A then
-    local pattern = "oklch(%d%% %d %d / %d%%)"
-    return pattern:format(L, C, H, A * 100)
+    A = utils.round(A * 100)
+    return ("oklch(%d%% %.2f %d / %d%%)"):format(L, C, H, A)
   else
-    local pattern = "oklch(%d%% %d %d)"
-    return pattern:format(L, C, H)
+    return ("oklch(%d%% %.2f %d)"):format(L, C, H)
   end
 end
 

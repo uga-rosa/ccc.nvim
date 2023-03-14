@@ -1,3 +1,4 @@
+local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
 ---@class CssHwbOutput: ColorOutput
@@ -10,14 +11,14 @@ local CssHwbOutput = {
 ---@return string
 function CssHwbOutput.str(RGB, A)
   local H, W, B = unpack(convert.rgb2hwb(RGB))
-  W = W * 100
-  B = B * 100
+  H = utils.round(H)
+  W = utils.round(W * 100)
+  B = utils.round(B * 100)
   if A then
-    local pattern = "hwb(%d %d%% %d%% / %d%%)"
-    return pattern:format(H, W, B, A * 100)
+    A = utils.round(A * 100)
+    return ("hwb(%d %d%% %d%% / %d%%)"):format(H, W, B, A)
   else
-    local pattern = "hwb(%d %d%% %d%%)"
-    return pattern:format(H, W, B)
+    return ("hwb(%d %d%% %d%%)"):format(H, W, B)
   end
 end
 

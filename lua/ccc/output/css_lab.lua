@@ -1,3 +1,4 @@
+local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
 ---@class CssLabOutput: ColorOutput
@@ -10,12 +11,14 @@ local CssLabOutput = {
 ---@return string
 function CssLabOutput.str(RGB, A)
   local L, a, b = unpack(convert.rgb2lab(RGB))
+  L = utils.round(L)
+  a = utils.round(a)
+  b = utils.round(b)
   if A then
-    local pattern = "lab(%d%% %d %d / %d%%)"
-    return pattern:format(L, a, b, A * 100)
+    A = utils.round(A * 100)
+    return ("lab(%d%% %d %d / %d%%)"):format(L, a, b, A)
   else
-    local pattern = "lab(%d%% %d %d)"
-    return pattern:format(L, a, b)
+    return ("lab(%d%% %d %d)"):format(L, a, b)
   end
 end
 

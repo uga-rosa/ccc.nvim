@@ -1,3 +1,4 @@
+local utils   = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
 ---@class CssRgbOutput: ColorOutput
@@ -10,12 +11,14 @@ local CssRgbOutput = {
 ---@return string
 function CssRgbOutput.str(RGB, A)
   local R, G, B = convert.rgb_format(RGB)
+  R = utils.round(R)
+  G = utils.round(G)
+  B = utils.round(B)
   if A then
-    local pattern = "rgb(%d %d %d / %d%%)"
-    return pattern:format(R, G, B, A * 100)
+    A = utils.round(A * 100)
+    return ("rgb(%d %d %d / %d%%)"):format(R, G, B, A)
   else
-    local pattern = "rgb(%d %d %d)"
-    return pattern:format(R, G, B)
+    return ("rgb(%d %d %d)"):format(R, G, B)
   end
 end
 
