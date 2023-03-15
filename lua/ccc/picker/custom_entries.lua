@@ -27,7 +27,10 @@ function CustomEntries:init()
       self.rgb[name] = { parse.hex(r), parse.hex(g), parse.hex(b) }
     end
   end
-  -- Sort names to match the longest word at first.
+  -- Sort names to match the longest “word” at first.
+  -- If more than one branch matches, the first one is used.
+  -- Since keys are not guaranteed to be in 'iskeyword',
+  -- we should order them from the longest to the shortest.
   table.sort(patterns, function(a, b)
     return #a.plain > #b.plain
   end)
