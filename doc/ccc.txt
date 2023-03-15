@@ -19,14 +19,15 @@ Action							|ccc-action|
 Introduction                                                  *ccc-introduction*
 
 
-Use the sliders, easy, to create any color you want!
+Use the colorful sliders, easy, to create any color you want!
 
 Features:
-- RGB, HSL, CMYK, and other color space sliders for color adjustment.
+- No dependency.
+- RGB, HSL, CMYK, and other color space sliders for color creation.
 - Dynamic highlighting of sliders.
 - Restore previously used colors.
 - Selectable output formats.
-- Transparent slider (for css `rgb()`/`hsl()`).
+- Transparent slider for css functions (e.g. `rgb()`, `hsl()`)
 - Fast colorizer.
 
 
@@ -47,7 +48,12 @@ See |ccc-option| for the options that can be used.
 	local mapping = ccc.mapping
 	
 	ccc.setup({
-		-- Your favorite settings
+	  -- Your preferred settings
+	  -- Example: enable highlighter
+	  highlighter = {
+	    auto_enable = true,
+	    lsp = true,
+	  },
 	})
 <
 
@@ -386,12 +392,12 @@ Default: See |ccc-action|
 	local mapping = ccc.mapping
 
 	ccc.setup({
-		-- Disable all default mappings
-		-- disable_default_mappings = true
-		mappings = {
-			-- Disable only 'q' (|ccc-action-quit|)
-			q = mapping.none
-		}
+	  -- Disable all default mappings
+	  -- disable_default_mappings = true
+	  mappings = {
+	    -- Disable only 'q' (|ccc-action-quit|)
+	    q = mapping.none
+	  }
 	})
 <
 
