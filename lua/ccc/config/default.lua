@@ -11,9 +11,9 @@ return {
   ---@type string hex
   default_color = "#000000",
   ---@type string
-  bar_char = "■",
+  bar_char = "█",
   ---@type string
-  point_char = "◇",
+  point_char = "◊",
   ---@type string hex
   point_color = "",
   ---@type integer
