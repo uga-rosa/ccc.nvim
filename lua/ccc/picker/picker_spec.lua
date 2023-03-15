@@ -7,11 +7,12 @@ local css_lch = require("ccc.picker.css_lch")
 local css_oklab = require("ccc.picker.css_oklab")
 local css_oklch = require("ccc.picker.css_oklch")
 local css_name = require("ccc.picker.css_name")
+local custom_entries = require("ccc.picker.custom_entries")
 
 ---@param module ColorPicker
 ---@param str string
 ---@param expect_rgb integer[] #range in [0-255]
----@param expect_alpha Alpha
+---@param expect_alpha Alpha?
 local function test(module, str, expect_rgb, expect_alpha)
   local start, end_, rgb, alpha = module:parse_color(str)
   assert.equals(2, start)
@@ -196,5 +197,15 @@ describe("Color detection test", function()
   it("Named Colors", function()
     test(css_name, " yellow ", { 255, 255, 0 }, nil)
     test(css_name, " yellowgreen ", { 154, 205, 50 }, nil)
+  end)
+
+  it("Custom Entries", function()
+    test(custom_entries({ red = "#ff0000" }), " red ", { 255, 0, 0 }, nil)
+    test(custom_entries({ [ [[foo\bar]] ] = "#ff0000" }), [[ foo\bar ]], { 255, 0, 0 }, nil)
+
+    local orig = vim.opt.iskeyword:get()
+    vim.opt.iskeyword = { "@", "48-57", "_", "128-167", "224-235" } -- default for Lua
+    test(custom_entries({ red = "#ff0000", ["red-green"] = "#ffff00" }), " red-green ", { 255, 255, 0 }, nil)
+    vim.opt.iskeyword = orig
   end)
 end)

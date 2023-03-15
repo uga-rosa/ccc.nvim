@@ -40,6 +40,7 @@ local M = {
     css_lch = require("ccc.picker.css_lch"),
     css_oklab = require("ccc.picker.css_oklab"),
     css_oklch = require("ccc.picker.css_oklch"),
+    custom_entries = require("ccc.picker.custom_entries"),
   },
   mapping = {},
 }
