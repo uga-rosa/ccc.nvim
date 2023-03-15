@@ -74,14 +74,14 @@ Default: "#000000"
                                                            *ccc-option-bar-char*
 bar_char ~
 string
-Default: "■"
+Default: "█"
 	The character used for the sliders.
 
 
                                                          *ccc-option-point-char*
 point_char ~
 string
-Default: "◇"
+Default: "◊"
 	The character used for the cursor point on the sliders.
 
 
