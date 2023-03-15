@@ -201,7 +201,11 @@ describe("Color detection test", function()
 
   it("Custom Entries", function()
     test(custom_entries({ red = "#ff0000" }), " red ", { 255, 0, 0 }, nil)
-    test(custom_entries({ red = "#ff0000", Alfred = "#00ff00" }), " Alfred ", { 0, 255, 0 }, nil)
     test(custom_entries({ [ [[foo\bar]] ] = "#ff0000" }), [[ foo\bar ]], { 255, 0, 0 }, nil)
+
+    local orig = vim.opt.iskeyword:get()
+    vim.opt.iskeyword = { "@", "48-57", "_", "128-167", "224-235" } -- default for Lua
+    test(custom_entries({ red = "#ff0000", ["red-green"] = "#ffff00" }), " red-green ", { 255, 255, 0 }, nil)
+    vim.opt.iskeyword = orig
   end)
 end)
