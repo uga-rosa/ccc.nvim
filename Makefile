@@ -7,4 +7,4 @@ luacheck:
 
 .PHONY: vusted
 vusted:
-	vusted ./lua
+	vusted ./test
