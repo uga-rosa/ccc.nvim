@@ -20,13 +20,13 @@ See [doc](./doc/ccc.txt) for details.
 
 # GIF 
 
-## Selectable input/output mode
+## Seamless mode change
 
-![toggle](https://user-images.githubusercontent.com/82267684/190847776-81763c84-2662-4693-97df-b15e8d9115ec.gif)
+![cccpick](https://user-images.githubusercontent.com/82267684/225461164-a36d4ad3-da49-4124-b957-e0749f14fa05.gif)
 
 ## Restore previously used colors
 
-![prev](https://user-images.githubusercontent.com/82267684/190847777-e1f434f9-a8f9-4cb9-b496-cbd849e71a9c.gif)
+![restore](https://user-images.githubusercontent.com/82267684/225461172-4c3e17af-99b6-4da9-8216-c00dc20c7a40.gif)
 
 ## Colorizer
 
