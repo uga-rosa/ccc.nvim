@@ -43,4 +43,4 @@ See [doc](./doc/ccc.txt) for details.
 - Advanced settings
 - See wiki
 
-![multi](https://user-images.githubusercontent.com/82267684/190847778-751e7656-985b-47e7-890f-91339ee354e9.gif)
+![multi](https://user-images.githubusercontent.com/82267684/225504962-bf71730e-e681-4ee3-8a26-f949b1973e71.gif)
