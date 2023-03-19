@@ -18,11 +18,11 @@ local Color = {}
 ---@return CccColor
 function Color.new(input_name, output_name, alpha)
   local self = setmetatable({
-    _inputs = config.get("inputs"),
+    _inputs = {},
     _outputs = config.get("outputs"),
     alpha = alpha,
   }, { __index = Color })
-  for i, input in ipairs(self._inputs) do
+  for i, input in ipairs(config.get("inputs")) do
     self._inputs[i] = input:new()
   end
 
