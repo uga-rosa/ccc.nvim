@@ -19,7 +19,7 @@ end
 ---@param replacement string
 ---@return string
 function RegExp.gsub(text, pattern, replacement)
-  return vim.fn.substitute(text, pattern, replacement, 'g')
+  return vim.fn.substitute(text, pattern, replacement, "g")
 end
 
 ---Match pattern in text for specified position.
@@ -30,8 +30,8 @@ end
 function RegExp.extract_at(text, pattern, pos)
   local before_text = text:sub(1, pos - 1)
   local after_text = text:sub(pos)
-  local b_s, _ = RegExp.get(pattern .. '$'):match_str(before_text)
-  local _, a_e = RegExp.get('^' .. pattern):match_str(after_text)
+  local b_s, _ = RegExp.get(pattern .. "$"):match_str(before_text)
+  local _, a_e = RegExp.get("^" .. pattern):match_str(after_text)
   if b_s or a_e then
     b_s = b_s or #before_text
     a_e = #before_text + (a_e or 0)

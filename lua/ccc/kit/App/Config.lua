@@ -1,5 +1,5 @@
-local kit = require('ccc.kit')
-local Cache = require('ccc.kit.App.Cache')
+local kit = require("ccc.kit")
+local Cache = require("ccc.kit.App.Cache")
 
 ---@class ccc.kit.App.Config.Schema
 
@@ -58,7 +58,7 @@ end
 ---Get current configuration.
 ---@return ccc.kit.App.Config.Schema
 function Config:get()
-  local filetype = vim.api.nvim_buf_get_option(0, 'filetype')
+  local filetype = vim.api.nvim_buf_get_option(0, "filetype")
   local bufnr = vim.api.nvim_get_current_buf()
   return self._cache:ensure({
     tostring(self._global.revision or 0),

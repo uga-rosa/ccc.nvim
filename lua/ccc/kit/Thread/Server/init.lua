@@ -1,5 +1,5 @@
-local uv = require('luv')
-local Session = require('ccc.kit.Thread.Server.Session')
+local uv = require("luv")
+local Session = require("ccc.kit.Thread.Server.Session")
 
 ---Return current executing file directory.
 ---@return string
@@ -34,20 +34,20 @@ end
 ---Connect to server.
 ---@return ccc.kit.Async.AsyncTask
 function Server:connect()
-  self.process = uv.spawn('nvim', {
+  self.process = uv.spawn("nvim", {
     cwd = uv.cwd(),
     args = {
-      '--headless',
-      '--noplugin',
-      '-l',
-      ('%s/_bootstrap.lua'):format(dirname()),
-      vim.o.runtimepath
+      "--headless",
+      "--noplugin",
+      "-l",
+      ("%s/_bootstrap.lua"):format(dirname()),
+      vim.o.runtimepath,
     },
-    stdio = { self.stdin, self.stdout, self.stderr }
+    stdio = { self.stdin, self.stdout, self.stderr },
   })
   self.session = Session.new(self.stdout, self.stdin)
-  return self.session:request('connect', {
-    dispatcher = string.dump(self.dispatcher)
+  return self.session:request("connect", {
+    dispatcher = string.dump(self.dispatcher),
   })
 end
 
@@ -56,7 +56,7 @@ end
 ---@param params table
 function Server:request(method, params)
   if not self.process then
-    error('Server is not connected.')
+    error("Server is not connected.")
   end
   return self.session:request(method, params)
 end
@@ -66,7 +66,7 @@ end
 ---@param params table
 function Server:notify(method, params)
   if not self.process then
-    error('Server is not connected.')
+    error("Server is not connected.")
   end
   self.session:notify(method, params)
 end
@@ -74,7 +74,7 @@ end
 ---Kill server process.
 function Server:kill()
   if self.process then
-    local ok, err = self.process:kill('SIGINT')
+    local ok, err = self.process:kill("SIGINT")
     if not ok then
       error(err)
     end

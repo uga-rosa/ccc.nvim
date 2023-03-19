@@ -1,5 +1,5 @@
-local mpack = require('mpack')
-local Async = require('ccc.kit.Async')
+local mpack = require("mpack")
+local Async = require("ccc.kit.Async")
 
 ---Encode data to msgpack.
 ---@param v any
@@ -38,21 +38,24 @@ function Session.new(reader, writer)
     local length = #data
     while offset <= length do
       local type, id_or_cb, method_or_error, params_or_result, new_offset = self.mpack_session:receive(data, offset)
-      if type == 'request' then
+      if type == "request" then
         local request_id, method, params = id_or_cb, method_or_error, params_or_result
-        Async.resolve():next(function()
-          return Async.run(function()
-            return self.on_request[method](params)
+        Async.resolve()
+          :next(function()
+            return Async.run(function()
+              return self.on_request[method](params)
+            end)
           end)
-        end):next(function(res)
-          self.writer:write(self.mpack_session:reply(request_id) .. encode(mpack.NIL) .. encode(res))
-        end):catch(function(err_)
-          self.writer:write(self.mpack_session:reply(request_id) .. encode(err_) .. encode(mpack.NIL))
-        end)
-      elseif type == 'notification' then
+          :next(function(res)
+            self.writer:write(self.mpack_session:reply(request_id) .. encode(mpack.NIL) .. encode(res))
+          end)
+          :catch(function(err_)
+            self.writer:write(self.mpack_session:reply(request_id) .. encode(err_) .. encode(mpack.NIL))
+          end)
+      elseif type == "notification" then
         local method, params = method_or_error, params_or_result
         self.on_notification[method](params)
-      elseif type == 'response' then
+      elseif type == "response" then
         local callback, err_, res = id_or_cb, method_or_error, params_or_result
         if err_ == mpack.NIL then
           callback(nil, res)

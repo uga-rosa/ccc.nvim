@@ -1,5 +1,5 @@
-local kit = require('ccc.kit')
-local Async = require('ccc.kit.Async')
+local kit = require("ccc.kit")
+local Async = require("ccc.kit.Async")
 
 ---@alias ccc.kit.Vim.Keymap.Keys { keys: string, remap: boolean }
 ---@alias ccc.kit.Vim.Keymap.KeysSpecifier string|{ keys: string, remap: boolean }
@@ -7,7 +7,7 @@ local Async = require('ccc.kit.Async')
 ---@param keys ccc.kit.Vim.Keymap.KeysSpecifier
 ---@return ccc.kit.Vim.Keymap.Keys
 local function to_keys(keys)
-  if type(keys) == 'table' then
+  if type(keys) == "table" then
     return keys
   end
   return { keys = keys, remap = false }
@@ -28,7 +28,7 @@ end
 ---@param callback fun()
 ---@return ccc.kit.Async.AsyncTask
 function Keymap.next(callback)
-  return Keymap.send(''):next(callback)
+  return Keymap.send(""):next(callback)
 end
 
 ---Send keys.
@@ -44,14 +44,14 @@ function Keymap.send(keys, no_insert)
     if no_insert then
       for _, keys_ in ipairs(kit.to_array(keys)) do
         keys_ = to_keys(keys_)
-        vim.api.nvim_feedkeys(keys_.keys, keys_.remap and 'm' or 'n', true)
+        vim.api.nvim_feedkeys(keys_.keys, keys_.remap and "m" or "n", true)
       end
-      vim.api.nvim_feedkeys(callback, 'n', true)
+      vim.api.nvim_feedkeys(callback, "n", true)
     else
-      vim.api.nvim_feedkeys(callback, 'in', true)
+      vim.api.nvim_feedkeys(callback, "in", true)
       for _, keys_ in ipairs(kit.reverse(kit.to_array(keys))) do
         keys_ = to_keys(keys_)
-        vim.api.nvim_feedkeys(keys_.keys, 'i' .. (keys_.remap and 'm' or 'n'), true)
+        vim.api.nvim_feedkeys(keys_.keys, "i" .. (keys_.remap and "m" or "n"), true)
       end
     end
   end):catch(function()
@@ -72,9 +72,9 @@ end
 ---@param spec fun(): any
 function Keymap.spec(spec)
   local task = Async.resolve():next(Async.async(spec))
-  vim.api.nvim_feedkeys('', 'x', true)
+  vim.api.nvim_feedkeys("", "x", true)
   task:sync()
-  collectgarbage('collect')
+  collectgarbage("collect")
   vim.wait(200)
 end
 

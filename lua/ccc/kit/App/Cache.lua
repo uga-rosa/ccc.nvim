@@ -3,8 +3,8 @@
 ---@param key string[]|string
 ---@return string
 local function _key(key)
-  if type(key) == 'table' then
-    return table.concat(key, ':')
+  if type(key) == "table" then
+    return table.concat(key, ":")
   end
   return key
 end

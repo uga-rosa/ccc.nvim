@@ -1,4 +1,4 @@
-local AsyncTask = require('ccc.kit.Async.AsyncTask')
+local AsyncTask = require("ccc.kit.Async.AsyncTask")
 
 local Async = {}
 
@@ -67,7 +67,7 @@ function Async.async(runner)
       Async.___threads___[thread] = 1
 
       local function next_step(ok, v)
-        if coroutine.status(thread) == 'dead' then
+        if coroutine.status(thread) == "dead" then
           Async.___threads___[thread] = nil
           if AsyncTask.is(v) then
             v:dispatch(resolve, reject)
@@ -98,10 +98,10 @@ end
 ---@return any
 function Async.await(task)
   if not Async.___threads___[coroutine.running()] then
-    error('`Async.await` must be called in async context.')
+    error("`Async.await` must be called in async context.")
   end
   if not AsyncTask.is(task) then
-    error('`Async.await` must be called with AsyncTask.')
+    error("`Async.await` must be called with AsyncTask.")
   end
 
   local ok, res = coroutine.yield(task)

@@ -1,4 +1,4 @@
-local LSP = require('ccc.kit.LSP')
+local LSP = require("ccc.kit.LSP")
 
 local Position = {}
 
@@ -7,7 +7,7 @@ local Position = {}
 ---@return boolean
 function Position.is(v)
   local is = true
-  is = is and (type(v) == 'table' and type(v.line) == 'number' and type(v.character) == 'number')
+  is = is and (type(v) == "table" and type(v.line) == "number" and type(v.character) == "number")
   return is
 end
 
@@ -40,7 +40,7 @@ function Position.to(text, position, from_encoding, to_encoding)
   elseif to_encoding == LSP.PositionEncodingKind.UTF32 then
     return Position.to_utf32(text, position, from_encoding)
   end
-  error('LSP.Position: Unsupported encoding: ' .. to_encoding)
+  error("LSP.Position: Unsupported encoding: " .. to_encoding)
 end
 
 ---Convert position to utf8 from specified encoding.

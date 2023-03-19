@@ -1,7 +1,7 @@
-local uv = require('luv')
-local Async = require('ccc.kit.Async')
+local uv = require("luv")
+local Async = require("ccc.kit.Async")
 
-local is_windows = uv.os_uname().sysname:lower() == 'windows'
+local is_windows = uv.os_uname().sysname:lower() == "windows"
 
 ---@see https://github.com/luvit/luvit/blob/master/deps/fs.lua
 local IO = {}
@@ -27,24 +27,24 @@ local IO = {}
 
 ---@enum ccc.kit.IO.UV.AccessMode
 IO.AccessMode = {
-  r = 'r',
-  rs = 'rs',
-  sr = 'sr',
-  ['r+'] = 'r+',
-  ['rs+'] = 'rs+',
-  ['sr+'] = 'sr+',
-  w = 'w',
-  wx = 'wx',
-  xw = 'xw',
-  ['w+'] = 'w+',
-  ['wx+'] = 'wx+',
-  ['xw+'] = 'xw+',
-  a = 'a',
-  ax = 'ax',
-  xa = 'xa',
-  ['a+'] = 'a+',
-  ['ax+'] = 'ax+',
-  ['xa+'] = 'xa+',
+  r = "r",
+  rs = "rs",
+  sr = "sr",
+  ["r+"] = "r+",
+  ["rs+"] = "rs+",
+  ["sr+"] = "sr+",
+  w = "w",
+  wx = "wx",
+  xw = "xw",
+  ["w+"] = "w+",
+  ["wx+"] = "wx+",
+  ["xw+"] = "xw+",
+  a = "a",
+  ax = "ax",
+  xa = "xa",
+  ["a+"] = "a+",
+  ["ax+"] = "ax+",
+  ["xa+"] = "xa+",
 }
 
 ---@enum ccc.kit.IO.WalkStatus
@@ -104,9 +104,11 @@ IO.fs_realpath = Async.promisify(uv.fs_realpath)
 function IO.is_directory(path)
   path = IO.normalize(path)
   return Async.run(function()
-    return IO.fs_stat(path):catch(function()
-      return {}
-    end):await().type == 'directory'
+    return IO.fs_stat(path)
+      :catch(function()
+        return {}
+      end)
+      :await().type == "directory"
   end)
 end
 
@@ -118,7 +120,7 @@ function IO.read_file(path, chunk_size)
   chunk_size = chunk_size or 1024
   return Async.run(function()
     local stat = IO.fs_stat(path):await()
-    local fd = IO.fs_open(path, IO.AccessMode.r, tonumber('755', 8)):await()
+    local fd = IO.fs_open(path, IO.AccessMode.r, tonumber("755", 8)):await()
     local ok, res = pcall(function()
       local chunks = {}
       local offset = 0
@@ -130,7 +132,7 @@ function IO.read_file(path, chunk_size)
         table.insert(chunks, chunk)
         offset = offset + #chunk
       end
-      return table.concat(chunks, ''):sub(1, stat.size - 1) -- remove EOF.
+      return table.concat(chunks, ""):sub(1, stat.size - 1) -- remove EOF.
     end)
     IO.fs_close(fd):await()
     if not ok then
@@ -146,9 +148,9 @@ end
 ---@param chunk_size? integer
 function IO.write_file(path, content, chunk_size)
   chunk_size = chunk_size or 1024
-  content = content .. '\n' -- add EOF.
+  content = content .. "\n" -- add EOF.
   return Async.run(function()
-    local fd = IO.fs_open(path, IO.AccessMode.w, tonumber('755', 8)):await()
+    local fd = IO.fs_open(path, IO.AccessMode.w, tonumber("755", 8)):await()
     local ok, err = pcall(function()
       local offset = 0
       while offset < #content do
@@ -178,7 +180,7 @@ function IO.mkdir(path, mode, option)
     else
       local not_exists = {}
       local current = path
-      while current ~= '/' do
+      while current ~= "/" do
         local stat = IO.fs_stat(current):catch(function() end):await()
         if stat then
           break
@@ -202,16 +204,16 @@ function IO.rm(start_path, option)
   option.recursive = option.recursive or false
   return Async.run(function()
     local stat = IO.fs_stat(start_path):await()
-    if stat.type == 'directory' then
+    if stat.type == "directory" then
       local children = IO.scandir(start_path):await()
       if not option.recursive and #children > 0 then
-        error(('IO.rm: `%s` is a directory and not empty.'):format(start_path))
+        error(("IO.rm: `%s` is a directory and not empty."):format(start_path))
       end
       IO.walk(start_path, function(err, entry)
         if err then
-          error('IO.rm: ' .. tostring(err))
+          error("IO.rm: " .. tostring(err))
         end
-        if entry.type == 'directory' then
+        if entry.type == "directory" then
           IO.fs_rmdir(entry.path):await()
         else
           IO.fs_unlink(entry.path):await()
@@ -235,16 +237,16 @@ function IO.cp(from, to, option)
   option.recursive = option.recursive or false
   return Async.run(function()
     local stat = IO.fs_stat(from):await()
-    if stat.type == 'directory' then
+    if stat.type == "directory" then
       if not option.recursive then
-        error(('IO.cp: `%s` is a directory.'):format(from))
+        error(("IO.cp: `%s` is a directory."):format(from))
       end
       IO.walk(from, function(err, entry)
         if err then
-          error('IO.cp: ' .. tostring(err))
+          error("IO.cp: " .. tostring(err))
         end
         local new_path = entry.path:gsub(vim.pesc(from), to)
-        if entry.type == 'directory' then
+        if entry.type == "directory" then
           IO.mkdir(new_path, tonumber(stat.mode, 10), { recursive = true }):await()
         else
           IO.fs_copyfile(entry.path, new_path):await()
@@ -279,7 +281,7 @@ function IO.walk(start_path, callback, option)
         return status
       end
       for entry in iter_entries do
-        if entry.type == 'directory' then
+        if entry.type == "directory" then
           if walk_pre(entry) == IO.WalkStatus.Break then
             return IO.WalkStatus.Break
           end
@@ -299,7 +301,7 @@ function IO.walk(start_path, callback, option)
         return callback(iter_entries, dir)
       end
       for entry in iter_entries do
-        if entry.type == 'directory' then
+        if entry.type == "directory" then
           if walk_post(entry) == IO.WalkStatus.Break then
             return IO.WalkStatus.Break
           end
@@ -313,12 +315,12 @@ function IO.walk(start_path, callback, option)
     end
 
     if not IO.is_directory(start_path) then
-      error(('IO.walk: `%s` is not a directory.'):format(start_path))
+      error(("IO.walk: `%s` is not a directory."):format(start_path))
     end
     if option.postorder then
-      walk_post({ path = start_path, type = 'directory' })
+      walk_post({ path = start_path, type = "directory" })
     else
-      walk_pre({ path = start_path, type = 'directory' })
+      walk_pre({ path = start_path, type = "directory" })
     end
   end)
 end
@@ -369,11 +371,11 @@ end
 ---@return string
 function IO.normalize(path)
   if is_windows then
-    path = path:gsub('\\', '/')
+    path = path:gsub("\\", "/")
   end
 
   -- remove trailing slash.
-  if path:sub(-1) == '/' then
+  if path:sub(-1) == "/" then
     path = path:sub(1, -2)
   end
 
@@ -383,23 +385,23 @@ function IO.normalize(path)
   end
 
   -- homedir.
-  if path:sub(1, 1) == '~' then
+  if path:sub(1, 1) == "~" then
     path = IO.join(uv.os_homedir(), path:sub(2))
   end
 
   -- absolute.
-  if path:sub(1, 1) == '/' then
-    return path:sub(-1) == '/' and path:sub(1, -2) or path
+  if path:sub(1, 1) == "/" then
+    return path:sub(-1) == "/" and path:sub(1, -2) or path
   end
 
   -- resolve relative path.
   local up = uv.cwd()
-  up = up:sub(-1) == '/' and up:sub(1, -2) or up
+  up = up:sub(-1) == "/" and up:sub(1, -2) or up
   while true do
-    if path:sub(1, 3) == '../' then
+    if path:sub(1, 3) == "../" then
       path = path:sub(4)
       up = IO.dirname(up)
-    elseif path:sub(1, 2) == './' then
+    elseif path:sub(1, 2) == "./" then
       path = path:sub(3)
     else
       break
@@ -413,20 +415,20 @@ end
 ---@param path string
 ---@return string
 function IO.join(base, path)
-  if base:sub(-1) == '/' then
+  if base:sub(-1) == "/" then
     base = base:sub(1, -2)
   end
-  return base .. '/' .. path
+  return base .. "/" .. path
 end
 
 ---Return the path of the current working directory.
 ---@param path string
 ---@return string
 function IO.dirname(path)
-  if path:sub(-1) == '/' then
+  if path:sub(-1) == "/" then
     path = path:sub(1, -2)
   end
-  return (path:gsub('/[^/]+$', ''))
+  return (path:gsub("/[^/]+$", ""))
 end
 
 if is_windows then
@@ -434,14 +436,14 @@ if is_windows then
   ---@param path string
   ---@return boolean
   function IO.is_absolute(path)
-    return path:sub(1, 1) == '/' or path:match('^%a://')
+    return path:sub(1, 1) == "/" or path:match("^%a://")
   end
 else
   ---Return the path is absolute or not.
   ---@param path string
   ---@return boolean
   function IO.is_absolute(path)
-    return path:sub(1, 1) == '/'
+    return path:sub(1, 1) == "/"
   end
 end
 

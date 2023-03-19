@@ -1,7 +1,7 @@
 vim.o.runtimepath = _G.arg[1]
 
-local uv = require('luv')
-local Session = require('ccc.kit.Thread.Server.Session')
+local uv = require("luv")
+local Session = require("ccc.kit.Thread.Server.Session")
 
 local stdin = uv.new_pipe()
 stdin:open(0)
@@ -15,5 +15,5 @@ function session.on_request.connect(params)
 end
 
 while true do
-  uv.run('once')
+  uv.run("once")
 end

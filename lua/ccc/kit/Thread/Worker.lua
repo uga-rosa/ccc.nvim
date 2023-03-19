@@ -1,5 +1,5 @@
-local uv = require('luv')
-local AsyncTask = require('ccc.kit.Async.AsyncTask')
+local uv = require("luv")
+local AsyncTask = require("ccc.kit.Async.AsyncTask")
 
 ---@class ccc.kit.Thread.WorkerOption
 ---@field public runtimepath string[]
@@ -25,14 +25,14 @@ function Worker:__call(...)
       option = vim.mpack.decode(option)
 
       --Initialize cwd.
-      require('luv').chdir(option.cwd)
+      require("luv").chdir(option.cwd)
 
       --Initialize package.loaders.
       table.insert(package.loaders, 2, vim._load_package)
 
       --Run runner function.
       local ok, res = pcall(function()
-        return require('ccc.kit.Async.AsyncTask').resolve(assert(loadstring(runner))(unpack(args))):sync()
+        return require("ccc.kit.Async.AsyncTask").resolve(assert(loadstring(runner))(unpack(args))):sync()
       end)
 
       res = vim.mpack.encode({ res })

@@ -1,5 +1,5 @@
-local uv = require('luv')
-local kit = require('ccc.kit')
+local uv = require("luv")
+local kit = require("ccc.kit")
 
 local is_thread = vim.is_thread()
 
@@ -51,7 +51,7 @@ AsyncTask.Status = {
 ---Handle unhandled rejection.
 ---@param err any
 function AsyncTask.on_unhandled_rejection(err)
-  error('AsyncTask.on_unhandled_rejection: ' .. tostring(err))
+  error("AsyncTask.on_unhandled_rejection: " .. tostring(err))
 end
 
 ---Return the value is AsyncTask or not.
@@ -153,7 +153,7 @@ function AsyncTask:sync(timeout)
       if self.status ~= AsyncTask.Status.Pending then
         break
       end
-      uv.run('once')
+      uv.run("once")
     end
   else
     vim.wait(timeout or 24 * 60 * 60 * 1000, function()
@@ -164,7 +164,7 @@ function AsyncTask:sync(timeout)
     error(self.value, 2)
   end
   if self.status ~= AsyncTask.Status.Fulfilled then
-    error('AsyncTask:sync is timeout.', 2)
+    error("AsyncTask:sync is timeout.", 2)
   end
   return self.value
 end
@@ -173,7 +173,7 @@ end
 ---@param schedule? boolean
 ---@return any
 function AsyncTask:await(schedule)
-  local Async = require('ccc.kit.Async')
+  local Async = require("ccc.kit.Async")
   local ok, res = pcall(Async.await, self)
   if not ok then
     error(res, 2)

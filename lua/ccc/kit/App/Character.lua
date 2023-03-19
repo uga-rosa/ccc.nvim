@@ -4,19 +4,19 @@ local Character = {}
 
 ---@type table<integer, string>
 Character.alpha = {}
-string.gsub('abcdefghijklmnopqrstuvwxyz', '.', function(char)
+string.gsub("abcdefghijklmnopqrstuvwxyz", ".", function(char)
   Character.alpha[string.byte(char)] = char
 end)
 
 ---@type table<integer, string>
 Character.digit = {}
-string.gsub('1234567890', '.', function(char)
+string.gsub("1234567890", ".", function(char)
   Character.digit[string.byte(char)] = char
 end)
 
 ---@type table<integer, string>
 Character.white = {}
-string.gsub(' \t\n', '.', function(char)
+string.gsub(" \t\n", ".", function(char)
   Character.white[string.byte(char)] = char
 end)
 

@@ -2,49 +2,49 @@ local LSP = {}
 
 ---@enum ccc.kit.LSP.SemanticTokenTypes
 LSP.SemanticTokenTypes = {
-  namespace = 'namespace',
-  type = 'type',
-  class = 'class',
-  enum = 'enum',
-  interface = 'interface',
-  struct = 'struct',
-  typeParameter = 'typeParameter',
-  parameter = 'parameter',
-  variable = 'variable',
-  property = 'property',
-  enumMember = 'enumMember',
-  event = 'event',
-  ['function'] = 'function',
-  method = 'method',
-  macro = 'macro',
-  keyword = 'keyword',
-  modifier = 'modifier',
-  comment = 'comment',
-  string = 'string',
-  number = 'number',
-  regexp = 'regexp',
-  operator = 'operator',
-  decorator = 'decorator',
+  namespace = "namespace",
+  type = "type",
+  class = "class",
+  enum = "enum",
+  interface = "interface",
+  struct = "struct",
+  typeParameter = "typeParameter",
+  parameter = "parameter",
+  variable = "variable",
+  property = "property",
+  enumMember = "enumMember",
+  event = "event",
+  ["function"] = "function",
+  method = "method",
+  macro = "macro",
+  keyword = "keyword",
+  modifier = "modifier",
+  comment = "comment",
+  string = "string",
+  number = "number",
+  regexp = "regexp",
+  operator = "operator",
+  decorator = "decorator",
 }
 
 ---@enum ccc.kit.LSP.SemanticTokenModifiers
 LSP.SemanticTokenModifiers = {
-  declaration = 'declaration',
-  definition = 'definition',
-  readonly = 'readonly',
-  static = 'static',
-  deprecated = 'deprecated',
-  abstract = 'abstract',
-  async = 'async',
-  modification = 'modification',
-  documentation = 'documentation',
-  defaultLibrary = 'defaultLibrary',
+  declaration = "declaration",
+  definition = "definition",
+  readonly = "readonly",
+  static = "static",
+  deprecated = "deprecated",
+  abstract = "abstract",
+  async = "async",
+  modification = "modification",
+  documentation = "documentation",
+  defaultLibrary = "defaultLibrary",
 }
 
 ---@enum ccc.kit.LSP.DocumentDiagnosticReportKind
 LSP.DocumentDiagnosticReportKind = {
-  Full = 'full',
-  Unchanged = 'unchanged',
+  Full = "full",
+  Unchanged = "unchanged",
 }
 
 ---@enum ccc.kit.LSP.ErrorCodes
@@ -68,9 +68,9 @@ LSP.LSPErrorCodes = {
 
 ---@enum ccc.kit.LSP.FoldingRangeKind
 LSP.FoldingRangeKind = {
-  Comment = 'comment',
-  Imports = 'imports',
-  Region = 'region',
+  Comment = "comment",
+  Imports = "imports",
+  Region = "region",
 }
 
 ---@enum ccc.kit.LSP.SymbolKind
@@ -110,18 +110,18 @@ LSP.SymbolTag = {
 
 ---@enum ccc.kit.LSP.UniquenessLevel
 LSP.UniquenessLevel = {
-  document = 'document',
-  project = 'project',
-  group = 'group',
-  scheme = 'scheme',
-  global = 'global',
+  document = "document",
+  project = "project",
+  group = "group",
+  scheme = "scheme",
+  global = "global",
 }
 
 ---@enum ccc.kit.LSP.MonikerKind
 LSP.MonikerKind = {
-  import = 'import',
-  export = 'export',
-  ['local'] = 'local',
+  import = "import",
+  export = "export",
+  ["local"] = "local",
 }
 
 ---@enum ccc.kit.LSP.InlayHintKind
@@ -207,35 +207,35 @@ LSP.DocumentHighlightKind = {
 
 ---@enum ccc.kit.LSP.CodeActionKind
 LSP.CodeActionKind = {
-  Empty = '',
-  QuickFix = 'quickfix',
-  Refactor = 'refactor',
-  RefactorExtract = 'refactor.extract',
-  RefactorInline = 'refactor.inline',
-  RefactorRewrite = 'refactor.rewrite',
-  Source = 'source',
-  SourceOrganizeImports = 'source.organizeImports',
-  SourceFixAll = 'source.fixAll',
+  Empty = "",
+  QuickFix = "quickfix",
+  Refactor = "refactor",
+  RefactorExtract = "refactor.extract",
+  RefactorInline = "refactor.inline",
+  RefactorRewrite = "refactor.rewrite",
+  Source = "source",
+  SourceOrganizeImports = "source.organizeImports",
+  SourceFixAll = "source.fixAll",
 }
 
 ---@enum ccc.kit.LSP.TraceValues
 LSP.TraceValues = {
-  Off = 'off',
-  Messages = 'messages',
-  Verbose = 'verbose',
+  Off = "off",
+  Messages = "messages",
+  Verbose = "verbose",
 }
 
 ---@enum ccc.kit.LSP.MarkupKind
 LSP.MarkupKind = {
-  PlainText = 'plaintext',
-  Markdown = 'markdown',
+  PlainText = "plaintext",
+  Markdown = "markdown",
 }
 
 ---@enum ccc.kit.LSP.PositionEncodingKind
 LSP.PositionEncodingKind = {
-  UTF8 = 'utf-8',
-  UTF16 = 'utf-16',
-  UTF32 = 'utf-32',
+  UTF8 = "utf-8",
+  UTF16 = "utf-16",
+  UTF32 = "utf-32",
 }
 
 ---@enum ccc.kit.LSP.FileChangeType
@@ -288,8 +288,8 @@ LSP.CodeActionTriggerKind = {
 
 ---@enum ccc.kit.LSP.FileOperationPatternKind
 LSP.FileOperationPatternKind = {
-  file = 'file',
-  folder = 'folder',
+  file = "file",
+  folder = "folder",
 }
 
 ---@enum ccc.kit.LSP.NotebookCellKind
@@ -300,17 +300,17 @@ LSP.NotebookCellKind = {
 
 ---@enum ccc.kit.LSP.ResourceOperationKind
 LSP.ResourceOperationKind = {
-  Create = 'create',
-  Rename = 'rename',
-  Delete = 'delete',
+  Create = "create",
+  Rename = "rename",
+  Delete = "delete",
 }
 
 ---@enum ccc.kit.LSP.FailureHandlingKind
 LSP.FailureHandlingKind = {
-  Abort = 'abort',
-  Transactional = 'transactional',
-  TextOnlyTransactional = 'textOnlyTransactional',
-  Undo = 'undo',
+  Abort = "abort",
+  Transactional = "transactional",
+  TextOnlyTransactional = "textOnlyTransactional",
+  Undo = "undo",
 }
 
 ---@enum ccc.kit.LSP.PrepareSupportDefaultBehavior
@@ -320,7 +320,7 @@ LSP.PrepareSupportDefaultBehavior = {
 
 ---@enum ccc.kit.LSP.TokenFormat
 LSP.TokenFormat = {
-  Relative = 'relative',
+  Relative = "relative",
 }
 
 ---@class ccc.kit.LSP.ImplementationParams : ccc.kit.LSP.TextDocumentPositionParams, ccc.kit.LSP.WorkDoneProgressParams, ccc.kit.LSP.PartialResultParams
