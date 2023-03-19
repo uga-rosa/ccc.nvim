@@ -34,16 +34,12 @@ local function test(module, str, expect_rgb, expect_alpha)
   local msg = ("expected {%s}, but passed in {%s}"):format(table.concat(expect_rgb, ", "), table.concat(rgb, ", "))
   ---@cast rgb RGB
   for i = 1, 3 do
-    assert.is_true(utils.close(expect_rgb[i], rgb[i], 1 / 255), msg)
+    assert.is_true(utils.near(expect_rgb[i], rgb[i], 1 / 255), msg)
   end
   assert.equals(expect_alpha, alpha)
 end
 
 describe("Color detection test", function()
-  before_each(function()
-    require("ccc").setup({})
-  end)
-
   it("none", function()
     test(css_rgb, " rgb(255 none 255) ", { 255, 0, 255 }, nil)
   end)

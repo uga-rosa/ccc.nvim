@@ -54,7 +54,7 @@ local function from_rgb_test(colorInput, input, expected, limit)
   assert.equal(#expected, #converted)
   local msg = ("expected {%s}, but passed in {%s}"):format(table.concat(expected, ", "), table.concat(converted, ", "))
   for i = 1, #expected do
-    assert.is_true(utils.close(expected[i], converted[i], limit[i]), msg)
+    assert.is_true(utils.near(expected[i], converted[i], limit[i]), msg)
   end
 end
 
@@ -69,7 +69,7 @@ local function to_rgb_test(colorInput, input, expected, limit)
   assert.equals(#expected, #converted)
   local msg = ("expected {%s}, but passed in {%s}"):format(table.concat(expected, ", "), table.concat(converted, ", "))
   for i = 1, #expected do
-    assert.is_true(utils.close(expected[i], converted[i], limit[i]), msg)
+    assert.is_true(utils.near(expected[i], converted[i], limit[i]), msg)
   end
 end
 

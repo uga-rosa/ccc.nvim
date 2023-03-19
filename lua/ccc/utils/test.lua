@@ -4,7 +4,7 @@ local M = {}
 ---@param b number
 ---@param limit number
 ---@return boolean
-function M.close(a, b, limit)
+function M.near(a, b, limit)
   return math.abs(a - b) < limit
 end
 
