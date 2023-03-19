@@ -107,6 +107,10 @@ function M.mapping.toggle_output_mode()
   UI:toggle_output_mode()
 end
 
+function M.mapping.reset_mode()
+  UI:reset_mode()
+end
+
 function M.mapping.show_alpha()
   UI.alpha:show()
 end

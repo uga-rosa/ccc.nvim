@@ -535,6 +535,13 @@ Default mapping: o
 	Toggle output mode. See |ccc-option-outputs|.
 
 
+							*ccc-action-reset_mode*
+reset_mode ~
+mapping.reset_mode()
+Default mapping: r
+	Reset input and output to default.
+
+
                                                        *ccc-action-toggle-alpha*
 toggle_alpha ~
 mapping.toggle_alpha()

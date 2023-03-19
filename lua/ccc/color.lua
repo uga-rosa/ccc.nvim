@@ -60,6 +60,14 @@ function Color:set_output(output_name)
   end
 end
 
+---Reset input and output to default
+function Color:reset_mode()
+  local rgb = self.input:get_rgb()
+  self:set_input()
+  self:set_output()
+  self.input:set_rgb(rgb)
+end
+
 ---@return CccColor
 function Color:copy()
   local new = Color.new(self.input.name, self.output.name, self.alpha)

@@ -507,4 +507,11 @@ function UI:toggle_output_mode()
   self:update()
 end
 
+function UI:reset_mode()
+  self.color:reset_mode()
+  self.input_mode = self.color.input.name
+  self.output_mode = self.color.output.name
+  self:update()
+end
+
 return UI
