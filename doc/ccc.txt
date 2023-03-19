@@ -155,7 +155,7 @@ Default: {
 	ccc.input.hsl,
 	ccc.input.cmyk,
 }
-	List of color system to be activated. |ccc-action-toggle-input-mode|
+	List of color system to be activated. |ccc-action-toggle_input_mode|
 	toggles in this order. The first one is the default used at the first
 	startup. Once activated, it will keep the previous input mode.
 	The presets currently available are as follows:
@@ -183,7 +183,7 @@ Default: {
 	ccc.output.css_rgb,
 	ccc.output.css_hsl,
 }
-	List of output format to be activated. |ccc-action-toggle-output-mode|
+	List of output format to be activated. |ccc-action-toggle_ouotput_mode|
 	toggles in this order. The first one is the default used at the first
 	startup. Once activated, it will keep the previous output mode.
 	The presets currently available are as follows:
@@ -521,14 +521,14 @@ Default mapping: q
 	Alias of |:quit|. Cancel and close the UI without replace or insert.
 
 
-                                                  *ccc-action-toggle-input-mode*
+                                                  *ccc-action-toggle_input_mode*
 toggle_input_mode ~
 mapping.toggle_input_mode()
 Default mapping: i
 	Toggle input mode. See |ccc-option-inputs|.
 
 
-                                                 *ccc-action-toggle-output-mode*
+                                                 *ccc-action-toggle_ouotput_mode*
 toggle_output_mode ~
 mapping.toggle_output_mode()
 Default mapping: o
@@ -542,14 +542,14 @@ Default mapping: r
 	Reset input and output to default.
 
 
-                                                       *ccc-action-toggle-alpha*
+                                                       *ccc-action-toggle_alpha*
 toggle_alpha ~
 mapping.toggle_alpha()
 Default mapping: a
 	Toggle show/hide alpha (transparency) slider.
 
 
-                                                 *ccc-action-toggle-prev-colors*
+                                                 *ccc-action-toggle_prev_colors*
 toggle_prev_colors ~
 mapping.toggle_prev_colors()
 Default mapping: g
@@ -561,15 +561,15 @@ Default mapping: g
 		- |ccc-action-goto-head|
 
 
-                                                   *ccc-action-show-prev-colors*
-toggle_prev_colors ~
+                                                   *ccc-action-show_prev_colors*
+show_prev_colors ~
 mapping.show_prev_colors()
 Default mapping is nothing.
 	Show the previous colors pallet.
 
 
-                                                   *ccc-action-hide-prev-colors*
-toggle_prev_colors ~
+                                                   *ccc-action-hide_prev_colors*
+hide_prev_colors ~
 mapping.hide_prev_colors()
 Default mapping is nothing.
 	Hide the previous colors pallet.
