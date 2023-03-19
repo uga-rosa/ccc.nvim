@@ -18,7 +18,7 @@ end
 ---Call worker function.
 ---@return ccc.kit.Async.AsyncTask
 function Worker:__call(...)
-  local args = { ... }
+  local call_args = { ... }
   return AsyncTask.new(function(resolve, reject)
     uv.new_work(function(runner, args, option)
       args = vim.mpack.decode(args)
@@ -51,7 +51,7 @@ function Worker:__call(...)
       end
     end):queue(
       self.runner,
-      vim.mpack.encode(args),
+      vim.mpack.encode(call_args),
       vim.mpack.encode({
         cwd = uv.cwd(),
       })
