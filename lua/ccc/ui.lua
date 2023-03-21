@@ -511,6 +511,8 @@ function UI:reset_mode()
   self.color:reset_mode()
   self.input_mode = self.color.input.name
   self.output_mode = self.color.output.name
+  self.alpha:hide()
+  self.prev_colors:hide()
   self:update()
 end
 

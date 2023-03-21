@@ -539,7 +539,8 @@ Default mapping: o
 reset_mode ~
 mapping.reset_mode()
 Default mapping: r
-	Reset input and output to default.
+	Reset input and output to default, and hide alpha slider and previous
+	colors pallet.
 
 
                                                        *ccc-action-toggle_alpha*
