@@ -1,3 +1,4 @@
+---@diagnostic disable: invisible
 local uv = require("luv")
 local kit = require("ccc.kit")
 

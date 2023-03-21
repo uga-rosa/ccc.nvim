@@ -1,4 +1,5 @@
 local uv = require("luv")
+local Async = require("ccc.kit.Async")
 local Session = require("ccc.kit.Thread.Server.Session")
 
 ---Return current executing file directory.
@@ -22,33 +23,60 @@ Server.__index = Server
 ---@return ccc.kit.Thread.Server
 function Server.new(dispatcher)
   local self = setmetatable({}, Server)
-  self.stdin = uv.new_pipe()
-  self.stdout = uv.new_pipe()
-  self.stderr = uv.new_pipe()
   self.dispatcher = dispatcher
+  self.session = Session.new()
   self.process = nil
-  self.session = nil
   return self
 end
 
 ---Connect to server.
 ---@return ccc.kit.Async.AsyncTask
 function Server:connect()
-  self.process = uv.spawn("nvim", {
-    cwd = uv.cwd(),
-    args = {
-      "--headless",
-      "--noplugin",
-      "-l",
-      ("%s/_bootstrap.lua"):format(dirname()),
-      vim.o.runtimepath,
-    },
-    stdio = { self.stdin, self.stdout, self.stderr },
-  })
-  self.session = Session.new(self.stdout, self.stdin)
-  return self.session:request("connect", {
-    dispatcher = string.dump(self.dispatcher),
-  })
+  return Async.run(function()
+    Async.schedule():await()
+    local stdin = uv.new_pipe()
+    local stdout = uv.new_pipe()
+    local stderr = uv.new_pipe()
+    self.process = uv.spawn("nvim", {
+      cwd = uv.cwd(),
+      args = {
+        "--headless",
+        "--noplugin",
+        "-l",
+        ("%s/_bootstrap.lua"):format(dirname()),
+        vim.o.runtimepath,
+      },
+      stdio = { stdin, stdout, stderr },
+    })
+
+    stderr:read_start(function(err, data)
+      if err then
+        error(err)
+      end
+      print(data)
+    end)
+
+    self.session:connect(stdout, stdin)
+    return self.session
+      :request("connect", {
+        dispatcher = string.dump(self.dispatcher),
+      })
+      :await()
+  end)
+end
+
+---Add request handler.
+---@param method string
+---@param callback fun(params: table): any
+function Server:on_request(method, callback)
+  self.session:on_request(method, callback)
+end
+
+---Add notification handler.
+---@param method string
+---@param callback fun(params: table)
+function Server:on_notification(method, callback)
+  self.session:on_notification(method, callback)
 end
 
 --- Send request.

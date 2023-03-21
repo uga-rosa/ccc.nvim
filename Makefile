@@ -8,3 +8,7 @@ luacheck:
 .PHONY: vusted
 vusted:
 	vusted ./test
+
+.PHONY: format
+format:
+	stylua .

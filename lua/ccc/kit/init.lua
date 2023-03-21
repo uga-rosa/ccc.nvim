@@ -15,6 +15,17 @@ function kit.gc(callback)
   return gc
 end
 
+---Bind arguments for function.
+---@param fn fun(...: any): any
+---@vararg any
+---@return fun(...: any): any
+function kit.bind(fn, ...)
+  local args = { ... }
+  return function(...)
+    return fn(unpack(args), ...)
+  end
+end
+
 ---Safe version of vim.schedule.
 ---@param fn fun(...: any): any
 function kit.safe_schedule(fn)

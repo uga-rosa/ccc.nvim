@@ -1,3 +1,4 @@
+---@diagnostic disable: invisible
 local mpack = require("mpack")
 local Async = require("ccc.kit.Async")
 
@@ -12,23 +13,33 @@ local function encode(v)
 end
 
 ---@class ccc.kit.Thread.Server.Session
+---@field private mpack_session any
 ---@field private reader uv.uv_pipe_t
 ---@field private writer uv.uv_pipe_t
----@field private mpack_session any
----@field public on_request table<string, fun(params: table): any>
----@field public on_notification table<string, fun(params: table): nil>
+---@field private _on_request table<string, fun(params: table): any>
+---@field private _on_notification table<string, fun(params: table): nil>
 local Session = {}
 Session.__index = Session
 
+---Create new session.
+---@return ccc.kit.Thread.Server.Session
+function Session.new()
+  local self = setmetatable({}, Session)
+  self.mpack_session = mpack.Session({ unpack = mpack.Unpacker() })
+  self.reader = nil
+  self.writer = nil
+  self._on_request = {}
+  self._on_notification = {}
+  return self
+end
+
+---Connect reader/writer.
 ---@param reader uv.uv_pipe_t
 ---@param writer uv.uv_pipe_t
-function Session.new(reader, writer)
-  local self = setmetatable({}, Session)
-  self.on_request = {}
-  self.on_notification = {}
-  self.mpack_session = mpack.Session({ unpack = mpack.Unpacker() })
+function Session:connect(reader, writer)
   self.reader = reader
   self.writer = writer
+
   self.reader:read_start(function(err, data)
     if err then
       error(err)
@@ -43,7 +54,7 @@ function Session.new(reader, writer)
         Async.resolve()
           :next(function()
             return Async.run(function()
-              return self.on_request[method](params)
+              return self._on_request[method](params)
             end)
           end)
           :next(function(res)
@@ -54,7 +65,7 @@ function Session.new(reader, writer)
           end)
       elseif type == "notification" then
         local method, params = method_or_error, params_or_result
-        self.on_notification[method](params)
+        self._on_notification[method](params)
       elseif type == "response" then
         local callback, err_, res = id_or_cb, method_or_error, params_or_result
         if err_ == mpack.NIL then
@@ -66,7 +77,20 @@ function Session.new(reader, writer)
       offset = new_offset
     end
   end)
-  return self
+end
+
+---Add request handler.
+---@param method string
+---@param callback fun(params: table): any
+function Session:on_request(method, callback)
+  self._on_request[method] = callback
+end
+
+---Add notification handler.
+---@param method string
+---@param callback fun(params: table)
+function Session:on_notification(method, callback)
+  self._on_notification[method] = callback
 end
 
 ---Send request to the peer.
