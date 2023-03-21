@@ -31,20 +31,22 @@ function PrevColors:get()
   return self.selected_color
 end
 
+function PrevColors:reset()
+  self.colors = {}
+  self.selected_color = nil
+  self.index = 1
+end
+
 ---@return CccColor?
 function PrevColors:select()
   if not self:get() then
     return
   end
   local color = self:get():copy()
-  if color.input.name ~= self.ui.input_mode then
-    local RGB = color:get_rgb()
-    color:set_input(self.ui.input_mode)
-    color:set_rgb(RGB)
-  end
-  if color.output.name ~= self.ui.output_mode then
-    color:set_output(self.ui.output_mode)
-  end
+  local RGB = color:get_rgb()
+  color:set_input(self.ui.input_mode)
+  color:set_rgb(RGB)
+  color:set_output(self.ui.output_mode)
   self:hide()
   return color
 end
@@ -77,7 +79,9 @@ function PrevColors:hide()
   utils.set_lines(ui.bufnr, ui.win_height - 1, ui.win_height, {})
   ui.win_height = ui.win_height - 1
   ui:refresh()
-  utils.cursor_set(self.prev_pos)
+  if self.prev_pos then
+    utils.cursor_set(self.prev_pos)
+  end
 end
 
 function PrevColors:toggle()
