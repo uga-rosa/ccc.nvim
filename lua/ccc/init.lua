@@ -1,6 +1,5 @@
 local UI = require("ccc.ui")
 local config = require("ccc.config")
-local utils = require("ccc.utils")
 
 local M = {
   input = {
@@ -49,7 +48,7 @@ setmetatable(M, {
   __index = function(self, key)
     if key == "inputs" or key == "outputs" or key == "pickers" then
       local properer_key = key:sub(1, -2)
-      utils.notify("ccc.%s is deprecated. Use ccc.%s instead.", key, properer_key)
+      vim.notify(("ccc.%s is deprecated. Use ccc.%s instead."):format(key, properer_key), vim.log.levels.WARN)
       return self[properer_key]
     end
   end,
