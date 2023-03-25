@@ -48,6 +48,10 @@ end
 ---@return RGB?
 ---@return Alpha?
 function CustomEntries:parse_color(s, init)
+  if vim.tbl_isempty(self.color_table) then
+    vim.notify_once("[ccc] no entries for the custom_entries picker", vim.log.levels.WARN)
+    return
+  end
   self:init()
   init = vim.F.if_nil(init, 1) --[[@as integer]]
   if #s - init + 1 < self.min_length then
