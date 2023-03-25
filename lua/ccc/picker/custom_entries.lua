@@ -49,7 +49,7 @@ end
 ---@return Alpha?
 function CustomEntries:parse_color(s, init)
   if vim.tbl_isempty(self.color_table) then
-    vim.notify("[ccc] no entries for the custom_entries picker", vim.log.levels.WARN)
+    vim.notify_once("[ccc] no entries for the custom_entries picker", vim.log.levels.WARN)
     return
   end
   self:init()
