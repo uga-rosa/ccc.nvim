@@ -5,25 +5,16 @@ local pattern = require("ccc.utils.pattern")
 ---@field rgb { [string]: integer[] }
 ---@field min_length integer
 ---@field color_table { [string]: string }
----@field disabled boolean
 local CustomEntries = {}
 
 ---@param color_table { [string]: string }
 ---@return CustomEntries
 CustomEntries.new = function(color_table)
-  return setmetatable(
-    { color_table = color_table, rgb = {}, min_length = 0, disabled = false },
-    { __index = CustomEntries }
-  )
+  return setmetatable({ color_table = color_table, rgb = {}, min_length = 0 }, { __index = CustomEntries })
 end
 
 function CustomEntries:init()
   if self.pattern then
-    return
-  end
-  if vim.tbl_isempty(self.color_table) then
-    vim.notify("[ccc] no entries for the custom_entries picker", vim.log.levels.WARN)
-    self.disabled = true
     return
   end
   ---@type { plain: string, vim: string }[]
@@ -57,7 +48,8 @@ end
 ---@return RGB?
 ---@return Alpha?
 function CustomEntries:parse_color(s, init)
-  if self.disabled then
+  if vim.tbl_isempty(self.color_table) then
+    vim.notify("[ccc] no entries for the custom_entries picker", vim.log.levels.WARN)
     return
   end
   self:init()
