@@ -511,7 +511,7 @@ complete ~
 mapping.complete()
 Default mapping: <CR>
 	Close the UI and perform a replace or insert.
-	If open the previous colors pallet, select the color under the cursor.
+	If open the previous colors palette, select the color under the cursor.
 
 
                                                                *ccc-action-quit*
@@ -540,7 +540,7 @@ reset_mode ~
 mapping.reset_mode()
 Default mapping: r
 	Reset input and output to default, and hide alpha slider and previous
-	colors pallet.
+	colors palette.
 
 
                                                        *ccc-action-toggle_alpha*
@@ -554,7 +554,7 @@ Default mapping: a
 toggle_prev_colors ~
 mapping.toggle_prev_colors()
 Default mapping: g
-	Toggle show and hide the previous colors pallet.
+	Toggle show and hide the previous colors palette.
 	Use the following to move colors.
 		- |ccc-action-goto-next|
 		- |ccc-action-goto-prev|
@@ -566,14 +566,14 @@ Default mapping: g
 show_prev_colors ~
 mapping.show_prev_colors()
 Default mapping is nothing.
-	Show the previous colors pallet.
+	Show the previous colors palette.
 
 
                                                    *ccc-action-hide_prev_colors*
 hide_prev_colors ~
 mapping.hide_prev_colors()
 Default mapping is nothing.
-	Hide the previous colors pallet.
+	Hide the previous colors palette.
 
 
                                                           *ccc-action-goto-next*
