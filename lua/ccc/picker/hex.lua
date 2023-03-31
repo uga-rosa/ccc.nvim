@@ -13,10 +13,10 @@ function HexPicker:init()
   -- #RRGGBBAA
   -- #RGBA
   self.pattern = {
-    [[\v%(^|[^\k])\zs#(\x\x)(\x\x)(\x\x)>]],
-    [[\v%(^|[^\k])\zs#(\x)(\x)(\x)>]],
-    [[\v%(^|[^\k])\zs#(\x\x)(\x\x)(\x\x)(\x\x)>]],
-    [[\v%(^|[^\k])\zs#(\x)(\x)(\x)(\x)>]],
+    [=[\v%(^|[^[:keyword:]])\zs#(\x\x)(\x\x)(\x\x)>]=],
+    [=[\v%(^|[^[:keyword:]])\zs#(\x)(\x)(\x)>]=],
+    [=[\v%(^|[^[:keyword:]])\zs#(\x\x)(\x\x)(\x\x)(\x\x)>]=],
+    [=[\v%(^|[^[:keyword:]])\zs#(\x)(\x)(\x)(\x)>]=],
   }
 end
 
