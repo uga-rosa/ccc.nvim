@@ -20,23 +20,26 @@ end
 
 ---@param module ColorPicker
 ---@param str string
----@param expect_rgb integer[] #range in [0-255]
+---@param expect_rgb integer[]? #range in [0-255]. If nil, expect parsing fail.
 ---@param expect_alpha Alpha?
 local function test(module, str, expect_rgb, expect_alpha)
-  expect_rgb = div255(expect_rgb)
   local start, end_, rgb, alpha = module:parse_color(str)
-  if not (start and end_ and rgb) then
-    assert(false, "Can't parse color")
-    return
+  if expect_rgb == nil then
+    for _, v in ipairs({ start, end_, rgb, alpha }) do
+      assert.is_nil(v)
+    end
+  else
+    assert(start and end_ and rgb, "Can't parse color")
+    assert.equals(2, start)
+    assert.equals(#str - 1, end_)
+    expect_rgb = div255(expect_rgb)
+    local msg = ("expected {%s}, but passed in {%s}"):format(table.concat(expect_rgb, ", "), table.concat(rgb, ", "))
+    ---@cast rgb RGB
+    for i = 1, 3 do
+      assert.is_true(utils.near(expect_rgb[i], rgb[i], 1 / 255), msg)
+    end
+    assert.equals(expect_alpha, alpha)
   end
-  assert.equals(2, start)
-  assert.equals(#str - 1, end_)
-  local msg = ("expected {%s}, but passed in {%s}"):format(table.concat(expect_rgb, ", "), table.concat(rgb, ", "))
-  ---@cast rgb RGB
-  for i = 1, 3 do
-    assert.is_true(utils.near(expect_rgb[i], rgb[i], 1 / 255), msg)
-  end
-  assert.equals(expect_alpha, alpha)
 end
 
 describe("Color detection test", function()
@@ -56,6 +59,9 @@ describe("Color detection test", function()
     end)
     it("4 digits (with alpha)", function()
       test(hex, " #ff00 ", { 255, 255, 0 }, 0)
+    end)
+    it("word boundary", function()
+      test(hex, " dein#add ", nil, nil)
     end)
   end)
 
