@@ -28,7 +28,7 @@ See [doc](./doc/ccc.txt) for details.
 
 ![restore](https://user-images.githubusercontent.com/82267684/225461172-4c3e17af-99b6-4da9-8216-c00dc20c7a40.gif)
 
-## Colorizer
+## Highlight pickable colors
 
 - LSP `textDocument/documentColor` is supported (Requires neovim built-in LSP client).
 
@@ -41,6 +41,6 @@ See [doc](./doc/ccc.txt) for details.
 ## Use multiple color spaces simultaneously
 
 - Advanced settings
-- See wiki
+- See [wiki](https://github.com/uga-rosa/ccc.nvim/wiki/Use-multiple-color-spaces-simultaneously)
 
 ![multi](https://user-images.githubusercontent.com/82267684/225504962-bf71730e-e681-4ee3-8a26-f949b1973e71.gif)
