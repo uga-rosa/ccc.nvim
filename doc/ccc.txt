@@ -253,7 +253,7 @@ Default: {
 
 						*ccc-option-pickers-ansi_escape*
 	There is a special picker named `ccc.picker.ansi_escape`. You need to
-	define colors corresponding to ANSI escape code (16 colors).
+	define colors corresponding to ANSI escape code (8/16 colors).
 	It also reads fg/bg to switch highlight mode automatically.
 >
 	ccc.setup({
@@ -275,6 +275,10 @@ Default: {
 	      bright_magenta = "#b4009e",
 	      bright_cyan = "#61d6d6",
 	      bright_white = "#f2f2f2",
+	    }, {
+	      -- Meaning of code 1. "bright"|"bold"
+	      -- `\e[31;1m` means whether `red + bold` or `bright red`.
+	      meaning1 = "bright",
 	    })
 	  }
 	})

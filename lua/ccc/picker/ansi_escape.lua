@@ -1,54 +1,75 @@
-local parse = require("ccc.utils.parse")
+local pattern = require("ccc.utils.pattern")
 
 local definition = {
-  code2name = {
-    ["\\u001b[30m"] = { "black", "fg" },
-    ["\\u001b[31m"] = { "red", "fg" },
-    ["\\u001b[32m"] = { "green", "fg" },
-    ["\\u001b[33m"] = { "yellow", "fg" },
-    ["\\u001b[34m"] = { "blue", "fg" },
-    ["\\u001b[35m"] = { "magenta", "fg" },
-    ["\\u001b[36m"] = { "cyan", "fg" },
-    ["\\u001b[37m"] = { "white", "fg" },
-    ["\\u001b[30;1m"] = { "bright_black", "fg" },
-    ["\\u001b[31;1m"] = { "bright_red", "fg" },
-    ["\\u001b[32;1m"] = { "bright_green", "fg" },
-    ["\\u001b[33;1m"] = { "bright_yellow", "fg" },
-    ["\\u001b[34;1m"] = { "bright_blue", "fg" },
-    ["\\u001b[35;1m"] = { "bright_magenta", "fg" },
-    ["\\u001b[36;1m"] = { "bright_cyan", "fg" },
-    ["\\u001b[37;1m"] = { "bright_white", "fg" },
-    ["\\u001b[40m"] = { "black", "bg" },
-    ["\\u001b[41m"] = { "red", "bg" },
-    ["\\u001b[42m"] = { "green", "bg" },
-    ["\\u001b[43m"] = { "yellow", "bg" },
-    ["\\u001b[44m"] = { "blue", "bg" },
-    ["\\u001b[45m"] = { "magenta", "bg" },
-    ["\\u001b[46m"] = { "cyan", "bg" },
-    ["\\u001b[47m"] = { "white", "bg" },
-    ["\\u001b[40;1m"] = { "bright_black", "bg" },
-    ["\\u001b[41;1m"] = { "bright_red", "bg" },
-    ["\\u001b[42;1m"] = { "bright_green", "bg" },
-    ["\\u001b[43;1m"] = { "bright_yellow", "bg" },
-    ["\\u001b[44;1m"] = { "bright_blue", "bg" },
-    ["\\u001b[45;1m"] = { "bright_magenta", "bg" },
-    ["\\u001b[46;1m"] = { "bright_cyan", "bg" },
-    ["\\u001b[47;1m"] = { "bright_white", "bg" },
-  },
+  ["1"] = { bold = true },
+  -- 2, faint/dim can't support
+  ["3"] = { italic = true },
+  ["4"] = { underline = true },
+  -- 5 and 6, slow/papid blink can't support
+  ["7"] = { reverse = true },
+  -- 8, conceal/hide can't support
+  ["9"] = { strikethrough = true },
+
+  -- Foreground colors
+  ["30"] = { fg = "black" },
+  ["31"] = { fg = "red" },
+  ["32"] = { fg = "green" },
+  ["33"] = { fg = "yellow" },
+  ["34"] = { fg = "blue" },
+  ["35"] = { fg = "magenta" },
+  ["36"] = { fg = "cyan" },
+  ["37"] = { fg = "white" },
+
+  -- Background colors
+  ["40"] = { bg = "black" },
+  ["41"] = { bg = "red" },
+  ["42"] = { bg = "green" },
+  ["43"] = { bg = "yellow" },
+  ["44"] = { bg = "blue" },
+  ["45"] = { bg = "magenta" },
+  ["46"] = { bg = "cyan" },
+  ["47"] = { bg = "white" },
+
+  -- Bright colors (aixterm specification)
+  -- Foreground colors
+  ["90"] = { fg = "bright_black" },
+  ["91"] = { fg = "bright_red" },
+  ["92"] = { fg = "bright_green" },
+  ["93"] = { fg = "bright_yellow" },
+  ["94"] = { fg = "bright_blue" },
+  ["95"] = { fg = "bright_magenta" },
+  ["96"] = { fg = "bright_cyan" },
+  ["97"] = { fg = "bright_white" },
+  -- Background colors
+  ["100"] = { bg = "bright_black" },
+  ["101"] = { bg = "bright_red" },
+  ["102"] = { bg = "bright_green" },
+  ["103"] = { bg = "bright_yellow" },
+  ["104"] = { bg = "bright_blue" },
+  ["105"] = { bg = "bright_magenta" },
+  ["106"] = { bg = "bright_cyan" },
+  ["107"] = { bg = "bright_white" },
 }
 
 ---@class AnsiEscapePicker: ColorPicker
----@field name2color { [string]: string }
 ---@field pattern string
+---@field name2color { [string]: string }
+---@field meaning1 "bold"|"bright"
 local AnsiEscapePicker = {
-  pattern = [[\v\\u001b\[[34][0-7]%(;1)?m]],
+  -- ESC[{code}m: {code} is numbers separated by `;`.
+  -- Escape expression: \u001b, \033, \x1b, 27, ^[, \e
+  pattern = [=[\V\c\%(\\u001b\|\\033\|\\x1b\|27\|\^[\|\\e\)[\(\[0-9;]\+\)m]=],
+  meaning1 = "bright",
 }
 
 ---@param name2color { [string]: string }
+---@param opts? table
 ---@return AnsiEscapePicker
-function AnsiEscapePicker.new(name2color)
+function AnsiEscapePicker.new(name2color, opts)
+  opts = vim.F.if_nil(opts, {})
   return setmetatable({
     name2color = name2color,
+    meaning1 = opts.meaning1,
   }, { __index = AnsiEscapePicker })
 end
 
@@ -56,27 +77,33 @@ end
 ---@param init? integer
 ---@return integer? start
 ---@return integer? end_
----@return RGB?
----@return Alpha?
----@return hl_mode?
+---@return nil
+---@return nil
+---@return highlightDefinition?
 function AnsiEscapePicker:parse_color(s, init)
   init = vim.F.if_nil(init, 1)
-  -- The shortest patten is 10 characters like `\u001b[30m`
-  while init <= #s - 9 do
-    local code, start, end_ = unpack(vim.fn.matchstrpos(s, self.pattern, init))
-    if start == -1 then
-      return
-    end
-    local name, hl_mode = unpack(definition.code2name[code])
-    if name then
-      local color = self.name2color[name]
-      local R = parse.hex(color:sub(2, 3))
-      local G = parse.hex(color:sub(4, 5))
-      local B = parse.hex(color:sub(6, 7))
-      return start, end_, { R, G, B }, nil, hl_mode
-    end
-    init = end_ + 1
+  -- The shortest patten is 10 characters like `\u001b[31m`
+  local start, end_, codes = pattern.find(s, self.pattern, init)
+  if not start then
+    return
   end
+
+  local hl_def = {}
+  for code in vim.gsplit(codes, ";") do
+    hl_def = vim.tbl_extend("force", hl_def, definition[code] or {})
+  end
+
+  if self.meaning1 == "bright" then
+    if hl_def.bold then
+      hl_def.bold = nil
+      hl_def.fg = hl_def.fg and "bright_" .. hl_def.fg
+      hl_def.bg = hl_def.bg and "bright_" .. hl_def.bg
+    end
+  end
+  hl_def.fg = hl_def.fg and self.name2color[hl_def.fg]
+  hl_def.bg = hl_def.bg and self.name2color[hl_def.bg]
+
+  return start, end_, nil, nil, hl_def
 end
 
 return AnsiEscapePicker.new

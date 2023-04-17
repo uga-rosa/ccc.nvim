@@ -152,14 +152,12 @@ function Highlighter:update(bufnr, first_line, last_line)
 end
 
 ---@param rgb number[]
----@param hl_mode? hl_mode
 ---@return string hl_name
-function Highlighter:_get_or_create_hl(rgb, hl_mode)
-  hl_mode = vim.F.if_nil(hl_mode, self.hl_mode)
+function Highlighter:_get_or_create_hl(rgb)
   local hex = rgb2hex(rgb)
-  local hl_name = "CccHighlighter" .. hex:sub(2) .. hl_mode
+  local hl_name = "CccHighlighter" .. hex:sub(2)
   if not self.is_defined[hl_name] then
-    local highlight = utils.create_highlight(hex, hl_mode)
+    local highlight = utils.create_highlight(hex, self.hl_mode)
     api.nvim_set_hl(0, hl_name, highlight)
     self.is_defined[hl_name] = true
   end
@@ -240,22 +238,29 @@ function Highlighter:update_picker(bufnr, start_row, end_row)
     local row = start_row + i - 1
     local init = 1
     while true do
-      local start, end_, RGB, hl_mode
+      local start, end_, RGB, hl_def
       for _, picker in ipairs(self.pickers) do
-        local s_, e_, rgb, _, hl_ = picker:parse_color(line, init)
+        local s_, e_, rgb, _, h_d = picker:parse_color(line, init)
         if s_ and (start == nil or s_ < start) then
           start = s_
           end_ = e_
           RGB = rgb
-          hl_mode = hl_
+          hl_def = h_d
         end
       end
-      if RGB == nil then
+      if RGB then
+        local hl_name = self:_get_or_create_hl(RGB)
+        api.nvim_buf_add_highlight(bufnr, self.picker_ns_id, hl_name, row, start - 1, end_)
+        init = end_ + 1
+      elseif hl_def then
+        local hl_name = ("CccHighlighter%p"):format(hl_def)
+        api.nvim_set_hl(0, hl_name, hl_def)
+        api.nvim_buf_add_highlight(bufnr, self.picker_ns_id, hl_name, row, start - 1, end_)
+        vim.print(hl_name)
+        init = end_ + 1
+      else
         break
       end
-      local hl_name = self:_get_or_create_hl(RGB, hl_mode)
-      api.nvim_buf_add_highlight(bufnr, self.picker_ns_id, hl_name, row, start - 1, end_)
-      init = end_ + 1
     end
   end
 end
