@@ -10,7 +10,11 @@ local CustomEntries = {}
 ---@param color_table { [string]: string }
 ---@return CustomEntries
 CustomEntries.new = function(color_table)
-  return setmetatable({ color_table = color_table, rgb = {}, min_length = 0 }, { __index = CustomEntries })
+  return setmetatable({
+    rgb = {},
+    min_length = 0,
+    color_table = color_table,
+  }, { __index = CustomEntries })
 end
 
 function CustomEntries:init()
