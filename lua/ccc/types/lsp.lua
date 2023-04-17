@@ -1,10 +1,20 @@
----@alias lsp.ColorInformation { range: lsp.Range, color: lsp.Color }
+---@class lsp.ColorInformation
+---@field color lsp.Color
+---@field range lsp.Range
 
----@alias lsp.Color { red: number, green: number, blue: number, alpha: number }
 ---All values range from 0 to 1.
+---@class lsp.Color
+---@field red number
+---@field green number
+---@field blue number
+---@field alpha number
 
----@alias lsp.Range { start: lsp.Position, end: lsp.Position }
+---@class lsp.Range
+---@field start lsp.Position
+---@field end lsp.Position
 
----@alias lsp.Position { line: integer, character: integer }
 ---The line field means row number (zero-based).
 ---The character field means col number (zero-based).
+---@class lsp.Position
+---@field line integer
+---@field character integer
