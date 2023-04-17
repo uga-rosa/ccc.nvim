@@ -10,7 +10,7 @@ local rgb2hex = require("ccc.output.hex").str
 ---@field pickers ColorPicker[]
 ---@field picker_ns_id integer
 ---@field lsp_ns_id integer
----@field is_defined table<string, boolean> #Set. Keys are hexes.
+---@field is_defined table<string, boolean> #Set. Keys are highlight names.
 ---@field ft_filter table<string, boolean>
 ---@field lsp boolean
 ---@field hl_mode hl_mode
@@ -152,14 +152,16 @@ function Highlighter:update(bufnr, first_line, last_line)
 end
 
 ---@param rgb number[]
+---@param hl_mode? hl_mode
 ---@return string hl_name
-function Highlighter:_get_or_create_hl(rgb)
+function Highlighter:_get_or_create_hl(rgb, hl_mode)
+  hl_mode = vim.F.if_nil(hl_mode, self.hl_mode)
   local hex = rgb2hex(rgb)
-  local hl_name = "CccHighlighter" .. hex:sub(2)
-  if not self.is_defined[hex] then
-    local highlight = utils.create_highlight(hex, self.hl_mode)
+  local hl_name = "CccHighlighter" .. hex:sub(2) .. hl_mode
+  if not self.is_defined[hl_name] then
+    local highlight = utils.create_highlight(hex, hl_mode)
     api.nvim_set_hl(0, hl_name, highlight)
-    self.is_defined[hex] = true
+    self.is_defined[hl_name] = true
   end
   return hl_name
 end
@@ -238,19 +240,20 @@ function Highlighter:update_picker(bufnr, start_row, end_row)
     local row = start_row + i - 1
     local init = 1
     while true do
-      local start, end_, RGB
+      local start, end_, RGB, hl_mode
       for _, picker in ipairs(self.pickers) do
-        local s_, e_, rgb = picker:parse_color(line, init)
+        local s_, e_, rgb, _, hl_ = picker:parse_color(line, init)
         if s_ and (start == nil or s_ < start) then
           start = s_
           end_ = e_
           RGB = rgb
+          hl_mode = hl_
         end
       end
       if RGB == nil then
         break
       end
-      local hl_name = self:_get_or_create_hl(RGB)
+      local hl_name = self:_get_or_create_hl(RGB, hl_mode)
       api.nvim_buf_add_highlight(bufnr, self.picker_ns_id, hl_name, row, start - 1, end_)
       init = end_ + 1
     end

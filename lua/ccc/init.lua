@@ -40,6 +40,7 @@ local M = {
     css_oklab = require("ccc.picker.css_oklab"),
     css_oklch = require("ccc.picker.css_oklch"),
     custom_entries = require("ccc.picker.custom_entries"),
+    ansi_escape = require("ccc.picker.ansi_escape"),
   },
   mapping = {},
 }

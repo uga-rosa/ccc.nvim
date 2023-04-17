@@ -251,6 +251,36 @@ Default: {
 	them such as `%`, `[]`, and `^$`, it detects the characters as they are.
 
 
+						*ccc-option-pickers-ansi_escape*
+	There is a special picker named `ccc.picker.ansi_escape`. You need to
+	define colors corresponding to ANSI escape code (16 colors).
+	It also reads fg/bg to switch highlight mode automatically.
+>
+	ccc.setup({
+	  pickers = {
+	    ccc.picker.ansi_escape({
+	      black = "#0c0c0c",
+	      red = "#c50f1f",
+	      green = "#13a10e",
+	      yellow = "#c19c00",
+	      blue = "#0037da",
+	      magenta = "#881798",
+	      cyan = "#3a96dd",
+	      white = "#cccccc",
+	      bright_black = "#767676",
+	      bright_red = "#e74856",
+	      bright_green = "#16c60c",
+	      bright_yellow = "#f9f1a5",
+	      bright_blue = "#3b78ff",
+	      bright_magenta = "#b4009e",
+	      bright_cyan = "#61d6d6",
+	      bright_white = "#f2f2f2",
+	    })
+	  }
+	})
+<
+
+
                                                      *ccc-option-highlight-mode*
 highlight_mode ~
 "fg" | "bg" | "foreground" | "background"
