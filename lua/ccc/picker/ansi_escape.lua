@@ -93,12 +93,10 @@ function AnsiEscapePicker:parse_color(s, init)
     hl_def = vim.tbl_extend("force", hl_def, definition[code] or {})
   end
 
-  if self.meaning1 == "bright" then
-    if hl_def.bold then
-      hl_def.bold = nil
-      hl_def.fg = hl_def.fg and "bright_" .. hl_def.fg
-      hl_def.bg = hl_def.bg and "bright_" .. hl_def.bg
-    end
+  if self.meaning1 == "bright" and hl_def.bold then
+    hl_def.bold = nil
+    hl_def.fg = hl_def.fg and "bright_" .. hl_def.fg
+    hl_def.bg = hl_def.bg and "bright_" .. hl_def.bg
   end
   hl_def.fg = hl_def.fg and self.name2color[hl_def.fg]
   hl_def.bg = hl_def.bg and self.name2color[hl_def.bg]
