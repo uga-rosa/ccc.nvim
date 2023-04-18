@@ -80,7 +80,8 @@ local default_name2color = {
 local AnsiEscapePicker = {
   -- ESC[{code}m: {code} is numbers separated by `;`.
   -- Escape expression: \u001b, \033, \x1b, 27, ^[, \e
-  pattern = [=[\V\c\%(\\u001b\|\\033\|\\x1b\|27\|\^[\|\\e\)[\(\[0-9;]\+\)m]=],
+  -- Appearing in a string, `\` may be escaped to become `\\` (\\\?\\).
+  pattern = [=[\V\c\%(\\\?\\u001b\|\\\?\\033\|\\\?\\x1b\|27\|\^[\|\\\?\\e\)[\(\[0-9;]\+\)m]=],
   meaning1 = "bright",
 }
 

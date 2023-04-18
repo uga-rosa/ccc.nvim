@@ -254,5 +254,12 @@ describe("Color detection test", function()
         }
       )
     end)
+    it([[In a string (\ may become \\)]], function()
+      test_hl_def(
+        ansi_escape({ red = "#ff0000", blue = "#0000ff" }),
+        [["\\u001b[31;44m"]],
+        { fg = "#ff0000", bg = "#0000ff" }
+      )
+    end)
   end)
 end)
