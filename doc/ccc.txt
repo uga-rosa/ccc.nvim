@@ -281,7 +281,7 @@ Default: {
 	      bright_white = "#f2f2f2",
 	    }, {
 	      -- `\e[31;1m` means whether `red + bold` or `bright red`.
-	      ---@type "bold"|"bright" Meaning of code 1. default: "bold"
+	      ---@type "bold"|"bright" Meaning of code 1. default: "bright"
 	      meaning1 = "bright",
 	    })
 	  }
