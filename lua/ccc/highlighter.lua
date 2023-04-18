@@ -153,12 +153,45 @@ end
 
 ---@param rgb number[]
 ---@return string hl_name
-function Highlighter:_get_or_create_hl(rgb)
+function Highlighter:_get_or_create_hl_from_rgb(rgb)
   local hex = rgb2hex(rgb)
   local hl_name = "CccHighlighter" .. hex:sub(2)
   if not self.is_defined[hl_name] then
     local highlight = utils.create_highlight(hex, self.hl_mode)
     api.nvim_set_hl(0, hl_name, highlight)
+    self.is_defined[hl_name] = true
+  end
+  return hl_name
+end
+
+---@param hl_def highlightDefinition
+---@return string hl_name
+function Highlighter:_get_or_create_hl_from_def(hl_def)
+  local hl_name = "CccHighlighter"
+  if hl_def.fg then
+    hl_name = hl_name .. "fg" .. hl_def.fg:sub(2)
+  end
+  if hl_def.bg then
+    hl_name = hl_name .. "bg" .. hl_def.bg:sub(2)
+  end
+  if hl_def.bold then
+    hl_name = hl_name .. "bold"
+  end
+  if hl_def.italic then
+    hl_name = hl_name .. "italic"
+  end
+  if hl_def.underline then
+    hl_name = hl_name .. "underline"
+  end
+  if hl_def.reverse then
+    hl_name = hl_name .. "reverse"
+  end
+  if hl_def.strikethrough then
+    hl_name = hl_name .. "strikethrough"
+  end
+
+  if not self.is_defined[hl_name] then
+    api.nvim_set_hl(0, hl_name, hl_def)
     self.is_defined[hl_name] = true
   end
   return hl_name
@@ -193,7 +226,7 @@ function Highlighter:update_lsp(bufnr)
           local ls_color = self._create_ls_color(range, color)
           table.insert(self.ls_colors[bufnr], ls_color)
 
-          local hl_name = self:_get_or_create_hl(ls_color.rgb)
+          local hl_name = self:_get_or_create_hl_from_rgb(ls_color.rgb)
           api.nvim_buf_add_highlight(0, self.lsp_ns_id, hl_name, ls_color.row - 1, ls_color.start - 1, ls_color.end_)
         end
       end)
@@ -248,15 +281,10 @@ function Highlighter:update_picker(bufnr, start_row, end_row)
           hl_def = h_d
         end
       end
-      if RGB then
-        local hl_name = self:_get_or_create_hl(RGB)
+      if RGB or hl_def then
+        local hl_name = (RGB and self:_get_or_create_hl_from_rgb(RGB))
+          or (hl_def and self:_get_or_create_hl_from_def(hl_def))
         api.nvim_buf_add_highlight(bufnr, self.picker_ns_id, hl_name, row, start - 1, end_)
-        init = end_ + 1
-      elseif hl_def then
-        local hl_name = ("CccHighlighter%p"):format(hl_def)
-        api.nvim_set_hl(0, hl_name, hl_def)
-        api.nvim_buf_add_highlight(bufnr, self.picker_ns_id, hl_name, row, start - 1, end_)
-        vim.print(hl_name)
         init = end_ + 1
       else
         break
