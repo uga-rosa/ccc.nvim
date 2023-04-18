@@ -51,6 +51,28 @@ local definition = {
   ["107"] = { bg = "bright_white" },
 }
 
+-- This color scheme came from Campbell (WindowsTerminal)
+local default_name2color = {
+  foreground = "#cccccc",
+  background = "#0c0c0c",
+  black = "#0c0c0c",
+  red = "#c50f1f",
+  green = "#13a10e",
+  yellow = "#c19c00",
+  blue = "#0037da",
+  magenta = "#881798",
+  cyan = "#3a96dd",
+  white = "#cccccc",
+  bright_black = "#767676",
+  bright_red = "#e74856",
+  bright_green = "#16c60c",
+  bright_yellow = "#f9f1a5",
+  bright_blue = "#3b78ff",
+  bright_magenta = "#b4009e",
+  bright_cyan = "#61d6d6",
+  bright_white = "#f2f2f2",
+}
+
 ---@class AnsiEscapePicker: ColorPicker
 ---@field pattern string
 ---@field name2color { [string]: string }
@@ -62,13 +84,14 @@ local AnsiEscapePicker = {
   meaning1 = "bright",
 }
 
----@param name2color { [string]: string }
+---@param name2color? { [string]: string }
 ---@param opts? table
 ---@return AnsiEscapePicker
 function AnsiEscapePicker.new(name2color, opts)
+  name2color = vim.F.if_nil(name2color, {})
   opts = vim.F.if_nil(opts, {})
   return setmetatable({
-    name2color = name2color,
+    name2color = vim.tbl_extend("keep", name2color, default_name2color),
     meaning1 = opts.meaning1,
   }, { __index = AnsiEscapePicker })
 end
@@ -82,7 +105,7 @@ end
 ---@return highlightDefinition?
 function AnsiEscapePicker:parse_color(s, init)
   init = vim.F.if_nil(init, 1)
-  -- The shortest patten is 10 characters like `\u001b[31m`
+
   local start, end_, codes = pattern.find(s, self.pattern, init)
   if not start then
     return
@@ -98,8 +121,8 @@ function AnsiEscapePicker:parse_color(s, init)
     hl_def.fg = hl_def.fg and "bright_" .. hl_def.fg
     hl_def.bg = hl_def.bg and "bright_" .. hl_def.bg
   end
-  hl_def.fg = hl_def.fg and self.name2color[hl_def.fg]
-  hl_def.bg = hl_def.bg and self.name2color[hl_def.bg]
+  hl_def.fg = hl_def.fg and self.name2color[hl_def.fg] or self.name2color["foreground"]
+  hl_def.bg = hl_def.bg and self.name2color[hl_def.bg] or self.name2color["background"]
 
   return start, end_, nil, nil, hl_def
 end

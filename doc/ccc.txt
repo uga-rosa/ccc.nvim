@@ -252,13 +252,17 @@ Default: {
 
 
 						*ccc-option-pickers-ansi_escape*
-	There is a special picker named `ccc.picker.ansi_escape`. You need to
-	define colors corresponding to ANSI escape code (8/16 colors).
-	It also reads fg/bg to switch highlight mode automatically.
+	There is a special picker named `ccc.picker.ansi_escape`. You can
+	define colors corresponding to ANSI escape code (16 colors).
+	Note: that this picker is only used for highlights. The reason is that
+	foreground and background colors can be set at the same time, and the
+	color to be picked cannot be determined.
 >
 	ccc.setup({
 	  pickers = {
 	    ccc.picker.ansi_escape({
+	      foreground = "#cccccc",
+	      background = "#0c0c0c",
 	      black = "#0c0c0c",
 	      red = "#c50f1f",
 	      green = "#13a10e",
@@ -276,8 +280,8 @@ Default: {
 	      bright_cyan = "#61d6d6",
 	      bright_white = "#f2f2f2",
 	    }, {
-	      -- Meaning of code 1. "bright"|"bold"
 	      -- `\e[31;1m` means whether `red + bold` or `bright red`.
+	      ---@type "bold"|"bright" Meaning of code 1. default: "bold"
 	      meaning1 = "bright",
 	    })
 	  }
