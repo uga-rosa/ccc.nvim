@@ -6,12 +6,12 @@ Use the colorful sliders, easy, to create any color you want!
 
 - Features
     - No dependency.
-    - RGB, HSL, CMYK, and other color space sliders for color creation.
     - Dynamic highlighting of sliders.
+    - Supports more than 10 color spaces (RGB, HSL, CMYK, etc.).
+    - Seamless input/output mode change.
     - Restore previously used colors.
-    - Selectable output formats.
     - Transparent slider for css functions (e.g. `rgb()`, `hsl()`)
-    - Fast colorizer.
+    - Color Highlighter for many formats.
 
 - Requirements
     - neovim 0.8+
