@@ -38,6 +38,9 @@ See [doc](./doc/ccc.txt) for details.
 
 ![image](https://user-images.githubusercontent.com/82267684/196505445-fac76002-7344-47f7-84cb-710c3ecbb717.png)
 
+There are some special picker to highlight. Descriptions are in the doc.
+If you would like to see images, please visit the [wiki](https://github.com/uga-rosa/ccc.nvim/wiki/Special-pickers).
+
 ## Use multiple color spaces simultaneously
 
 - Advanced settings
