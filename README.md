@@ -2,7 +2,7 @@
 
 **C**reate **C**olor **C**ode in neovim.
 
-Use the colorful sliders, easy, to create any color you want!
+Use the colorful sliders to easily generate any desired color!
 
 - Features
     - No dependency.

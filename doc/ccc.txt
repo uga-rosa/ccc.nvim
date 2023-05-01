@@ -19,7 +19,7 @@ Action							|ccc-action|
 Introduction                                                  *ccc-introduction*
 
 
-Use the colorful sliders, easy, to create any color you want!
+Use the colorful sliders to easily generate any desired color!
 
 Features:
 - No dependency.
