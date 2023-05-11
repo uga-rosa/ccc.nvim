@@ -67,6 +67,10 @@ end
 ---@return nil
 ---@return highlightDefinition?
 function TrailingWhitespacePicker:parse_color(s, init)
+  local ft = vim.bo.filetype
+  if not self.filter[ft] then
+    return
+  end
   if vim.startswith(vim.fn.mode(), "i") then
     if not self.inInsert then
       local highlighter = require("ccc.highlighter").new()
@@ -81,12 +85,7 @@ function TrailingWhitespacePicker:parse_color(s, init)
     end
     return
   end
-  init = vim.F.if_nil(init, 1)
-  local ft = vim.bo.filetype
-  if not self.filter[ft] then
-    return
-  end
-  local start, end_ = s:find("%s+$", init)
+  local start, end_ = s:find("%s+$", init or 1)
   if start then
     local hex = self.ft2color[ft]
     return start, end_, nil, nil, { bg = hex }
