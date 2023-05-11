@@ -1,6 +1,7 @@
 ---@class TrailingWhitespacePicker: ColorPicker
 ---@field ft2color table<string, RGB>
 ---@field filter table<string, boolean>
+---@field inInsert boolean
 local TrailingWhitespacePicker = {}
 
 ---@class TrailingWhitespaceConfig
@@ -66,6 +67,20 @@ end
 ---@return nil
 ---@return highlightDefinition?
 function TrailingWhitespacePicker:parse_color(s, init)
+  if vim.startswith(vim.fn.mode(), "i") then
+    if not self.inInsert then
+      local highlighter = require("ccc.highlighter").new()
+      highlighter.pickers = { self }
+      vim.api.nvim_create_autocmd("InsertLeave", {
+        callback = function(opts)
+          highlighter:update_picker(opts.buf, 0, -1)
+          self.inInsert = false
+        end,
+      })
+      self.inInsert = true
+    end
+    return
+  end
   init = vim.F.if_nil(init, 1)
   local ft = vim.bo.filetype
   if not self.filter[ft] then
