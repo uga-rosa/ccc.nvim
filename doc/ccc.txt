@@ -474,21 +474,22 @@ Command                                                            *ccc-command*
 
 
                                                                       *:CccPick*
-:CccPick ~
+:CccPick
 	Detects and replaces the color under the cursor. Detectable formats
 	are defined in |ccc-option-pickers|. If nothing is detected, the color
 	is inserted at a cursor position.
 
 
                                                                    *:CccConvert*
-:CccConvert ~
+:CccConvert
 	Convert color formats directly without opening the UI. The conversion
 	rules are specified in |ccc-option-convert|.
 
 
                                                          *:CccHighlighterEnable*
-:CccHighlighterEnable ~
-	Highlight colors in the buffer. The colors to be highlighted are those
+:CccHighlighterEnable [{bufnr}]
+	Highlight colors in the buffer {bufnr}. If {bufnr} is omitted, the
+	target is the current buffer. The colors to be highlighted are those
 	returned by textDocument/documentColor request or those registered in
 	|ccc-option-pickers|.
 	Highlight is managed on a buffer-by-buffer basis, so you must use this
@@ -503,12 +504,12 @@ Command                                                            *ccc-command*
 
 
                                                         *:CccHighlighterDisable*
-:CccHighlighterDisable ~
+:CccHighlighterDisable [{bufnr}]
 	Disable highlight.
 
 
                                                          *:CccHighlighterToggle*
-:CccHighlighterToggle ~
+:CccHighlighterToggle [{bufnr}]
 	Toggle highlight.
 
 
