@@ -77,7 +77,7 @@ function TrailingWhitespacePicker:parse_color(s, init)
       highlighter.pickers = { self }
       vim.api.nvim_create_autocmd("InsertLeave", {
         callback = function(opts)
-          highlighter:update_picker(opts.buf, 0, -1)
+          highlighter:update_picker(opts.buf, 0, -1, true)
           self.inInsert = false
         end,
       })
