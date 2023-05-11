@@ -13,19 +13,21 @@ vim.keymap.set("i", "<Plug>(ccc-insert)", function()
   require("ccc.ui"):open(true)
 end)
 
+local highlighter = require("ccc.highlighter").new()
+
 vim.api.nvim_create_user_command("CccHighlighterEnable", function(opt)
   local bufnr = tonumber(opt.args)
-  require("ccc.highlighter"):enable(bufnr)
+  highlighter:enable(bufnr)
 end, { nargs = "?" })
 
 vim.api.nvim_create_user_command("CccHighlighterDisable", function(opt)
   local bufnr = tonumber(opt.args)
-  require("ccc.highlighter"):disable(bufnr)
+  highlighter:disable(bufnr)
 end, { nargs = "?" })
 
 vim.api.nvim_create_user_command("CccHighlighterToggle", function(opt)
   local bufnr = tonumber(opt.args)
-  require("ccc.highlighter"):toggle(bufnr)
+  highlighter:toggle(bufnr)
 end, { nargs = "?" })
 
 vim.api.nvim_create_user_command("CccConvert", function()

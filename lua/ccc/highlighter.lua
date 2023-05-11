@@ -18,10 +18,9 @@ local rgb2hex = require("ccc.output.hex").str
 ---@field ls_colors table<integer, ls_color[]> #Keys are bufnr
 local Highlighter = {}
 
-function Highlighter:init()
-  if self.pickers ~= nil then
-    return
-  end
+---@return Highlighter
+function Highlighter.new()
+  local self = setmetatable({}, { __index = Highlighter })
 
   self.pickers = config.get("pickers")
   self.picker_ns_id = api.nvim_create_namespace("ccc-highlighter-picker")
@@ -67,12 +66,13 @@ function Highlighter:init()
       end
     end,
   })
+
+  return self
 end
 
 ---@param bufnr? integer
 ---@param filter? boolean
 function Highlighter:enable(bufnr, filter)
-  self:init()
   if filter and not self.ft_filter[vim.bo.filetype] then
     return
   end
@@ -101,7 +101,6 @@ end
 
 ---@param bufnr? integer
 function Highlighter:disable(bufnr)
-  self:init()
   bufnr = utils.resolve_bufnr(bufnr)
   self.attached_buffer[bufnr] = nil
   api.nvim_buf_clear_namespace(bufnr, self.picker_ns_id, 0, -1)
@@ -110,7 +109,6 @@ end
 
 ---@param bufnr? integer
 function Highlighter:toggle(bufnr)
-  self:init()
   bufnr = utils.resolve_bufnr(bufnr)
   if self.attached_buffer[bufnr] then
     self:disable(bufnr)

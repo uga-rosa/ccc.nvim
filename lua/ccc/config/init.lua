@@ -47,6 +47,7 @@ function M.setup(opt)
   })
 
   if M.config.highlighter.auto_enable then
+    local highlighter = require("ccc.highlighter").new()
     api.nvim_create_autocmd("BufEnter", {
       pattern = "*",
       group = api.nvim_create_augroup("ccc-highlighter-auto-enable", {}),
@@ -56,7 +57,7 @@ function M.setup(opt)
         if ok and stats and stats.size > max_byte then
           return
         end
-        require("ccc.highlighter"):enable(0, true)
+        highlighter:enable(0, true)
       end,
     })
   end
