@@ -41,6 +41,7 @@ local M = {
     css_oklch = require("ccc.picker.css_oklch"),
     custom_entries = require("ccc.picker.custom_entries"),
     ansi_escape = require("ccc.picker.ansi_escape"),
+    trailing_space = require("ccc.picker.trailing_whitespace"),
   },
   mapping = {},
 }

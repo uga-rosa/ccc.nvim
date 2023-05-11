@@ -251,6 +251,33 @@ Default: {
 	them such as `%`, `[]`, and `^$`, it detects the characters as they are.
 
 
+					*ccc-option-pickers-trailing_space*
+	There is a special picker named `ccc.picker.trailing_space`. As the
+	name suggests, it picks trailing white spaces. This colors are
+	pickable, but it is few meaning.
+>lua
+	ccc.setup({
+	  pickers = {
+	    ccc.picker.trailing_whitespace({
+	      ---@type table<string, string>
+	      --- Keys are filetypes, values are colors (6-digit hex)
+	      palette = {},
+	      ---@type string
+	      --- Default color. 6-digit hex representation.
+	      default_color = "#db7093",
+	      ---@type string[]|true
+	      --- List of filetypes for which highlighting is enabled or true.
+	      enable = true,
+	      ---@type string[]
+	      --- Used only when enable is true. List of filetypes for which
+	      --- highlighting is disabled.
+	      disable = {},
+	    }),
+	  },
+	})
+<
+
+
 						*ccc-option-pickers-ansi_escape*
 	There is a special picker named `ccc.picker.ansi_escape`. You can
 	define colors corresponding to ANSI escape code (16 colors).

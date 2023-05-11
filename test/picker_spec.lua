@@ -9,6 +9,7 @@ local css_oklab = require("ccc.picker.css_oklab")
 local css_oklch = require("ccc.picker.css_oklch")
 local css_name = require("ccc.picker.css_name")
 local custom_entries = require("ccc.picker.custom_entries")
+local trailing_whitespace = require("ccc.picker.trailing_whitespace")
 local ansi_escape = require("ccc.picker.ansi_escape")
 
 ---@param a number[]
@@ -222,6 +223,69 @@ describe("Color detection test", function()
     vim.opt.iskeyword = { "@", "48-57", "_", "128-167", "224-235" } -- default for Lua
     test_rgb(custom_entries({ red = "#ff0000", ["red-green"] = "#ffff00" }), " red-green ", { 255, 255, 0 }, nil)
     vim.opt.iskeyword = orig
+  end)
+
+  describe("Trailing Whitespace", function()
+    after_each(function()
+      vim.bo.filetype = ""
+    end)
+
+    ---@param ft string
+    ---@param opts TrailingWhitespaceConfig
+    ---@param str string
+    ---@param expect_rgb? RGB
+    ---@param length integer
+    local function test(ft, opts, str, expect_rgb, length)
+      vim.bo.filetype = ft
+      local start, end_, rgb = trailing_whitespace(opts):parse_color(str)
+      assert.equals(length, end_ - start + 1)
+      assert.same(expect_rgb, rgb)
+    end
+
+    ---@param ft string
+    ---@param opts TrailingWhitespaceConfig
+    ---@param str string
+    local function test_fail(ft, opts, str)
+      vim.bo.filetype = ft
+      local start = trailing_whitespace(opts):parse_color(str)
+      assert.is_nil(start)
+    end
+
+    -- #db7093
+    local default_color = { 219 / 255, 112 / 255, 147 / 255 }
+
+    it("enable for all filetypes (default)", function()
+      test("markdown", {}, "ccc  ", default_color, 2)
+      test("text", {}, "ccc   ", default_color, 3)
+    end)
+
+    it("enable in only markdown", function()
+      local opts = { enable = { "markdown" } }
+      test("markdown", opts, "ccc  ", default_color, 2)
+      test_fail("text", opts, "ccc  ")
+    end)
+
+    it("enable in except markdown", function()
+      local opts = { disable = { "markdown" } }
+      test_fail("markdown", opts, "ccc  ")
+      test("text", opts, "ccc  ", default_color, 2)
+      test("lua", opts, "ccc  ", default_color, 2)
+    end)
+
+    it("Set default color", function()
+      test("markdown", { default_color = "#ff0000" }, "ccc  ", { 1, 0, 0 }, 2)
+    end)
+
+    it("Set palette to specify color per filetype", function()
+      local opts = {
+        palette = {
+          markdown = "#ff0000",
+        },
+        default_color = "#00ff00",
+      }
+      test("markdown", opts, "ccc  ", { 1, 0, 0 }, 2)
+      test("text", opts, "ccc  ", { 0, 1, 0 }, 2)
+    end)
   end)
 
   describe("ANSI Escape", function()
