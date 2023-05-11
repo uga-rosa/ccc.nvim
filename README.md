@@ -18,7 +18,7 @@ Use the colorful sliders to easily generate any desired color!
 
 See [doc](./doc/ccc.txt) for details.
 
-# GIF 
+# GIF
 
 ## Seamless mode change
 
