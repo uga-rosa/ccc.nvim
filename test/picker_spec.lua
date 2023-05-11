@@ -45,17 +45,6 @@ local function test_rgb(module, str, expect_rgb, expect_alpha)
   end
 end
 
----@param module ColorPicker
----@param str string
----@param expect_hl_def highlightDefinition
-local function test_hl_def(module, str, expect_hl_def)
-  local start, end_, _, _, hl_def = module:parse_color(str)
-  assert(start and end_ and hl_def, "Can't parse color")
-  assert.equals(2, start)
-  assert.equals(#str - 1, end_)
-  assert.same(expect_hl_def, hl_def)
-end
-
 describe("Color detection test", function()
   it("none", function()
     test_rgb(css_rgb, " rgb(255 none 255) ", { 255, 0, 255 }, nil)
@@ -233,13 +222,13 @@ describe("Color detection test", function()
     ---@param ft string
     ---@param opts TrailingWhitespaceConfig
     ---@param str string
-    ---@param expect_rgb? RGB
+    ---@param expected? string
     ---@param length integer
-    local function test(ft, opts, str, expect_rgb, length)
+    local function test(ft, opts, str, expected, length)
       vim.bo.filetype = ft
-      local start, end_, rgb = trailing_whitespace(opts):parse_color(str)
+      local start, end_, _, _, hl_def = trailing_whitespace(opts):parse_color(str)
       assert.equals(length, end_ - start + 1)
-      assert.same(expect_rgb, rgb)
+      assert.same({ bg = expected }, hl_def)
     end
 
     ---@param ft string
@@ -251,8 +240,7 @@ describe("Color detection test", function()
       assert.is_nil(start)
     end
 
-    -- #db7093
-    local default_color = { 219 / 255, 112 / 255, 147 / 255 }
+    local default_color = "#db7093"
 
     it("enable for all filetypes (default)", function()
       test("markdown", {}, "ccc  ", default_color, 2)
@@ -273,7 +261,7 @@ describe("Color detection test", function()
     end)
 
     it("Set default color", function()
-      test("markdown", { default_color = "#ff0000" }, "ccc  ", { 1, 0, 0 }, 2)
+      test("markdown", { default_color = "#ff0000" }, "ccc  ", "#ff0000", 2)
     end)
 
     it("Set palette to specify color per filetype", function()
@@ -283,12 +271,23 @@ describe("Color detection test", function()
         },
         default_color = "#00ff00",
       }
-      test("markdown", opts, "ccc  ", { 1, 0, 0 }, 2)
-      test("text", opts, "ccc  ", { 0, 1, 0 }, 2)
+      test("markdown", opts, "ccc  ", "#ff0000", 2)
+      test("text", opts, "ccc  ", "#00ff00", 2)
     end)
   end)
 
   describe("ANSI Escape", function()
+    ---@param module ColorPicker
+    ---@param str string
+    ---@param expect_hl_def highlightDefinition
+    local function test_hl_def(module, str, expect_hl_def)
+      local start, end_, _, _, hl_def = module:parse_color(str)
+      assert(start and end_ and hl_def, "Can't parse color")
+      assert.equals(2, start)
+      assert.equals(#str - 1, end_)
+      assert.same(expect_hl_def, hl_def)
+    end
+
     it("bold", function()
       test_hl_def(
         ansi_escape({ red = "#ff0000", blue = "#0000ff" }, { meaning1 = "bold" }),

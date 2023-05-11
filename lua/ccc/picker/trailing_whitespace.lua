@@ -1,15 +1,3 @@
-local parse = require("ccc.utils.parse")
-
----@param str string
----@return RGB?
-local parse_hex = function(str)
-  local r, g, b = str:match("(%x%x)(%x%x)(%x%x)")
-  r, g, b = parse.hex(r), parse.hex(g), parse.hex(b)
-  if r and g and b then
-    return { r, g, b }
-  end
-end
-
 ---@class TrailingWhitespacePicker: ColorPicker
 ---@field ft2color table<string, RGB>
 ---@field filter table<string, boolean>
@@ -34,14 +22,9 @@ function TrailingWhitespacePicker.new(opts)
 
   local palette = {}
   for ft, hex in pairs(opts.palette) do
-    local rgb = parse_hex(hex)
-    if rgb then
-      palette[ft] = rgb
-    else
-      vim.notify("[ccc] Invalid color representation: " .. hex)
-    end
+    palette[ft] = hex
   end
-  local default_color = parse_hex(opts.default_color) or parse_hex(default.default_color)
+  local default_color = opts.default_color
   local ft2color = setmetatable(palette, {
     __index = function()
       return default_color
@@ -79,8 +62,9 @@ end
 ---@param init? integer
 ---@return integer? start
 ---@return integer? end_
----@return RGB?
----@return Alpha?
+---@return nil
+---@return nil
+---@return highlightDefinition?
 function TrailingWhitespacePicker:parse_color(s, init)
   init = vim.F.if_nil(init, 1)
   local ft = vim.bo.filetype
@@ -89,7 +73,8 @@ function TrailingWhitespacePicker:parse_color(s, init)
   end
   local start, end_ = s:find("%s+$", init)
   if start then
-    return start, end_, self.ft2color[ft]
+    local hex = self.ft2color[ft]
+    return start, end_, nil, nil, { bg = hex }
   end
 end
 

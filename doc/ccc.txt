@@ -251,10 +251,11 @@ Default: {
 	them such as `%`, `[]`, and `^$`, it detects the characters as they are.
 
 
-					*ccc-option-pickers-trailing_space*
-	There is a special picker named `ccc.picker.trailing_space`. As the
-	name suggests, it picks trailing white spaces. This colors are
-	pickable, but it is few meaning.
+					*ccc-option-pickers-trailing_whitespace*
+	There is a special picker named `ccc.picker.trailing_whitespace`. As
+	the name suggests, it picks trailing white spaces.
+	NOTE: This picker is only used for highlights. The reason is to pick
+	is meaningless.
 >lua
 	ccc.setup({
 	  pickers = {
@@ -281,7 +282,7 @@ Default: {
 						*ccc-option-pickers-ansi_escape*
 	There is a special picker named `ccc.picker.ansi_escape`. You can
 	define colors corresponding to ANSI escape code (16 colors).
-	Note: that this picker is only used for highlights. The reason is that
+	Note: This picker is only used for highlights. The reason is that
 	foreground and background colors can be set at the same time, and the
 	color to be picked cannot be determined.
 >
