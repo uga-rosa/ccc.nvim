@@ -1,7 +1,8 @@
 ---@class TrailingWhitespacePicker: ColorPicker
 ---@field ft2color table<string, RGB>
 ---@field filter table<string, boolean>
----@field inInsert boolean
+---@field already_in_insert boolean
+---@field highlighter? Highlighter
 local TrailingWhitespacePicker = {}
 
 ---@class TrailingWhitespaceConfig
@@ -72,17 +73,20 @@ function TrailingWhitespacePicker:parse_color(s, init)
     return
   end
   if vim.startswith(vim.fn.mode(), "i") then
-    if not self.inInsert then
-      local highlighter = require("ccc.highlighter").new(false)
-      highlighter.pickers = { self }
+    if not self.already_in_insert then
+      if self.highlighter == nil then
+        -- Can't initialize in new() because setup() must be called before highlighter.new()
+        self.highlighter = require("ccc.highlighter").new(false)
+        self.highlighter.pickers = { self }
+      end
       vim.api.nvim_create_autocmd("InsertLeave", {
         callback = function(opts)
-          highlighter:update_picker(opts.buf, 0, -1, true)
-          self.inInsert = false
+          self.highlighter:update_picker(opts.buf, 0, -1, true)
+          self.already_in_insert = false
         end,
         once = true,
       })
-      self.inInsert = true
+      self.already_in_insert = true
     end
     return
   end
