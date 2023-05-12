@@ -80,6 +80,7 @@ function TrailingWhitespacePicker:parse_color(s, init)
           highlighter:update_picker(opts.buf, 0, -1, true)
           self.inInsert = false
         end,
+        once = true,
       })
       self.inInsert = true
     end
