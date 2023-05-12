@@ -73,7 +73,7 @@ function TrailingWhitespacePicker:parse_color(s, init)
   end
   if vim.startswith(vim.fn.mode(), "i") then
     if not self.inInsert then
-      local highlighter = require("ccc.highlighter").new()
+      local highlighter = require("ccc.highlighter").new(false)
       highlighter.pickers = { self }
       vim.api.nvim_create_autocmd("InsertLeave", {
         callback = function(opts)

@@ -47,7 +47,7 @@ function M.setup(opt)
   })
 
   if M.config.highlighter.auto_enable then
-    local highlighter = require("ccc.highlighter").new()
+    local highlighter = require("ccc.highlighter").new(true)
     api.nvim_create_autocmd("BufEnter", {
       pattern = "*",
       group = api.nvim_create_augroup("ccc-highlighter-auto-enable", {}),

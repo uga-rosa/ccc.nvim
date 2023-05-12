@@ -13,7 +13,7 @@ vim.keymap.set("i", "<Plug>(ccc-insert)", function()
   require("ccc.ui"):open(true)
 end)
 
-local highlighter = require("ccc.highlighter").new()
+local highlighter = require("ccc.highlighter").new(true)
 
 vim.api.nvim_create_user_command("CccHighlighterEnable", function(opt)
   local bufnr = tonumber(opt.args)

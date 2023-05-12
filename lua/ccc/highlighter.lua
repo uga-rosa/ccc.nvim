@@ -18,8 +18,9 @@ local rgb2hex = require("ccc.output.hex").str
 ---@field ls_colors table<integer, ls_color[]> #Keys are bufnr
 local Highlighter = {}
 
+---@param set_autocmd boolean
 ---@return Highlighter
-function Highlighter.new()
+function Highlighter.new(set_autocmd)
   local self = setmetatable({}, { __index = Highlighter })
 
   self.pickers = config.get("pickers")
@@ -49,23 +50,25 @@ function Highlighter.new()
   self.attached_buffer = {}
   self.ls_colors = {}
 
-  api.nvim_create_autocmd("ColorScheme", {
-    callback = function()
-      -- Re-highlight only visible buffers.
-      local visible_buf = {}
-      for _, win in ipairs(api.nvim_list_wins()) do
-        visible_buf[api.nvim_win_get_buf(win)] = true
-      end
-      self.is_defined = {}
-      for bufnr in pairs(self.attached_buffer) do
-        if visible_buf[bufnr] then
-          self:update(bufnr, 0, -1)
-        else
-          self:disable(bufnr)
+  if set_autocmd then
+    api.nvim_create_autocmd("ColorScheme", {
+      callback = function()
+        -- Re-highlight only visible buffers.
+        local visible_buf = {}
+        for _, win in ipairs(api.nvim_list_wins()) do
+          visible_buf[api.nvim_win_get_buf(win)] = true
         end
-      end
-    end,
-  })
+        self.is_defined = {}
+        for bufnr in pairs(self.attached_buffer) do
+          if visible_buf[bufnr] then
+            self:update(bufnr, 0, -1)
+          else
+            self:disable(bufnr)
+          end
+        end
+      end,
+    })
+  end
 
   return self
 end
