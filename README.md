@@ -12,6 +12,7 @@ Use the colorful sliders to easily generate any desired color!
     - Restore previously used colors.
     - Transparent slider for css functions (e.g. `rgb()`, `hsl()`)
     - Color Highlighter for many formats.
+    - Programmable modules (input/output/picker)
 
 - Requirements
     - neovim 0.8+
