@@ -15,6 +15,7 @@ local config = require("ccc.config")
 local utils = require("ccc.utils")
 local prev_colors = require("ccc.prev_colors")
 local alpha = require("ccc.alpha")
+local convert = require("ccc.utils.convert")
 
 ---@class UI
 ---@field color CccColor
@@ -305,6 +306,9 @@ function UI:highlight()
   local bar_char = config.get("bar_char")
   local point_char = config.get("point_char")
   local point_color = config.get("point_color")
+  local empty_point_bg = config.get("empty_point_bg")
+  local point_color_on_dark = config.get("point_color_on_dark")
+  local point_color_on_light = config.get("point_color_on_light")
   local bar_len = config.get("bar_len")
   local bar_name_len = #self.color.input.bar_name[1]
   -- ColorInput.format() must return string of 6 bytes.
@@ -322,15 +326,25 @@ function UI:highlight()
     for j = 1, bar_len do
       end_ = update_end(j == point_idx, start, #bar_char, #point_char)
 
-      local hex
-      if point_color ~= "" and j == point_idx then
-        hex = point_color
+      local new_value = (j - 0.5) / bar_len * (max - min) + min
+      local hex = self.color:hex(i, new_value)
+      local hi = {}
+      if j == point_idx then
+        hi.fg = hex
+        if not empty_point_bg then
+          local RGB = self.color:get_rgb()
+          local _, _, L = unpack(convert.rgb2hsl(RGB))
+          hi.fg = L < 0.6 and point_color_on_dark or point_color_on_light
+          hi.bg = hex
+        end
+        if point_color ~= "" then
+          hi.fg = point_color
+        end
       else
-        local new_value = (j - 0.5) / bar_len * (max - min) + min
-        hex = self.color:hex(i, new_value)
+        hi.fg = hex
       end
       local color_name = "CccBar" .. i .. "_" .. j
-      set_hl(self.ns_id, color_name, { fg = hex })
+      set_hl(self.ns_id, color_name, hi)
       add_hl(self.bufnr, self.ns_id, color_name, i, start, end_)
 
       start = end_
@@ -345,9 +359,23 @@ function UI:highlight()
     for i = 0, bar_len - 1 do
       end_ = update_end(i == point_idx, start, #bar_char, #point_char)
 
-      local hex = self.alpha:hex((i + 0.5) / bar_len)
+      local alpha_ratio = (i + 0.5) / bar_len
+      local hex = self.alpha:hex(alpha_ratio)
+      local hi = {}
+      if i + 1 == point_idx then
+        hi.fg = hex
+        if not empty_point_bg then
+          hi.fg = alpha_ratio > 0.5 and point_color_on_dark or point_color_on_light
+          hi.bg = hex
+        end
+        if point_color ~= "" then
+          hi.fg = point_color
+        end
+      else
+        hi.fg = hex
+      end
       local color_name = "CccAlpha" .. i
-      set_hl(self.ns_id, color_name, { fg = hex })
+      set_hl(self.ns_id, color_name, hi)
       add_hl(self.bufnr, self.ns_id, color_name, row, start, end_)
 
       start = end_
