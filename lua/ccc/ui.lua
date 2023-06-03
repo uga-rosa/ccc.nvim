@@ -328,20 +328,17 @@ function UI:highlight()
 
       local new_value = (j - 0.5) / bar_len * (max - min) + min
       local hex = self.color:hex(i, new_value)
-      local hi = {}
+      local hi = { fg = hex }
       if j == point_idx then
-        hi.fg = hex
         if not empty_point_bg then
           local RGB = self.color:get_rgb()
-          local _, _, L = unpack(convert.rgb2hsl(RGB))
-          hi.fg = L < 0.6 and point_color_on_dark or point_color_on_light
+          local R, G, B = convert.rgb_format(RGB)
+          hi.fg = utils.is_bright_RGB(R, G, B) and point_color_on_light or point_color_on_dark
           hi.bg = hex
         end
         if point_color ~= "" then
           hi.fg = point_color
         end
-      else
-        hi.fg = hex
       end
       local color_name = "CccBar" .. i .. "_" .. j
       set_hl(self.ns_id, color_name, hi)
@@ -361,9 +358,8 @@ function UI:highlight()
 
       local alpha_ratio = (i + 0.5) / bar_len
       local hex = self.alpha:hex(alpha_ratio)
-      local hi = {}
+      local hi = { fg = hex }
       if i + 1 == point_idx then
-        hi.fg = hex
         if not empty_point_bg then
           hi.fg = alpha_ratio > 0.5 and point_color_on_dark or point_color_on_light
           hi.bg = hex
@@ -371,8 +367,6 @@ function UI:highlight()
         if point_color ~= "" then
           hi.fg = point_color
         end
-      else
-        hi.fg = hex
       end
       local color_name = "CccAlpha" .. i
       set_hl(self.ns_id, color_name, hi)
