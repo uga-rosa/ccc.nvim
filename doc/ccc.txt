@@ -95,6 +95,33 @@ Default: ""
 	dynamically highlighted.
 
 
+                                                     *ccc-option-empty-point-bg*
+empty_point_bg ~
+boolean
+Default: true
+	Determine whether to display background of the points on the sliders.
+	If it is false, the background color will be the color where the point
+	steps on, which will make the bar look continuous.
+
+
+                                                *ccc-option-point-color-on-dark*
+point_color_on_dark ~
+string
+Default: "#ffffff"
+	The color of the cursor point on the sliders when the background color
+	is dark. It must be HEX format. If point_color is not empty, this
+	value will be overridden.
+
+
+                                               *ccc-option-point-color-on-light*
+point_color_on_light ~
+string
+Default: "#000000"
+	The color of the cursor point on the sliders when the background color
+	is light. It must be HEX format. If point_color is not empty, this
+	value will be overridden.
+
+
                                                             *ccc-option-bar-len*
 bar_len ~
 integer
@@ -705,7 +732,6 @@ mapping.set100()
 ccc.set_percent(integer)
 Default mapping: H / M / L (0 / 50 / 100), 1 - 9 (10% - 90%)
 	Set the value of the slider as a percentage.
-
 
 
 vim:tw=78:ts=8:noet:ft=help:norl:
