@@ -114,22 +114,30 @@ function utils.clamp(int, min, max)
   return int
 end
 
+---@param R integer #0-255
+---@param G integer #0-255
+---@param B integer #0-255
+---@return boolean
+function utils.is_bright_RGB(R, G, B)
+  local luminance = 0.298912 * R + 0.586611 * G + 0.114478 * B
+  return luminance > 127
+end
+
 ---@param HEX string
 ---@return boolean
-local function is_bright(HEX)
+local function is_bright_HEX(HEX)
   -- 0-255
   local R = tonumber(HEX:sub(2, 3), 16)
   local G = tonumber(HEX:sub(4, 5), 16)
   local B = tonumber(HEX:sub(6, 7), 16)
-  local luminance = 0.298912 * R + 0.586611 * G + 0.114478 * B
-  return luminance > 127
+  return utils.is_bright_RGB(R, G, B)
 end
 
 ---@param hex string
 ---@param hl_mode hl_mode
 ---@return table
 function utils.create_highlight(hex, hl_mode)
-  local contrast = is_bright(hex) and "#000000" or "#ffffff"
+  local contrast = is_bright_HEX(hex) and "#000000" or "#ffffff"
   if hl_mode == "fg" or hl_mode == "foreground" then
     return { fg = hex, bg = contrast }
   else

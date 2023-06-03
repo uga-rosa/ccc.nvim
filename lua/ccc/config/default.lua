@@ -16,6 +16,12 @@ return {
   point_char = "◊",
   ---@type string hex
   point_color = "",
+  ---@type boolean
+  empty_point_bg = true,
+  ---@type string hex
+  point_color_on_dark = "#ffffff",
+  ---@type string hex
+  point_color_on_light = "#000000",
   ---@type integer
   bar_len = 30,
   ---@type table
