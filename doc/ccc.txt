@@ -279,15 +279,15 @@ Default: {
 	them such as `%`, `[]`, and `^$`, it detects the characters as they are.
 
 
-					*ccc-option-pickers-trailing_whitespace*
-	There is a special picker named `ccc.picker.trailing_whitespace`. As
+					*ccc-option-pickers-trailing_space*
+	There is a special picker named `ccc.picker.trailing_space`. As
 	the name suggests, it picks trailing white spaces.
 	NOTE: This picker is only used for highlights. The reason is to pick
 	is meaningless.
 >lua
 	ccc.setup({
 	  pickers = {
-	    ccc.picker.trailing_whitespace({
+	    ccc.picker.trailing_space({
 	      ---@type table<string, string>
 	      --- Keys are filetypes, values are colors (6-digit hex)
 	      palette = {},
