@@ -41,7 +41,11 @@ local M = {
     css_oklch = require("ccc.picker.css_oklch"),
     custom_entries = require("ccc.picker.custom_entries"),
     ansi_escape = require("ccc.picker.ansi_escape"),
-    trailing_space = require("ccc.picker.trailing_whitespace"),
+    trailing_whitespace = require("ccc.picker.trailing_whitespace"),
+    trailing_space = function(opts)
+      vim.notify("Incorrect picker name: `trailing_space`\nCorrect to `trailing_whitespace`")
+      return require("ccc.picker.trailing_whitespace")(opts)
+    end,
   },
   mapping = {},
 }
