@@ -3,7 +3,7 @@
 ---@field str fun(RGB: number[], A?: number): string
 
 ---@class ColorPicker
----@field parse_color fun(self, s: string, init?: integer): start: integer?, end_: integer?, RGB?, Alpha?, highlightDefinition?
+---@field parse_color fun(self, s: string, init?: integer, bufnr?: integer): start: integer?, end_: integer?, RGB?, Alpha?, highlightDefinition?
 
 ---See `:h nvim_set_hl()`
 ---@class highlightDefinition

@@ -9,13 +9,15 @@ local TrailingWhitespacePicker = {}
 ---@field palette table<string, string> Keys are filetypes, values are colors (hex)
 ---@field default_color string Hex
 ---@field enable string[]|true List of filetypes for which highlighting is enabled or true.
----@field disable string[] Used only when enable is true. List of filetypes for which highlighting is disabled.
+---@field disable string[]|fun(bufnr: number): boolean List of filetypes to disable highlighting or a function that returns true when you want to disable it
 local default = {
   palette = {},
   default_color = "#db7093",
   enable = true,
   disable = {},
 }
+
+local contains = vim.list_contains or vim.tbl_contains
 
 ---@param opts? TrailingWhitespaceConfig
 ---@return TrailingWhitespacePicker
@@ -33,25 +35,23 @@ function TrailingWhitespacePicker.new(opts)
     end,
   })
 
-  local filter = {}
+  local filter
   if opts.enable == true then
-    setmetatable(filter, {
-      __index = function()
-        return true
-      end,
-    })
-    for _, ft in ipairs(opts.disable) do
-      filter[ft] = false
+    if type(opts.disable) == "table" then
+      function filter(bufnr)
+        local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
+        return not contains(opts.disable, ft)
+      end
+    elseif type(opts.disable) == "function" then
+      function filter(bufnr)
+        return not opts.disable(bufnr)
+      end
     end
   else
-    for _, ft in ipairs(opts.enable) do
-      filter[ft] = true
+    function filter(bufnr)
+      local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
+      return contains(opts.enable, ft)
     end
-    setmetatable(filter, {
-      __index = function()
-        return false
-      end,
-    })
   end
 
   return setmetatable({
@@ -62,14 +62,15 @@ end
 
 ---@param s string
 ---@param init? integer
+---@param bufnr? integer
 ---@return integer? start
 ---@return integer? end_
 ---@return nil
 ---@return nil
 ---@return highlightDefinition?
-function TrailingWhitespacePicker:parse_color(s, init)
-  local ft = vim.bo.filetype
-  if not self.filter[ft] then
+function TrailingWhitespacePicker:parse_color(s, init, bufnr)
+  bufnr = vim.F.if_nil(bufnr, 0)
+  if not self.filter(bufnr) then
     return
   end
   if vim.startswith(vim.fn.mode(), "i") then
@@ -92,6 +93,7 @@ function TrailingWhitespacePicker:parse_color(s, init)
   end
   local start, end_ = s:find("%s+$", init or 1)
   if start then
+    local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
     local hex = self.ft2color[ft]
     return start, end_, nil, nil, { bg = hex }
   end
