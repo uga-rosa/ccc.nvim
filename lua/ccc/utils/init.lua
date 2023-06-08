@@ -48,6 +48,14 @@ function utils.set_lines(bufnr, start, end_, lines)
   api.nvim_buf_set_option(bufnr, "modifiable", false)
 end
 
+---@param bufnr integer
+---@param lnum integer 1-index
+---@return integer
+function utils.line_length(bufnr, lnum)
+  local line = vim.api.nvim_buf_get_lines(bufnr, lnum - 1, lnum, false)[1]
+  return vim.api.nvim_strwidth(line)
+end
+
 ---@param ... number
 ---@return number max
 function utils.max(...)

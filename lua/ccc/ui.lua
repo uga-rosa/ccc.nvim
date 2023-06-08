@@ -439,6 +439,35 @@ function UI:set_percent(percent)
   self:update()
 end
 
+function UI:click()
+  local mousepos = vim.fn.getmousepos()
+  if mousepos.winid ~= self.win_id then
+    return
+  end
+  local lnum, col = mousepos.line, mousepos.column
+  local index = lnum - 1
+  local input = self.color.input
+  local offset = #input.bar_name[1] + 3 + 6 + 1 -- bar_name : xxxxxx [bar]
+  if col <= offset then
+    return
+  end
+  local virtcol = vim.fn.virtcol({ lnum, col })
+  local fraction = (virtcol - offset) / (utils.line_length(self.bufnr, lnum) - offset)
+  if 1 <= index and index <= #input.value then
+    local max = input.max[index]
+    local min = input.min[index]
+    local new_value = (max - min) * fraction + min
+    input:callback(index, new_value)
+  elseif self.alpha.is_showed and index == #input.value + 1 then
+    local new_value = fraction
+    self.alpha:set(new_value)
+  else
+    return
+  end
+  utils.set_cursor({ lnum, 1 })
+  self:update()
+end
+
 ---@param input? ColorInput
 function UI:_set_input(input)
   if input and self.recognize.input then
