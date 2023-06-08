@@ -277,7 +277,7 @@ function Highlighter:update_picker(bufnr, start_row, end_row, keep)
     while true do
       local start, end_, RGB, hl_def
       for _, picker in ipairs(self.pickers) do
-        local s_, e_, rgb, _, h_d = picker:parse_color(line, init)
+        local s_, e_, rgb, _, h_d = picker:parse_color(line, init, bufnr)
         if s_ and (start == nil or s_ < start) then
           start = s_
           end_ = e_

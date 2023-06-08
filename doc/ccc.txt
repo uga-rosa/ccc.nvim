@@ -297,9 +297,9 @@ Default: {
 	      ---@type string[]|true
 	      --- List of filetypes for which highlighting is enabled or true.
 	      enable = true,
-	      ---@type string[]
-	      --- Used only when enable is true. List of filetypes for which
-	      --- highlighting is disabled.
+	      ---@type string[]|fun(bufnr: number): boolean
+	      --- List of filetypes to disable highlighting or a function
+	      --- that returns true when you want to disable it
 	      disable = {},
 	    }),
 	  },
