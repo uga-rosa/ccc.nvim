@@ -9,7 +9,7 @@ local TrailingWhitespacePicker = {}
 ---@field palette table<string, string> Keys are filetypes, values are colors (hex)
 ---@field default_color string Hex
 ---@field enable string[]|true List of filetypes for which highlighting is enabled or true.
----@field disable string[]|fun(bufnr: number): boolean List of filetypes to disable highlighting or a function that returns true when you want to disable it
+---@field disable string[]|fun(bufnr: number): boolean Used only when enable is true. List of filetypes to disable highlighting or a function that returns true when you want to disable it.
 local default = {
   palette = {},
   default_color = "#db7093",
