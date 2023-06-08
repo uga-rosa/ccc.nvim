@@ -68,7 +68,7 @@ function PrevColors:show()
   if self:get() then
     self:_goto()
   else
-    utils.cursor_set({ ui.win_height, 1 })
+    utils.set_cursor({ ui.win_height, 1 })
   end
   ui:highlight()
 end
@@ -80,7 +80,7 @@ function PrevColors:hide()
   ui.win_height = ui.win_height - 1
   ui:refresh()
   if self.prev_pos then
-    utils.cursor_set(self.prev_pos)
+    utils.set_cursor(self.prev_pos)
   end
 end
 
@@ -94,7 +94,7 @@ end
 
 function PrevColors:_goto()
   self.selected_color = self.colors[self.index]
-  utils.cursor_set({ self.ui.win_height, self.index * 8 - 7 })
+  utils.set_cursor({ self.ui.win_height, self.index * 8 - 7 })
 end
 
 function PrevColors:goto_next()

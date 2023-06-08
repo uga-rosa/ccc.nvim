@@ -30,7 +30,7 @@ function AlphaSlider:show(cursor_keep)
     if ui.prev_colors.is_showed then
       lnum = lnum - 1
     end
-    utils.cursor_set({ lnum, 1 })
+    utils.set_cursor({ lnum, 1 })
   end
 end
 
@@ -40,7 +40,7 @@ function AlphaSlider:hide()
   ui:update()
   ui:refresh()
   if self.prev_pos then
-    utils.cursor_set(self.prev_pos)
+    utils.set_cursor(self.prev_pos)
   end
 end
 

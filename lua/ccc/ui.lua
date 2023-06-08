@@ -136,7 +136,7 @@ function UI:open(insert)
   self.before_color = self.color:copy()
   self:update()
   self:_open()
-  utils.cursor_set({ 2, 1 })
+  utils.set_cursor({ 2, 1 })
   api.nvim_create_autocmd("WinClosed", {
     pattern = self.win_id .. "",
     callback = function()
