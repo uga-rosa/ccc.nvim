@@ -81,13 +81,13 @@ return {
     ---@type boolean
     lsp = true,
   },
-    -- stylua: ignore
-    ---@type {[1]: ColorPicker, [2]: ColorOutput}[]
-    convert = {
-        { picker.hex,     output.css_rgb },
-        { picker.css_rgb, output.css_hsl },
-        { picker.css_hsl, output.hex     },
-    },
+  -- stylua: ignore
+  ---@type {[1]: ColorPicker, [2]: ColorOutput}[]
+  convert = {
+      { picker.hex,     output.css_rgb },
+      { picker.css_rgb, output.css_hsl },
+      { picker.css_hsl, output.hex     },
+  },
   recognize = {
     input = false,
     output = false,
@@ -154,5 +154,8 @@ return {
     ["9"] = function()
       ccc.set_percent(90)
     end,
+    ["<LeftMouse>"] = mapping.click,
+    ["<ScrollWheelDown>"] = mapping.decrease1,
+    ["<ScrollWheelUp>"] = mapping.increase1,
   },
 }
