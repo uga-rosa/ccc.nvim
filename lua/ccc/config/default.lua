@@ -154,5 +154,8 @@ return {
     ["9"] = function()
       ccc.set_percent(90)
     end,
+    ["<LeftMouse>"] = mapping.click,
+    ["<ScrollWheelDown>"] = mapping.decrease1,
+    ["<ScrollWheelUp>"] = mapping.increase1,
   },
 }
