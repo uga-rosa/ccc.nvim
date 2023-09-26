@@ -22,13 +22,13 @@ function Convert:toggle()
     local picker, output = unpack(v)
 
     local init = 1
-    local start, end_, rgb
+    local start, end_, rgb, alpha
     while true do
-      start, end_, rgb = picker:parse_color(line, init)
+      start, end_, rgb, alpha = picker:parse_color(line, init)
       if start == nil then
         break
       elseif start <= cursor_col and cursor_col <= end_ then
-        local new_line = line:sub(1, start - 1) .. output.str(rgb) .. line:sub(end_ + 1)
+        local new_line = line:sub(1, start - 1) .. output.str(rgb, alpha) .. line:sub(end_ + 1)
         api.nvim_set_current_line(new_line)
         return
       end
