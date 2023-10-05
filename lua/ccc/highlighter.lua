@@ -124,13 +124,13 @@ end
 function Highlighter:start(bufnr)
   vim.schedule(function()
     if self.lsp then
-      if not self:update_lsp(bufnr) then
+      if not self:update_lsp(bufnr, 0, -1) then
         -- Wait for LS initialization
         vim.defer_fn(function()
           if not self.attached_buffer[bufnr] then
             return
           end
-          if not self:update_lsp(bufnr) then
+          if not self:update_lsp(bufnr, 0, -1) then
             self:update_picker(bufnr, 0, -1)
           end
         end, 200)
@@ -146,7 +146,7 @@ end
 ---@param last_line integer 0-index
 function Highlighter:update(bufnr, first_line, last_line)
   vim.schedule(function()
-    if not (self.lsp and self:update_lsp(bufnr)) then
+    if not (self.lsp and self:update_lsp(bufnr, first_line, last_line)) then
       self:update_picker(bufnr, first_line, last_line)
     end
   end)
@@ -198,17 +198,43 @@ function Highlighter:_get_or_create_hl_from_def(hl_def)
   return hl_name
 end
 
+---@param range lsp.Range
+---@param color lsp.Color
+---@return ls_color
+local function create_ls_color(range, color)
+  -- To end-included 1-index
+  local row = range.start.line + 1
+  local start = range.start.character + 1
+  local end_ = range["end"].character
+  local rgb = { color.red, color.green, color.blue }
+  local alpha = color.alpha or 1
+  return { row = row, start = start, end_ = end_, rgb = rgb, alpha = alpha }
+end
+
 ---@param bufnr integer
+---@param start_row integer 0-index
+---@param end_row integer 0-index
 ---@return boolean available
-function Highlighter:update_lsp(bufnr)
+function Highlighter:update_lsp(bufnr, start_row, end_row)
   if not api.nvim_buf_is_valid(bufnr) then
     return false
   end
 
   local available = false
-  api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, 0, -1)
+  api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, start_row, end_row)
 
-  self.ls_colors[bufnr] = {}
+  if self.ls_colors[bufnr] == nil then
+    self.ls_colors[bufnr] = {}
+  else
+    for i = #self.ls_colors[bufnr], 1, -1 do
+      local color = self.ls_colors[bufnr][i]
+      local row = color.row - 1
+      if row >= start_row and row <= end_row then
+        table.remove(self.ls_colors[bufnr], i)
+      end
+    end
+  end
+
   for _, client in pairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
     if client.server_capabilities.colorProvider then
       local param = { textDocument = vim.lsp.util.make_text_document_params() }
@@ -224,30 +250,19 @@ function Highlighter:update_lsp(bufnr)
           local color = color_info.color
           local range = color_info.range
 
-          local ls_color = self._create_ls_color(range, color)
-          table.insert(self.ls_colors[bufnr], ls_color)
+          if range.start.line >= start_row and range["end"].line <= end_row then
+            local ls_color = create_ls_color(range, color)
+            table.insert(self.ls_colors[bufnr], ls_color)
 
-          local hl_name = self:_get_or_create_hl_from_rgb(ls_color.rgb)
-          api.nvim_buf_add_highlight(0, self.lsp_ns_id, hl_name, ls_color.row - 1, ls_color.start - 1, ls_color.end_)
+            local hl_name = self:_get_or_create_hl_from_rgb(ls_color.rgb)
+            api.nvim_buf_add_highlight(0, self.lsp_ns_id, hl_name, ls_color.row - 1, ls_color.start - 1, ls_color.end_)
+          end
         end
       end)
     end
   end
 
   return available
-end
-
----@param range lsp.Range
----@param color lsp.Color
----@return ls_color
-function Highlighter._create_ls_color(range, color)
-  -- To end-included 1-index
-  local row = range.start.line + 1
-  local start = range.start.character + 1
-  local end_ = range["end"].character
-  local rgb = { color.red, color.green, color.blue }
-  local alpha = color.alpha or 1
-  return { row = row, start = start, end_ = end_, rgb = rgb, alpha = alpha }
 end
 
 ---@param bufnr? integer
