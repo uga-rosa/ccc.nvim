@@ -80,6 +80,8 @@ return {
     excludes = {},
     ---@type boolean
     lsp = true,
+    ---@type boolean
+    update_insert = true,
   },
   -- stylua: ignore
   ---@type {[1]: ColorPicker, [2]: ColorOutput}[]

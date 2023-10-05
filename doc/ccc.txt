@@ -410,6 +410,15 @@ Default: true
 	by |:CccPick|.
 
 
+					*ccc-option-highlighter-update_insert*
+highlighter.update_insert ~
+boolean
+Default: true
+	If true, highlights will be updated during insert mode. If false,
+	highlights will not be updated during editing in insert mode , but
+	will be updated on |InsertLeave|.
+
+
                                                             *ccc-option-convert*
 convert ~
 table

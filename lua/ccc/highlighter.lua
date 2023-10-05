@@ -16,6 +16,7 @@ local rgb2hex = require("ccc.output.hex").str
 ---@field hl_mode hl_mode
 ---@field attached_buffer table<integer, boolean>
 ---@field ls_colors table<integer, ls_color[]> #Keys are bufnr
+---@field update_insert boolean
 local Highlighter = {}
 
 ---@param set_autocmd boolean
@@ -46,6 +47,7 @@ function Highlighter.new(set_autocmd)
   end
   self.ft_filter = ft_filter
   self.lsp = highlighter_config.lsp
+  self.update_insert = highlighter_config.update_insert
   self.hl_mode = config.get("highlight_mode")
   self.attached_buffer = {}
   self.ls_colors = {}
@@ -66,6 +68,14 @@ function Highlighter.new(set_autocmd)
             self:disable(bufnr)
           end
         end
+      end,
+    })
+  end
+
+  if not self.update_insert then
+    api.nvim_create_autocmd("InsertLeave", {
+      callback = function(args)
+        self:update(args.buf, 0, -1)
       end,
     })
   end
@@ -91,6 +101,9 @@ function Highlighter:enable(bufnr, filter)
 
   api.nvim_buf_attach(bufnr, false, {
     on_lines = function(_, _, _, first_line, _, last_line)
+      if not self.update_insert and vim.api.nvim_get_mode().mode == "i" then
+        return
+      end
       if self.attached_buffer[bufnr] == nil then
         return true
       end
