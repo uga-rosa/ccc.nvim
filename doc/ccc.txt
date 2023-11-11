@@ -558,8 +558,11 @@ Key mapping                                                    *ccc-key-mapping*
 
                                                             *<Plug>(ccc-insert)*
 <Plug>(ccc-insert) ~
-	Defined in insert mode. Insert the color without detection.
+	Defined in |Insert-mode|. Insert the color without detection.
 
+						      *<Plug>(ccc-select-color)*
+<Plug>(ccc-select-color)
+	Defined in |Operator-pending-mode|. Select the color under the cursor.
 
 
 ==============================================================================

@@ -495,8 +495,6 @@ function UI:_recognize(picker)
 end
 
 function UI:pick()
-  local current_line = api.nvim_get_current_line()
-
   if self.highlighter_lsp then
     local start, end_, RGB, A = require("ccc.picker.lsp").pick()
     if start and end_ and RGB then
@@ -509,6 +507,7 @@ function UI:pick()
     end
   end
 
+  local current_line = api.nvim_get_current_line()
   local cursor_col = utils.col()
   local init = 1
   while true do
@@ -543,6 +542,49 @@ function UI:pick()
     init = end_ + 1
   end
   self.end_col = self.start_col - 1
+end
+
+function UI:select_color()
+  self:init()
+
+  ---@return number start, number end
+  local function search_range()
+    if self.highlighter_lsp then
+      local start, end_ = require("ccc.picker.lsp").pick()
+      if start and end_ then
+        return start, end_
+      end
+    end
+
+    local current_line = api.nvim_get_current_line()
+    local cursor_col = utils.col()
+    local init = 1
+    while true do
+      local start, end_
+      for _, picker in ipairs(self.pickers) do
+        local s_, e_, rgb, a = picker:parse_color(current_line, init)
+        if s_ and (start == nil or s_ < start) then
+          start = s_
+          end_ = e_
+        end
+      end
+      if start == nil then
+        break
+      end
+      if start <= cursor_col and cursor_col <= end_ then
+        return start, end_
+      end
+      init = end_ + 1
+    end
+  end
+
+  local start, end_ = search_range()
+  if start and end_ then
+    local row = vim.fn.line(".")
+    vim.api.nvim_win_set_cursor(0, { row, start - 1 })
+    vim.cmd("normal! v")
+    vim.api.nvim_win_set_cursor(0, { row, end_ - 1 })
+  end
 end
 
 function UI:toggle_input_mode()
