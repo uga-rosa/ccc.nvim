@@ -562,7 +562,7 @@ function UI:select_color()
     while true do
       local start, end_
       for _, picker in ipairs(self.pickers) do
-        local s_, e_, rgb, a = picker:parse_color(current_line, init)
+        local s_, e_ = picker:parse_color(current_line, init)
         if s_ and (start == nil or s_ < start) then
           start = s_
           end_ = e_
