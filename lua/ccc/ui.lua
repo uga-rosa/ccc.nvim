@@ -544,7 +544,7 @@ function UI:pick()
   self.end_col = self.start_col - 1
 end
 
-function UI:select_color()
+function UI:select_color(cmd)
   self:init()
 
   ---@return number start, number end
@@ -582,7 +582,7 @@ function UI:select_color()
   if start and end_ then
     local row = vim.fn.line(".")
     vim.api.nvim_win_set_cursor(0, { row, start - 1 })
-    vim.cmd("normal! v")
+    vim.cmd("normal! " .. cmd)
     vim.api.nvim_win_set_cursor(0, { row, end_ - 1 })
   end
 end

@@ -14,7 +14,11 @@ vim.keymap.set("i", "<Plug>(ccc-insert)", function()
 end)
 
 vim.keymap.set("o", "<Plug>(ccc-select-color)", function()
-  require("ccc.ui"):select_color()
+  require("ccc.ui"):select_color("v")
+end)
+
+vim.keymap.set("v", "<Plug>(ccc-select-color)", function()
+  require("ccc.ui"):select_color("o")
 end)
 
 local highlighter = require("ccc.highlighter").new(true)

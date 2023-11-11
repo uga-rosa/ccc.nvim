@@ -562,7 +562,8 @@ Key mapping                                                    *ccc-key-mapping*
 
 						      *<Plug>(ccc-select-color)*
 <Plug>(ccc-select-color)
-	Defined in |Operator-pending-mode|. Select the color under the cursor.
+	Defined in |Visual-mode| and |Operator-pending-mode|. Select the color
+	under the cursor.
 
 
 ==============================================================================
