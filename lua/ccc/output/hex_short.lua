@@ -1,9 +1,29 @@
 local convert = require("ccc.utils.convert")
 
+local pattern = {
+  uppercase = {
+    "#%X%X%X%X",
+    "#%X%X%X",
+  },
+  lowercase = {
+    "#%x%x%x%x",
+    "#%x%x%x",
+  },
+}
+
 ---@class HexShortOutput: ColorOutput
 local HexShortOutput = {
   name = "HEXshort",
+  pattern = pattern.lowercase,
 }
+
+function HexShortOutput.setup(opt)
+  if opt.uppercase then
+    HexShortOutput.pattern = pattern.uppercase
+  else
+    HexShortOutput.pattern = pattern.lowercase
+  end
+end
 
 ---@param RGB RGB
 ---@param A? Alpha
@@ -16,9 +36,9 @@ function HexShortOutput.str(RGB, A)
   B = B / 16
   if A then
     A = A * 255 / 16
-    return ("#%x%x%x%x"):format(R, G, B, A)
+    return HexShortOutput.pattern[1]:format(R, G, B, A)
   else
-    return ("#%x%x%x"):format(R, G, B)
+    return HexShortOutput.pattern[2]:format(R, G, B)
   end
 end
 

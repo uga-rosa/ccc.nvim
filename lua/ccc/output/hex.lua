@@ -1,10 +1,30 @@
 local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
+local pattern = {
+  uppercase = {
+    "#%02X%02X%02X%02X",
+    "#%02X%02X%02X",
+  },
+  lowercase = {
+    "#%02x%02x%02x%02x",
+    "#%02x%02x%02x",
+  },
+}
+
 ---@class HexOutput: ColorOutput
 local HexOutput = {
   name = "HEX",
+  pattern = pattern.lowercase,
 }
+
+function HexOutput.setup(opt)
+  if opt.uppercase then
+    HexOutput.pattern = pattern.uppercase
+  else
+    HexOutput.pattern = pattern.lowercase
+  end
+end
 
 ---@param RGB RGB
 ---@param A? Alpha
@@ -16,11 +36,9 @@ function HexOutput.str(RGB, A)
   B = utils.round(B)
   if A then
     A = utils.round(A * 255)
-    local pattern = "#%02x%02x%02x%02x"
-    return pattern:format(R, G, B, A)
+    return HexOutput.pattern[1]:format(R, G, B, A)
   else
-    local pattern = "#%02x%02x%02x"
-    return pattern:format(R, G, B)
+    return HexOutput.pattern[2]:format(R, G, B)
   end
 end
 

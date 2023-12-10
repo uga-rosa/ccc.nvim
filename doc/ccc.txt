@@ -39,9 +39,7 @@ Setup                                                                *ccc-setup*
 
 If you do not change the default setting, there is no need to call setup.
 See |ccc-option| for the options that can be used.
-
-
->
+>lua
 	-- Enable true color
 	vim.opt.termguicolors = true
 
@@ -226,6 +224,13 @@ Default: {
 		- CssOKLCH          ccc.output.css_oklch
 		- Float             ccc.output.float
 
+	ccc.output.hex and ccc.output.hex_short use lowercase (e.g. #ffffff)
+	by default, but can be set to use uppercase letters.
+>lua
+	ccc.output.hex.setup({ uppercase = true })
+	ccc.output.hex_short.setup({ uppercase = true })
+<
+
 
                                                             *ccc-option-pickers*
 pickers ~
@@ -258,7 +263,7 @@ Default: {
 					     *ccc-option-pickers-custom_entries*
 	There is a special picker named `ccc.picker.custom_entries`. You can
 	define a table to convert from any word to a specific RGB color.
->
+>lua
 	ccc.setup({
 	  pickers = {
 	    ccc.picker.custom_entries({
@@ -314,7 +319,7 @@ Default: {
 	Note: This picker is only used for highlights. The reason is that
 	foreground and background colors can be set at the same time, and the
 	color to be picked cannot be determined.
->
+>lua
 	ccc.setup({
 	  pickers = {
 	    ccc.picker.ansi_escape({
@@ -489,9 +494,7 @@ Default: See |ccc-action|
 	rhs is value. To disable all default mappings, use
 	|ccc-option-disable-default-mappings|. To disable only some of the
 	default mappings, set ccc.mapping.none.
-
-
->
+>lua
 	local ccc = require("ccc")
 	local mapping = ccc.mapping
 
@@ -608,8 +611,7 @@ Action                                                              *ccc-action*
 
 All actions are implemented as lua functions.
 To customize, use |ccc-option-mappings|.
-
->
+>lua
 	local ccc = require("ccc")
 	local mapping = ccc.mapping
 <
