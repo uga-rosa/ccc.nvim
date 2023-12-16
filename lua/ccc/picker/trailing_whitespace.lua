@@ -39,7 +39,7 @@ function TrailingWhitespacePicker.new(opts)
   if opts.enable == true then
     if type(opts.disable) == "table" then
       function filter(bufnr)
-        local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
+        local ft = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
         return not contains(opts.disable, ft)
       end
     elseif type(opts.disable) == "function" then
@@ -49,7 +49,7 @@ function TrailingWhitespacePicker.new(opts)
     end
   else
     function filter(bufnr)
-      local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
+      local ft = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
       return contains(opts.enable, ft)
     end
   end
@@ -67,7 +67,7 @@ end
 ---@return integer? end_
 ---@return nil
 ---@return nil
----@return highlightDefinition?
+---@return vim.api.keyset.highlight?
 function TrailingWhitespacePicker:parse_color(s, init, bufnr)
   bufnr = vim.F.if_nil(bufnr, 0)
   if not self.filter(bufnr) then
@@ -93,7 +93,7 @@ function TrailingWhitespacePicker:parse_color(s, init, bufnr)
   end
   local start, end_ = s:find("%s+$", init or 1)
   if start then
-    local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
+    local ft = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
     local hex = self.ft2color[ft]
     return start, end_, nil, nil, { bg = hex }
   end

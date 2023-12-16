@@ -178,7 +178,7 @@ function Highlighter:_get_or_create_hl_from_rgb(rgb)
   return hl_name
 end
 
----@param hl_def highlightDefinition
+---@param hl_def vim.api.keyset.highlight
 ---@return string hl_name
 function Highlighter:_get_or_create_hl_from_def(hl_def)
   local hl_name = "CccHighlighter"
@@ -248,7 +248,9 @@ function Highlighter:update_lsp(bufnr, start_row, end_row)
     end
   end
 
-  for _, client in pairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
+  ---@diagnostic disable-next-line: deprecated
+  local get_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
+  for _, client in pairs(get_clients({ bufnr = bufnr })) do
     if client.server_capabilities.colorProvider then
       local param = { textDocument = vim.lsp.util.make_text_document_params() }
       ---@param err any
@@ -271,7 +273,7 @@ function Highlighter:update_lsp(bufnr, start_row, end_row)
             api.nvim_buf_add_highlight(0, self.lsp_ns_id, hl_name, ls_color.row - 1, ls_color.start - 1, ls_color.end_)
           end
         end
-      end)
+      end, bufnr)
     end
   end
 
@@ -303,6 +305,7 @@ function Highlighter:update_picker(bufnr, start_row, end_row, keep)
     local row = start_row + i - 1
     local init = 1
     while true do
+      ---@type integer?, integer?, RGB?, vim.api.keyset.highlight?
       local start, end_, RGB, hl_def
       for _, picker in ipairs(self.pickers) do
         local s_, e_, rgb, _, h_d = picker:parse_color(line, init, bufnr)
@@ -313,9 +316,9 @@ function Highlighter:update_picker(bufnr, start_row, end_row, keep)
           hl_def = h_d
         end
       end
-      if RGB or hl_def then
+      if (RGB or hl_def) and end_ then
         local hl_name = (RGB and self:_get_or_create_hl_from_rgb(RGB))
-          or (hl_def and self:_get_or_create_hl_from_def(hl_def))
+          or (hl_def and self:_get_or_create_hl_from_def(hl_def)) --[[@as string]]
         api.nvim_buf_add_highlight(bufnr, self.picker_ns_id, hl_name, row, start - 1, end_)
         init = end_ + 1
       else

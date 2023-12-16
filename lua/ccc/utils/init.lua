@@ -43,9 +43,9 @@ end
 ---@param end_ integer
 ---@param lines string[]
 function utils.set_lines(bufnr, start, end_, lines)
-  api.nvim_buf_set_option(bufnr, "modifiable", true)
+  api.nvim_set_option_value("modifiable", true, { buf = bufnr })
   api.nvim_buf_set_lines(bufnr, start, end_, false, lines)
-  api.nvim_buf_set_option(bufnr, "modifiable", false)
+  api.nvim_set_option_value("modifiable", false, { buf = bufnr })
 end
 
 ---@param bufnr integer

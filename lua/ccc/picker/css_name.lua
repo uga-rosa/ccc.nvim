@@ -1,6 +1,6 @@
 ---@class NamePicker: ColorPicker
 ---@field colorname table<string, number[]>
----@field regexp userdata return value of vim.regex()
+---@field regexp vim.regex
 local NamePicker = {}
 
 function NamePicker:init()
@@ -180,9 +180,8 @@ function NamePicker:parse_color(s, init)
   init = vim.F.if_nil(init, 1)
   s = s:lower()
   -- byte index
-  ---@type integer, integer
-  local start, end_ = self.regexp:match_str(s:sub(init))
-  if start then
+  local start, end_ = self.regexp:match_str(s:sub(init)) --[[@as integer?, integer?]]
+  if start and end_ then
     start = start + init
     end_ = end_ + init - 1
     local name = s:sub(start, end_)

@@ -51,9 +51,9 @@ function UI:init()
   self.output_mode = self.color.output.name
   self.pickers = config.get("pickers")
   self.bufnr = api.nvim_create_buf(false, true)
-  api.nvim_buf_set_option(self.bufnr, "buftype", "nofile")
-  api.nvim_buf_set_option(self.bufnr, "modifiable", false)
-  api.nvim_buf_set_option(self.bufnr, "filetype", "ccc-ui")
+  api.nvim_set_option_value("buftype", "nofile", { buf = self.bufnr })
+  api.nvim_set_option_value("modifiable", false, { buf = self.bufnr })
+  api.nvim_set_option_value("filetype", "ccc-ui", { buf = self.bufnr })
   local mappings = config.get("mappings")
   for lhs, rhs in pairs(mappings) do
     vim.keymap.set("n", lhs, rhs, { nowait = true, buffer = self.bufnr })
@@ -104,10 +104,10 @@ function UI:_open()
   win_opts.height = self.win_height
   win_opts.width = self.win_width
   self.win_id = api.nvim_open_win(self.bufnr, true, win_opts)
-  api.nvim_win_set_option(self.win_id, "signcolumn", "no")
+  api.nvim_set_option_value("signcolumn", "no", { win = self.win_id })
   api.nvim_win_set_hl_ns(self.win_id, self.ns_id)
-  local float_normal = api.nvim_get_hl_by_name("CccFloatNormal", true)
-  local float_border = api.nvim_get_hl_by_name("CccFloatBorder", true)
+  local float_normal = api.nvim_get_hl(0, { name = "CccFloatNormal" })
+  local float_border = api.nvim_get_hl(0, { name = "CccFloatBorder" })
   set_hl(self.ns_id, "Normal", float_normal)
   set_hl(self.ns_id, "EndOfBuffer", float_normal)
   set_hl(self.ns_id, "FloatBorder", float_border)
@@ -560,6 +560,7 @@ function UI:select_color(cmd)
     local cursor_col = utils.col()
     local init = 1
     while true do
+      ---@type integer?, integer?
       local start, end_
       for _, picker in ipairs(self.pickers) do
         local s_, e_ = picker:parse_color(current_line, init)
@@ -568,7 +569,7 @@ function UI:select_color(cmd)
           end_ = e_
         end
       end
-      if start == nil then
+      if start == nil or end_ == nil then
         break
       end
       if start <= cursor_col and cursor_col <= end_ then

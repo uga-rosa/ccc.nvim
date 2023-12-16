@@ -103,12 +103,12 @@ end
 ---@return integer? end_
 ---@return nil
 ---@return nil
----@return highlightDefinition?
+---@return vim.api.keyset.highlight?
 function AnsiEscapePicker:parse_color(s, init)
   init = vim.F.if_nil(init, 1)
 
   local start, end_, codes = pattern.find(s, self.pattern, init)
-  if not start then
+  if not (start and end_ and codes) then
     return
   end
 
