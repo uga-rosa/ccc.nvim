@@ -46,11 +46,11 @@ end
 ---@param start_line integer 0-based
 ---@param end_line integer 0-based
 ---@return ccc.hl_info[]
-function PickerHandler:info_in_range(bufnr, start_line, end_line)
+function PickerHandler.info_in_range(bufnr, start_line, end_line)
   local opts = require("ccc.config").options
-  local lines = vim.api.nvim_buf_get_lines(bufnr, start_line, end_line, true)
 
   local infos = {}
+  local lines = vim.api.nvim_buf_get_lines(bufnr, start_line, end_line, true)
   for i, line in ipairs(lines) do
     local row = start_line + i - 1
     for _, picker in ipairs(opts.pickers) do

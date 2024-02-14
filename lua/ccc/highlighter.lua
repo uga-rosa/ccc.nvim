@@ -111,13 +111,13 @@ function Highlighter:update(bufnr, start_line, end_line)
   if opts.highlighter.lsp then
     local lsp_info = lsp_handler:info_in_range(bufnr, start_line, end_line)
     for _, info in ipairs(lsp_info) do
-      utils.set_hl(bufnr, 0, info.range, info.hl_name)
+      utils.set_hl(bufnr, self.lsp_ns_id, info.range, info.hl_name)
     end
   end
   if opts.highlighter.picker then
-    local picker_info = picker_handler:info_in_range(bufnr, start_line, end_line)
+    local picker_info = picker_handler.info_in_range(bufnr, start_line, end_line)
     for _, info in ipairs(picker_info) do
-      utils.set_hl(bufnr, 0, info.range, info.hl_name)
+      utils.set_hl(bufnr, self.picker_ns_id, info.range, info.hl_name)
     end
   end
 end
