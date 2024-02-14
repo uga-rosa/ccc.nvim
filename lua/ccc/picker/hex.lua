@@ -1,7 +1,7 @@
 local parse = require("ccc.utils.parse")
 local pattern = require("ccc.utils.pattern")
 
----@class HexPicker: ColorPicker
+---@class HexPicker: ccc.ColorPicker
 local HexPicker = {}
 
 function HexPicker:init()
@@ -28,7 +28,7 @@ end
 ---@return number? alpha
 function HexPicker:parse_color(s, init)
   self:init()
-  init = vim.F.if_nil(init, 1)
+  init = init or 1
   -- The shortest patten is 4 characters like `#fff`
   while init <= #s - 3 do
     local start, end_, cap1, cap2, cap3, cap4

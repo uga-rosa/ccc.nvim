@@ -2,7 +2,7 @@ local utils = require("ccc.utils")
 local parse = require("ccc.utils.parse")
 local pattern = require("ccc.utils.pattern")
 
----@class CssRgbPicker: ColorPicker
+---@class CssRgbPicker: ccc.ColorPicker
 local CssRgbPicker = {}
 
 function CssRgbPicker:init()
@@ -27,7 +27,7 @@ end
 ---@return Alpha?
 function CssRgbPicker:parse_color(s, init)
   self:init()
-  init = vim.F.if_nil(init, 1)
+  init = init or 1
   -- The shortest patten is 10 characters like `rgb(0 0 0)`
   while init < #s - 9 do
     local start, end_, cap1, cap2, cap3, cap4

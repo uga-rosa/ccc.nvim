@@ -3,7 +3,7 @@ local convert = require("ccc.utils.convert")
 local parse = require("ccc.utils.parse")
 local pattern = require("ccc.utils.pattern")
 
----@class CssLabPicker: ColorPicker
+---@class CssLabPicker: ccc.ColorPicker
 local CssLabPicker = {}
 
 function CssLabPicker:init()
@@ -22,7 +22,7 @@ end
 ---@return Alpha?
 function CssLabPicker:parse_color(s, init)
   self:init()
-  init = vim.F.if_nil(init, 1)
+  init = init or 1
   -- The shortest patten is 10 characters like `lab(0 0 0)`
   while init <= #s - 9 do
     local start, end_, cap1, cap2, cap3, cap4 = pattern.find(s, self.pattern, init)

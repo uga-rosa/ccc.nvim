@@ -73,7 +73,7 @@ local default_name2color = {
   bright_white = "#f2f2f2",
 }
 
----@class AnsiEscapePicker: ColorPicker
+---@class AnsiEscapePicker: ccc.ColorPicker
 ---@field pattern string
 ---@field name2color { [string]: string }
 ---@field meaning1 "bold"|"bright"
@@ -89,8 +89,8 @@ local AnsiEscapePicker = {
 ---@param opts? table
 ---@return AnsiEscapePicker
 function AnsiEscapePicker.new(name2color, opts)
-  name2color = vim.F.if_nil(name2color, {})
-  opts = vim.F.if_nil(opts, {})
+  name2color = name2color or {}
+  opts = opts or {}
   return setmetatable({
     name2color = vim.tbl_extend("keep", name2color, default_name2color),
     meaning1 = opts.meaning1,
@@ -105,7 +105,7 @@ end
 ---@return nil
 ---@return vim.api.keyset.highlight?
 function AnsiEscapePicker:parse_color(s, init)
-  init = vim.F.if_nil(init, 1)
+  init = init or 1
 
   local start, end_, codes = pattern.find(s, self.pattern, init)
   if not (start and end_ and codes) then

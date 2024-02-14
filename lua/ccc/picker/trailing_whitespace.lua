@@ -1,4 +1,4 @@
----@class TrailingWhitespacePicker: ColorPicker
+---@class TrailingWhitespacePicker: ccc.ColorPicker
 ---@field ft2color table<string, RGB>
 ---@field filter table<string, boolean>
 ---@field already_in_insert boolean

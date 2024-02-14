@@ -1,4 +1,4 @@
----@class NamePicker: ColorPicker
+---@class NamePicker: ccc.ColorPicker
 ---@field colorname table<string, number[]>
 ---@field regexp vim.regex
 local NamePicker = {}
@@ -177,7 +177,7 @@ end
 ---@return RGB?
 function NamePicker:parse_color(s, init)
   self:init()
-  init = vim.F.if_nil(init, 1)
+  init = init or 1
   s = s:lower()
   -- byte index
   local start, end_ = self.regexp:match_str(s:sub(init)) --[[@as integer?, integer?]]

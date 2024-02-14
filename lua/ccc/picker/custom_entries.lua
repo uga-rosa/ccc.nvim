@@ -1,7 +1,7 @@
 local parse = require("ccc.utils.parse")
 local pattern = require("ccc.utils.pattern")
 
----@class CustomEntries: ColorPicker
+---@class CustomEntries: ccc.ColorPicker
 ---@field rgb { [string]: integer[] }
 ---@field min_length integer
 ---@field color_table { [string]: string }
