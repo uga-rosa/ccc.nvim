@@ -9,7 +9,7 @@ local css_oklab = require("ccc.output.css_oklab")
 local css_oklch = require("ccc.output.css_oklch")
 local float = require("ccc.output.float")
 
----@param colorOutput ColorOutput
+---@param colorOutput ccc.ColorOutput
 ---@param RGB integer[] # range in (0, 255)
 ---@param A? Alpha
 ---@param expected string

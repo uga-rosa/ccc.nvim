@@ -13,7 +13,7 @@ local oklch = require("ccc.input.oklch")
 local rgb = require("ccc.input.rgb")
 local xyz = require("ccc.input.xyz")
 
----@param colorInput ColorInput
+---@param colorInput ccc.ColorInput
 ---@param input number[] [n, i]
 ---@param expected string
 local function format_test(colorInput, input, expected)
@@ -43,7 +43,7 @@ local function normalize_limit(limit, len)
   return limit
 end
 
----@param colorInput ColorInput
+---@param colorInput ccc.ColorInput
 ---@param input number[] #RGB range in [0, 255]
 ---@param expected number[]
 ---@param limit? number|number[]
@@ -58,7 +58,7 @@ local function from_rgb_test(colorInput, input, expected, limit)
   end
 end
 
----@param colorInput ColorInput
+---@param colorInput ccc.ColorInput
 ---@param input number[]
 ---@param expected number[] #RGB range in [0, 255]
 ---@param limit? number|number[]
