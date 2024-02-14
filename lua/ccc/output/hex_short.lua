@@ -11,7 +11,7 @@ local pattern = {
   },
 }
 
----@class HexShortOutput: ColorOutput
+---@class HexShortOutput: ccc.ColorOutput
 local HexShortOutput = {
   name = "HEXshort",
   pattern = pattern.lowercase,

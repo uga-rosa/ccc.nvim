@@ -1,6 +1,6 @@
 local utils = require("ccc.utils")
 
----@class FloatOutput: ColorOutput
+---@class FloatOutput: ccc.ColorOutput
 local FloatOutput = {
   name = "Float",
 }

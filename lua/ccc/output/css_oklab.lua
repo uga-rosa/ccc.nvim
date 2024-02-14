@@ -1,7 +1,7 @@
 local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
----@class CssOklabOutput: ColorOutput
+---@class CssOklabOutput: ccc.ColorOutput
 local CssOklabOutput = {
   name = "CssOKLab",
 }

@@ -12,7 +12,7 @@ local pattern = {
   },
 }
 
----@class HexOutput: ColorOutput
+---@class HexOutput: ccc.ColorOutput
 local HexOutput = {
   name = "HEX",
   pattern = pattern.lowercase,
