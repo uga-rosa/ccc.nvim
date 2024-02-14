@@ -1,6 +1,6 @@
 local utils = require("ccc.utils")
 
----@class ColorInput
+---@class ccc.ColorInput
 ---@field name string
 ---@field value number[]
 ---@field max number[]
@@ -10,7 +10,7 @@ local utils = require("ccc.utils")
 ---@field format fun(n: number, i: integer): string #String returned must be 6 byte.
 ---@field from_rgb fun(RGB: RGB): value: number[]
 ---@field to_rgb fun(value: number[]): RGB
----@field callback fun(self: ColorInput, new_value: number, index: integer)
+---@field callback fun(self: ccc.ColorInput, new_value: number, index: integer)
 local ColorInput = {}
 
 ---@param n number
@@ -40,9 +40,10 @@ function ColorInput:set_rgb(RGB)
   self:set(self.from_rgb(RGB))
 end
 
+--- Returns a shallow copy
 ---@return number[] value
 function ColorInput:get()
-  return self.value
+  return { unpack(self.value) }
 end
 
 ---@return RGB
