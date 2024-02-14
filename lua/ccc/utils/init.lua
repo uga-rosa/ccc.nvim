@@ -56,6 +56,27 @@ function utils.line_length(bufnr, lnum)
   return vim.api.nvim_strwidth(line)
 end
 
+---@param bufnr integer
+---@param ns_id integer
+---@param range lsp.Range
+---@param name string
+---@param hl_def? vim.api.keyset.highlight
+function utils.set_hl(bufnr, ns_id, range, name, hl_def)
+  if hl_def then
+    vim.api.nvim_set_hl(ns_id, name, hl_def)
+  end
+  vim.api.nvim_buf_add_highlight(bufnr, ns_id, name, range.start.line, range.start.character, range["end"].character)
+end
+
+---@param sl integer start line
+---@param sc integer start character
+---@param el integer end line
+---@param ec integer end character
+---@return lsp.Range
+function utils.range(sl, sc, el, ec)
+  return { start = { line = sl, character = sc }, ["end"] = { line = el, character = ec } }
+end
+
 ---@param ... number
 ---@return number max
 function utils.max(...)
@@ -93,22 +114,6 @@ function utils.round(float, digit)
   end
 end
 
----@param array any[]
----@param value any
----@param func? function
----@return integer?
-function utils.search_idx(array, value, func)
-  func = vim.F.if_nil(func, function(x)
-    return x
-  end)
-
-  for i, v in ipairs(array) do
-    if func(v) == value then
-      return i
-    end
-  end
-end
-
 ---@param int integer
 ---@param min integer
 ---@param max integer
@@ -142,8 +147,8 @@ local function is_bright_HEX(HEX)
 end
 
 ---@param hex string
----@param hl_mode hl_mode
----@return table
+---@param hl_mode ccc.Option.hl_mode
+---@return vim.api.keyset.highlight
 function utils.create_highlight(hex, hl_mode)
   local contrast = is_bright_HEX(hex) and "#000000" or "#ffffff"
   if hl_mode == "fg" or hl_mode == "foreground" then
@@ -155,7 +160,7 @@ end
 
 ---@param bufnr? integer
 ---@return integer
-function utils.resolve_bufnr(bufnr)
+function utils.ensure_bufnr(bufnr)
   if bufnr == nil or bufnr == 0 then
     return api.nvim_get_current_buf()
   end
@@ -180,18 +185,28 @@ function utils.valid_range(value, min, max)
   return false
 end
 
----@param tbl table
----@param ... unknown
----@return any
-function utils.resolve_tree(tbl, ...)
-  for i = 1, select("#", ...) do
-    local key = select(i, ...)
-    tbl = tbl[key]
-    if tbl == nil then
+function utils.bind(func, ...)
+  local args = { ... }
+  return function(...)
+    for _, v in ipairs({ ... }) do
+      table.insert(args, v)
+    end
+    func(unpack(args))
+  end
+end
+
+---optional chain
+---@param root table
+---@param ... unknown keys
+---@return unknown | nil
+function utils.oc(root, ...)
+  for _, key in ipairs({ ... }) do
+    root = root[key]
+    if root == nil then
       return
     end
   end
-  return tbl
+  return root
 end
 
 return utils
