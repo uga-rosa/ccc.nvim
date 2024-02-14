@@ -16,6 +16,25 @@ function Range.empty(range)
   return range.start.line == range["end"].line and range.start.character == range["end"].character
 end
 
+---Return the range is empty or not.
+---@param range ccc.kit.LSP.Range
+---@return boolean
+function Range.contains(range)
+  return range.start.line == range["end"].line and range.start.character == range["end"].character
+end
+
+---Convert range to buffer range from specified encoding.
+---@param bufnr number
+---@param range ccc.kit.LSP.Range
+---@param from_encoding? ccc.kit.LSP.PositionEncodingKind
+---@return ccc.kit.LSP.Range
+function Range.to_buf(bufnr, range, from_encoding)
+  return {
+    start = Position.to_buf(bufnr, range.start, from_encoding),
+    ["end"] = Position.to_buf(bufnr, range["end"], from_encoding),
+  }
+end
+
 ---Convert range to utf8 from specified encoding.
 ---@param text_start string
 ---@param range ccc.kit.LSP.Range

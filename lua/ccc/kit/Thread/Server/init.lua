@@ -9,12 +9,12 @@ local function dirname()
 end
 
 ---@class ccc.kit.Thread.Server
+---@field private dispatcher fun(session: ccc.kit.Thread.Server.Session): nil
+---@field private session? ccc.kit.Thread.Server.Session
 ---@field private stdin uv.uv_pipe_t
 ---@field private stdout uv.uv_pipe_t
 ---@field private stderr uv.uv_pipe_t
----@field private dispatcher fun(session: ccc.kit.Thread.Server.Session): nil
 ---@field private process? uv.uv_process_t
----@field private session? ccc.kit.Thread.Server.Session
 local Server = {}
 Server.__index = Server
 
@@ -25,6 +25,9 @@ function Server.new(dispatcher)
   local self = setmetatable({}, Server)
   self.dispatcher = dispatcher
   self.session = Session.new()
+  self.stdin = uv.new_pipe()
+  self.stdout = uv.new_pipe()
+  self.stderr = uv.new_pipe()
   self.process = nil
   return self
 end
@@ -34,11 +37,7 @@ end
 function Server:connect()
   return Async.run(function()
     Async.schedule():await()
-    local stdin = uv.new_pipe()
-    local stdout = uv.new_pipe()
-    local stderr = uv.new_pipe()
     self.process = uv.spawn("nvim", {
-      cwd = uv.cwd(),
       args = {
         "--headless",
         "--noplugin",
@@ -46,18 +45,27 @@ function Server:connect()
         ("%s/_bootstrap.lua"):format(dirname()),
         vim.o.runtimepath,
       },
-      stdio = { stdin, stdout, stderr },
+      cwd = uv.cwd(),
+      stdio = { self.stdin, self.stdout, self.stderr },
     })
+    self.session:connect(self.stdout, self.stdin)
 
-    stderr:read_start(function(err, data)
+    self.stderr:read_start(function(err, data)
       if err then
-        error(err)
+        return self:notify("$/error", { error = err })
       end
       print(data)
     end)
 
-    self.session:connect(stdout, stdin)
-    return self.session
+    vim.api.nvim_create_autocmd({ "VimLeave" }, {
+      desc = "ccc.kit.Thread.Server:on_exit",
+      once = true,
+      callback = function()
+        self:kill()
+      end,
+    })
+
+    self.session
       :request("connect", {
         dispatcher = string.dump(self.dispatcher),
       })
@@ -102,7 +110,7 @@ end
 ---Kill server process.
 function Server:kill()
   if self.process then
-    local ok, err = self.process:kill("SIGINT")
+    local ok, err = self.process:kill(15)
     if not ok then
       error(err)
     end

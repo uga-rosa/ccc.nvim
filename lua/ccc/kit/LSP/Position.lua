@@ -27,20 +27,14 @@ function Position.cursor(encoding)
   end
 end
 
----Convert position to specified encoding from specified encoding.
----@param text string
+---Convert position to buffer position from specified encoding.
+---@param bufnr number
 ---@param position ccc.kit.LSP.Position
----@param from_encoding ccc.kit.LSP.PositionEncodingKind
----@param to_encoding ccc.kit.LSP.PositionEncodingKind
-function Position.to(text, position, from_encoding, to_encoding)
-  if to_encoding == LSP.PositionEncodingKind.UTF8 then
-    return Position.to_utf8(text, position, from_encoding)
-  elseif to_encoding == LSP.PositionEncodingKind.UTF16 then
-    return Position.to_utf16(text, position, from_encoding)
-  elseif to_encoding == LSP.PositionEncodingKind.UTF32 then
-    return Position.to_utf32(text, position, from_encoding)
-  end
-  error("LSP.Position: Unsupported encoding: " .. to_encoding)
+---@param from_encoding? ccc.kit.LSP.PositionEncodingKind
+function Position.to_buf(bufnr, position, from_encoding)
+  from_encoding = from_encoding or LSP.PositionEncodingKind.UTF16
+  local text = vim.api.nvim_buf_get_lines(bufnr, position.line, position.line + 1, false)[1] or ""
+  return Position.to(text, position, from_encoding, LSP.PositionEncodingKind.UTF8)
 end
 
 ---Convert position to utf8 from specified encoding.
@@ -98,6 +92,22 @@ function Position.to_utf32(text, position, from_encoding)
     end
   end
   return position
+end
+
+---Convert position to specified encoding from specified encoding.
+---@param text string
+---@param position ccc.kit.LSP.Position
+---@param from_encoding ccc.kit.LSP.PositionEncodingKind
+---@param to_encoding ccc.kit.LSP.PositionEncodingKind
+function Position.to(text, position, from_encoding, to_encoding)
+  if to_encoding == LSP.PositionEncodingKind.UTF8 then
+    return Position.to_utf8(text, position, from_encoding)
+  elseif to_encoding == LSP.PositionEncodingKind.UTF16 then
+    return Position.to_utf16(text, position, from_encoding)
+  elseif to_encoding == LSP.PositionEncodingKind.UTF32 then
+    return Position.to_utf32(text, position, from_encoding)
+  end
+  error("LSP.Position: Unsupported encoding: " .. to_encoding)
 end
 
 return Position
