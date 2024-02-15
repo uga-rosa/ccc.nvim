@@ -1,4 +1,4 @@
----@class NamePicker: ccc.ColorPicker
+---@class ccc.ColorPicker.Name: ccc.ColorPicker
 ---@field colorname table<string, number[]>
 ---@field regexp vim.regex
 local NamePicker = {}
@@ -7,6 +7,7 @@ function NamePicker:init()
   if self.regexp then
     return
   end
+  -- Define self.colorname {{{
   -- https://www.w3.org/TR/css-color-4/#named-colors
   self.colorname = {
     aliceblue = { 240, 248, 255 },
@@ -164,6 +165,7 @@ function NamePicker:init()
       return x / 255
     end, rgb)
   end
+  --}}}
 
   -- The color names are all alphabetical and be included in iskeyword.
   -- Therefore, sorting is not necessary.
@@ -172,22 +174,22 @@ end
 
 ---@param s string
 ---@param init? integer
----@return integer? start
----@return integer? end_
----@return RGB?
+---@return integer? start_col
+---@return integer? end_col
+---@return RGB? rgb
 function NamePicker:parse_color(s, init)
   self:init()
   init = init or 1
   s = s:lower()
   -- byte index
-  local start, end_ = self.regexp:match_str(s:sub(init)) --[[@as integer?, integer?]]
-  if start and end_ then
-    start = start + init
-    end_ = end_ + init - 1
-    local name = s:sub(start, end_)
+  local start_col, end_col = self.regexp:match_str(s:sub(init)) --[[@as integer?, integer?]]
+  if start_col and end_col then
+    start_col = start_col + init
+    end_col = end_col + init - 1
+    local name = s:sub(start_col, end_col)
     -- By the generation rule of self.regexp, self.colorname[name] is always found.
     local RGB = self.colorname[name]
-    return start, end_, RGB
+    return start_col, end_col, RGB
   end
 end
 

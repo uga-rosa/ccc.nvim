@@ -21,12 +21,24 @@
 ---@field type "none" | "color" | "alpha" | "prev"
 ---@field index integer
 
+---@class ccc.ColorInput
+---@field name string
+---@field value number[]
+---@field max number[]
+---@field min number[]
+---@field delta number[] #Minimum slider movement.
+---@field bar_name string[] #Align all display widths.
+---@field format fun(n: number, i: integer): string #String returned must be 6 byte.
+---@field from_rgb fun(RGB: RGB): value: number[]
+---@field to_rgb fun(value: number[]): RGB
+---@field callback fun(self: ccc.ColorInput, new_value: number, index: integer)
+
 ---@class ccc.ColorOutput
 ---@field name string
 ---@field str fun(RGB: number[], A?: number): string
 
 ---@class ccc.ColorPicker
----@field parse_color fun(self, s: string, init?: integer, bufnr?: integer): start: integer?, end_: integer?, RGB?, Alpha?, vim.api.keyset.highlight?
+---@field parse_color fun(self, s: string, init?: integer, bufnr?: integer): start: integer?, end_: integer?, RGB: RGB?, Alpha: Alpha?, hl_def: vim.api.keyset.highlight?
 
 ---@class ccc.hl_info
 ---@field range lsp.Range

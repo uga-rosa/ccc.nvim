@@ -1,4 +1,6 @@
----@class TrailingWhitespacePicker: ccc.ColorPicker
+local utils = require("ccc.utils")
+
+---@class ccc.ColorPicker.TrailingWhiteSpace: ccc.ColorPicker
 ---@field ft2color table<string, RGB>
 ---@field filter table<string, boolean>
 ---@field already_in_insert boolean
@@ -63,11 +65,11 @@ end
 ---@param s string
 ---@param init? integer
 ---@param bufnr? integer
----@return integer? start
----@return integer? end_
----@return nil
----@return nil
----@return vim.api.keyset.highlight?
+---@return integer? start_col
+---@return integer? end_col
+---@return nil rgb
+---@return nil alpha
+---@return vim.api.keyset.highlight? hl_def
 function TrailingWhitespacePicker:parse_color(s, init, bufnr)
   bufnr = vim.F.if_nil(bufnr, 0)
   if not self.filter(bufnr) then

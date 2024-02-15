@@ -1,14 +1,11 @@
 local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
----@class CssOklchOutput: ccc.ColorOutput
+---@class ccc.ColorOutput
 local CssOklchOutput = {
   name = "CssOKLCH",
 }
 
----@param RGB RGB
----@param A? Alpha
----@return string
 function CssOklchOutput.str(RGB, A)
   local L, C, H = unpack(convert.rgb2oklch(RGB))
   L = utils.round(L * 100)

@@ -3,7 +3,8 @@ local convert = require("ccc.utils.convert")
 local parse = require("ccc.utils.parse")
 local pattern = require("ccc.utils.pattern")
 
----@class CssLchPicker: ccc.ColorPicker
+---@class ccc.ColorPicker.CssLch: ccc.ColorPicker
+---@field pattern string
 local CssLchPicker = {}
 
 function CssLchPicker:init()
@@ -15,17 +16,17 @@ end
 
 ---@param s string
 ---@param init? integer
----@return integer? start
----@return integer? end_
----@return RGB?
----@return Alpha?
+---@return integer? start_col
+---@return integer? end_col
+---@return RGB? rgb
+---@return Alpha? alpha
 function CssLchPicker:parse_color(s, init)
   self:init()
   init = init or 1
   -- The shortest patten is 10 characters like `lch(0 0 0)`
   while init <= #s - 9 do
-    local start, end_, cap1, cap2, cap3, cap4 = pattern.find(s, self.pattern, init)
-    if not (start and end_ and cap1 and cap2 and cap3) then
+    local start_col, end_col, cap1, cap2, cap3, cap4 = pattern.find(s, self.pattern, init)
+    if not (start_col and end_col and cap1 and cap2 and cap3) then
       return
     end
     local L = parse.percent(cap1, 100)
@@ -34,9 +35,9 @@ function CssLchPicker:parse_color(s, init)
     if utils.valid_range(L, 0, 100) and utils.valid_range(C, 0, 150) and H then
       local RGB = convert.lch2rgb({ L, C, H })
       local A = parse.alpha(cap4)
-      return start, end_, RGB, A
+      return start_col, end_col, RGB, A
     end
-    init = end_ + 1
+    init = end_col + 1
   end
 end
 

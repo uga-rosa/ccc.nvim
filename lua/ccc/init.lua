@@ -11,10 +11,10 @@ local function loader(root)
   end
 end
 
----@param opts ccc.Options
-local function setup(opts)
-  require("ccc.config").setup(opts)
-  opts = require("ccc.config").options
+---@param user_opts ccc.Options.P
+local function setup(user_opts)
+  require("ccc.config").setup(user_opts)
+  local opts = require("ccc.config").options
 
   if opts.lsp then
     require("ccc.handler.lsp"):enable()

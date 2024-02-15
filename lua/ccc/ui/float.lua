@@ -1,11 +1,10 @@
 local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
----@class ccc.UI.float: ccc.UI
+---@class ccc.UI
 local UI = {}
 UI.__index = UI
 
----@return ccc.UI.float
 function UI.new()
   return setmetatable({
     ns_id = vim.api.nvim_create_namespace("ccc-ui-highlight"),
@@ -13,8 +12,6 @@ function UI.new()
   }, UI)
 end
 
----@param color ccc.Color
----@param prev_colors ccc.PrevColors
 function UI:open(color, prev_colors)
   -- Avoid to nest ccc UI
   if vim.api.nvim_win_is_valid(self.winid or -1) then
@@ -86,7 +83,6 @@ function UI:reset_view()
   self:update()
 end
 
----@return ccc.UI.point
 function UI:point_at()
   local row = utils.row()
   local num_color = #self.color:input():get()
@@ -100,7 +96,6 @@ function UI:point_at()
   return { type = "none" }
 end
 
----@param point ccc.UI.point
 function UI:set_point(point)
   local pos = { 1, 0 }
   if point.type == "color" then

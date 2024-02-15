@@ -1,14 +1,11 @@
 local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
----@class CssRgbOutput: ccc.ColorOutput
+---@class ccc.ColorOutput
 local CssRgbOutput = {
   name = "CssRGB",
 }
 
----@param RGB RGB
----@param A? Alpha
----@return string
 function CssRgbOutput.str(RGB, A)
   local R, G, B = convert.rgb_format(RGB)
   R = utils.round(R)
