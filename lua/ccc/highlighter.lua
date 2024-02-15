@@ -5,11 +5,13 @@ local picker_handler = require("ccc.handler.picker")
 ---@class ccc.Highlighter
 ---@field picker_ns_id integer
 ---@field lsp_ns_id integer
+---@field custom_ns_id integer
 ---@field attached_buffer table<integer, boolean> Keys are bufnrs.
 ---@field is_defined table<string, boolean> Keys are highlight names.
 local Highlighter = {
   picker_ns_id = vim.api.nvim_create_namespace("ccc-highlighter-picker"),
   lsp_ns_id = vim.api.nvim_create_namespace("ccc-highlighter-lsp"),
+  custom_ns_id = vim.api.nvim_create_namespace("ccc-highlighter-custom"),
   attached_buffer = {},
   is_defined = {},
 }
@@ -44,6 +46,7 @@ function Highlighter:init()
   end
 end
 
+---Return true if ft is valid.
 ---@param ft string
 ---@return boolean
 local function ft_filter(ft)
@@ -65,9 +68,11 @@ function Highlighter:enable(bufnr)
   end
   -- filetype filter for auto_enable
   local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
-  if ft_filter(filetype) then
+  if not ft_filter(filetype) then
     return
   end
+  self.attached_buffer[bufnr] = true
+  self:update(bufnr, 0, -1)
 
   local opts = require("ccc.config").options
   vim.api.nvim_buf_attach(bufnr, false, {
@@ -106,16 +111,28 @@ end
 ---@param bufnr integer
 ---@param start_line integer
 ---@param end_line integer
-function Highlighter:update(bufnr, start_line, end_line)
+---@param pickers? ccc.ColorPicker[]
+function Highlighter:update(bufnr, start_line, end_line, pickers)
+  if pickers then
+    local custom_info = picker_handler.info_in_range(bufnr, start_line, end_line, pickers)
+    vim.api.nvim_buf_clear_namespace(bufnr, self.custom_ns_id, start_line, end_line)
+    for _, info in ipairs(custom_info) do
+      utils.set_hl(bufnr, self.custom_ns_id, info.range, info.hl_name)
+    end
+    return
+  end
+
   local opts = require("ccc.config").options
   if opts.highlighter.lsp then
     local lsp_info = lsp_handler:info_in_range(bufnr, start_line, end_line)
+    vim.api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, start_line, end_line)
     for _, info in ipairs(lsp_info) do
       utils.set_hl(bufnr, self.lsp_ns_id, info.range, info.hl_name)
     end
   end
   if opts.highlighter.picker then
     local picker_info = picker_handler.info_in_range(bufnr, start_line, end_line)
+    vim.api.nvim_buf_clear_namespace(bufnr, self.picker_ns_id, start_line, end_line)
     for _, info in ipairs(picker_info) do
       utils.set_hl(bufnr, self.picker_ns_id, info.range, info.hl_name)
     end

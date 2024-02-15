@@ -45,15 +45,19 @@ end
 ---@param bufnr integer
 ---@param start_line integer 0-based
 ---@param end_line integer 0-based
+---@param pickers? ccc.ColorPicker[]
 ---@return ccc.hl_info[]
-function PickerHandler.info_in_range(bufnr, start_line, end_line)
-  local opts = require("ccc.config").options
+function PickerHandler.info_in_range(bufnr, start_line, end_line, pickers)
+  if pickers == nil then
+    local opts = require("ccc.config").options
+    pickers = opts.pickers
+  end
 
   local infos = {}
   local lines = vim.api.nvim_buf_get_lines(bufnr, start_line, end_line, true)
   for i, line in ipairs(lines) do
     local row = start_line + i - 1
-    for _, picker in ipairs(opts.pickers) do
+    for _, picker in ipairs(pickers) do
       local init = 1
       while init <= #line do
         local start, end_, RGB, _, hl_def = picker:parse_color(line, init)
