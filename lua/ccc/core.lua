@@ -77,6 +77,13 @@ function Core:insert()
   local position = { line = cursor[1] - 1, character = cursor[2] - 1 }
   self.range = { start = position, ["end"] = position }
   self.ui:open(self.color, self.prev_colors)
+  -- Return to normal mode
+  vim.cmd("stopinsert")
+  -- Key mappings
+  local opts = require("ccc.config").options
+  for lhs, rhs in pairs(opts.mappings) do
+    vim.keymap.set("n", lhs, utils.bind(rhs, self), { nowait = true, buffer = self.ui.bufnr })
+  end
 end
 
 function Core:on_quit()
