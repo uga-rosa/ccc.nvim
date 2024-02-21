@@ -34,6 +34,11 @@ end
 ---@return integer? end
 ---@return string? ... submatches
 function pattern.find(str, pat, init)
+  -- Avoid vim:E976 error when the given string has a blob.
+  if vim.fn.type(str) ~= vim.v.t_string then
+    return
+  end
+
   local result = vim.fn.matchlist(str:sub(init), pat)
   if #result == 10 then
     local start, end_ = str:find(result[1], init, true)
