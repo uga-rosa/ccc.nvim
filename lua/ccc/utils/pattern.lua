@@ -34,6 +34,11 @@ end
 ---@return integer? end
 ---@return string? ... submatches
 function pattern.find(str, pat, init)
+  -- matchlist() considers a string containing `\n` as a blob and cannot process them.
+  if str:find("\n") then
+    return
+  end
+
   local result = vim.fn.matchlist(str:sub(init), pat)
   if #result == 10 then
     local start, end_ = str:find(result[1], init, true)
