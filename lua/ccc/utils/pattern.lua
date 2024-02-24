@@ -34,8 +34,8 @@ end
 ---@return integer? end
 ---@return string? ... submatches
 function pattern.find(str, pat, init)
-  -- Avoid vim:E976 error when the given string has a blob.
-  if vim.fn.type(str) ~= vim.v.t_string then
+  -- matchlist() considers a string containing `\n` as a blob and cannot process them.
+  if str:find("\n") then
     return
   end
 
