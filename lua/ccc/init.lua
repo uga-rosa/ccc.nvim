@@ -11,8 +11,9 @@ local function loader(root)
   end
 end
 
----@param user_opts ccc.Options.P
+---@param user_opts? ccc.Options.P
 local function setup(user_opts)
+  user_opts = user_opts or {}
   require("ccc.config").setup(user_opts)
   local opts = require("ccc.config").options
 
