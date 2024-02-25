@@ -4,12 +4,14 @@ local convert = require("ccc.utils.convert")
 
 ---@class ccc.UI
 ---@field prev_pos? ccc.Position For toggle_prev_colors()
+---@field augroup integer
 local UI = {}
 UI.__index = UI
 
 function UI.new()
   return setmetatable({
-    ns_id = vim.api.nvim_create_namespace("ccc-ui-highlight"),
+    ns_id = vim.api.nvim_create_namespace("ccc-ui-float-highlight"),
+    augroup = vim.api.nvim_create_augroup("ccc-ui-float-close", {}),
     show_prev_colors = false,
   }, UI)
 end
@@ -41,15 +43,19 @@ function UI:open(color, prev_colors)
   -- For callback
   self.is_quit = true
   -- Clean up on closing a window
+  vim.api.nvim_clear_autocmds({ group = self.augroup })
   vim.api.nvim_create_autocmd("WinClosed", {
     pattern = self.winid .. "",
+    group = self.augroup,
     callback = utils.bind(self.on_close, self),
     once = true,
   })
   if opts.auto_close then
     vim.api.nvim_create_autocmd("WinLeave", {
-      pattern = self.winid,
+      buffer = self.bufnr,
+      group = self.augroup,
       callback = utils.bind(self.close, self),
+      once = true,
     })
   end
 end
@@ -66,9 +72,10 @@ end
 
 --- Close UI manually.
 function UI:close()
-  vim.api.nvim_buf_delete(self.bufnr, { force = true })
+  vim.api.nvim_clear_autocmds({ group = self.augroup })
   -- A floating window is automatically closed by nvim_buf_delete().
-  -- UI:on_close() is called by autocmd 'WinClosed'. See UI:open().
+  vim.api.nvim_buf_delete(self.bufnr, { force = true })
+  self:on_close()
 end
 
 --- Called on closing UI.
