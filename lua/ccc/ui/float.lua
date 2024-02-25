@@ -32,6 +32,7 @@ function UI:open(color, prev_colors)
   opts.win_opts.width = width
   self.winid = vim.api.nvim_open_win(self.bufnr, true, opts.win_opts)
   vim.api.nvim_win_set_hl_ns(self.winid, self.ns_id)
+  api.set_cursor(1, 0)
   -- Set options
   vim.api.nvim_set_option_value("buftype", "nofile", { buf = self.bufnr })
   vim.api.nvim_set_option_value("modifiable", false, { buf = self.bufnr })
@@ -56,7 +57,6 @@ function UI:update()
   api.set_lines(self.bufnr, 0, -1, buffer)
   self:highlight(width)
   vim.api.nvim_win_set_config(self.winid, { height = #buffer, width = width })
-  self:_set_color()
 end
 
 --- Close UI manually.
@@ -76,16 +76,6 @@ function UI:on_close()
   if self.is_quit and self.on_quit_callback then
     self.on_quit_callback()
   end
-  self:_set_color("")
-end
-
----@param color? string
-function UI:_set_color(color)
-  if color == nil then
-    color = self.color:hex()
-  end
-  vim.g.ccc_color = color
-  vim.cmd("do User CccColorChanged")
 end
 
 -- Hides an alpha slider and prev colors.

@@ -33,6 +33,7 @@ function M._apply_delta(d, core)
     core.color.alpha:set(new_value)
   end
   core.ui:update()
+  core:set_color()
 end
 
 for _, delta in ipairs({ 1, 5, 10 }) do
@@ -55,6 +56,7 @@ function M._set_percent(percent, core)
     core.color.alpha:set(new_value)
   end
   core.ui:update()
+  core:set_color()
 end
 
 for _, percent in ipairs({ 0, 50, 100 }) do

@@ -63,6 +63,7 @@ function Core:pick()
     self.color.alpha:set(alpha)
   end
   self.ui:open(self.color, self.prev_colors)
+  self:set_color()
   -- Key mappings
   for lhs, rhs in pairs(opts.mappings) do
     vim.keymap.set("n", lhs, utils.bind(rhs, self), { nowait = true, buffer = self.ui.bufnr })
@@ -106,6 +107,14 @@ function Core:complete()
   else
     api.set_text(0, self.range, self.color:str())
   end
+  self:set_color("")
+end
+
+---@param color? string
+function Core:set_color(color)
+  color = color or self.color:hex()
+  vim.g.ccc_color = color
+  vim.cmd("do User CccColorChanged")
 end
 
 return Core
