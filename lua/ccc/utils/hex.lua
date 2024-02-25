@@ -1,17 +1,9 @@
+local convert = require("ccc.utils.convert")
+
 ---@param rgb integer[]
 ---@return RGB
 local function to_0_1(rgb)
   return { rgb[1] / 255, rgb[2] / 255, rgb[3] / 255 }
-end
-
----@param rgb RGB
----@return integer[]
-local function to_0_255(rgb)
-  return {
-    math.floor(rgb[1] * 255),
-    math.floor(rgb[2] * 255),
-    math.floor(rgb[3] * 255),
-  }
 end
 
 local M = {}
@@ -31,8 +23,8 @@ end
 ---@param rgb RGB
 ---@return string
 function M.stringify(rgb)
-  rgb = to_0_255(rgb)
-  return ("#%02x%02x%02x"):format(rgb[1], rgb[2], rgb[3])
+  local r, g, b = convert.rgb_format(rgb)
+  return ("#%02x%02x%02x"):format(r, g, b)
 end
 
 return M
