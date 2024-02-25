@@ -5,6 +5,7 @@ local utils = require("ccc.utils")
 ---@field color ccc.Color
 ---@field prev_colors ccc.PrevColors
 ---@field range lsp.Range
+---@field is_insert boolean
 local Core = {}
 Core.__index = Core
 
@@ -27,6 +28,7 @@ function Core:reset_mode()
 end
 
 function Core:pick()
+  self.is_insert = false
   local opts = require("ccc.config").options
   ---@type integer?, integer?, RGB?, Alpha?, ccc.ColorInput?, ccc.ColorOutput?
   local start, end_, rgb, alpha, input, output
@@ -72,6 +74,7 @@ function Core:pick()
 end
 
 function Core:insert()
+  self.is_insert = true
   self.color:reset()
   local cursor = utils.cursor()
   local position = { line = cursor[1] - 1, character = cursor[2] - 1 }
@@ -101,14 +104,21 @@ function Core:complete()
   end
   self.prev_colors:prepend(self.color:copy())
   self.ui:close()
-  vim.api.nvim_buf_set_text(
-    0,
-    self.range.start.line,
-    self.range.start.character,
-    self.range["end"].line,
-    self.range["end"].character,
-    { self.color:str() }
-  )
+  if self.is_insert then
+    vim.cmd("startinsert")
+    local pos = self.range.start
+    vim.api.nvim_win_set_cursor(0, { pos.line + 1, pos.character })
+    vim.api.nvim_feedkeys(self.color:str(), "n", false)
+  else
+    vim.api.nvim_buf_set_text(
+      0,
+      self.range.start.line,
+      self.range.start.character,
+      self.range["end"].line,
+      self.range["end"].character,
+      { self.color:str() }
+    )
+  end
 end
 
 return Core
