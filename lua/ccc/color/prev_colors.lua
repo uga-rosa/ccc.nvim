@@ -15,6 +15,11 @@ function PrevColors.new()
   }, PrevColors)
 end
 
+function PrevColors:reset()
+  self._values = array.new()
+  self._index = 1
+end
+
 ---@param color ccc.Color
 function PrevColors:prepend(color)
   local opts = require("ccc.config").options

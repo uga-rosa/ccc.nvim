@@ -83,20 +83,17 @@ end
 
 ---@param core ccc.Core
 function M.show_prev_colors(core)
-  core.ui.show_prev_colors = true
-  core.ui:update()
+  core.ui:toggle_prev_colors(true)
 end
 
 ---@param core ccc.Core
 function M.hide_prev_colors(core)
-  core.ui.show_prev_colors = false
-  core.ui:update()
+  core.ui:toggle_prev_colors(false)
 end
 
 ---@param core ccc.Core
 function M.toggle_prev_colors(core)
-  core.ui.show_prev_colors = not core.ui.show_prev_colors
-  core.ui:update()
+  core.ui:toggle_prev_colors()
 end
 
 ---@param core ccc.Core

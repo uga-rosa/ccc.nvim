@@ -40,6 +40,7 @@
 ---@class ccc.ColorPicker
 ---@field parse_color fun(self, s: string, init?: integer, bufnr?: integer): start: integer?, end_: integer?, RGB: RGB?, Alpha: Alpha?, hl_def: vim.api.keyset.highlight?
 
+---@alias ccc.Position integer[] { row, col } 0-indexed
 ---@alias ccc.Range integer[] { start_row, start_col, end_row, end_col } 0-indexed, Only end_col is exclusive
 
 ---@class ccc.hl_info

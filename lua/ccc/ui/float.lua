@@ -3,6 +3,7 @@ local api = require("ccc.utils.api")
 local convert = require("ccc.utils.convert")
 
 ---@class ccc.UI
+---@field prev_pos? ccc.Position For toggle_prev_colors()
 local UI = {}
 UI.__index = UI
 
@@ -78,6 +79,24 @@ function UI:on_close()
   end
 end
 
+---@param open? boolean If true/false, shows/hides view; if nil, toggles.
+function UI:toggle_prev_colors(open)
+  if open then
+    self.prev_pos = { api.get_cursor() }
+    self.show_prev_colors = true
+    self:update()
+    self.prev_colors._index = 1
+    self:set_point({ type = "prev", index = 1 })
+  elseif open == false then
+    self.show_prev_colors = false
+    self:update()
+    api.set_cursor(unpack(self.prev_pos))
+  else
+    open = not self.show_prev_colors
+    self:toggle_prev_colors(open)
+  end
+end
+
 -- Hides an alpha slider and prev colors.
 function UI:reset_view()
   self.color.alpha:hide()
@@ -99,15 +118,16 @@ function UI:point_at()
 end
 
 function UI:set_point(point)
-  local pos = { 1, 0 }
+  local row, col = 0, 0
   if point.type == "color" then
-    pos = { point.index + 1, 0 }
+    row = point.index
   elseif point.type == "alpha" and not self.color.alpha.is_hide then
-    pos = { #self.color:input().value + 2, 0 }
+    row = #self.color:input().value + 1
   elseif point.type == "prev" and self.show_prev_colors then
-    pos = { vim.fn.line("$"), point.index * 8 - 8 }
+    row = vim.api.nvim_buf_line_count(self.bufnr) - 1
+    col = point.index * 8 - 8
   end
-  vim.api.nvim_win_set_cursor(self.winid, pos)
+  api.set_cursor(row, col)
 end
 
 ---@param value number
