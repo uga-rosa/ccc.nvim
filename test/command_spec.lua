@@ -367,4 +367,29 @@ describe("Commands", function()
     vim.cmd("CccConvert")
     assert.equal("#808080", utils.get_line())
   end)
+
+  describe("<Plug>(ccc-select-color)", function()
+    it("visual mode", function()
+      utils.set_lines(0, -1, { "#00ff00" })
+      Keymap.spec(function()
+        Keymap.send({
+          "llv",
+          { keys = t("<Plug>(ccc-select-color)"), remap = true },
+          "y",
+        }):await()
+      end)
+      assert.equal("#00ff00", vim.fn.getreg())
+    end)
+
+    it("operator pending mode", function()
+      utils.set_lines(0, -1, { "#ff00ff" })
+      Keymap.spec(function()
+        Keymap.send({
+          'lly',
+          { keys = t("<Plug>(ccc-select-color)"), remap = true },
+        }):await()
+      end)
+      assert.equal("#ff00ff", vim.fn.getreg())
+    end)
+  end)
 end)
