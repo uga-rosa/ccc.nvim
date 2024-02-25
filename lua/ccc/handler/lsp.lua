@@ -66,14 +66,14 @@ end
 
 ---Whether the cursor is within range
 ---@param range lsp.Range
----@param cursor { [1]: integer, [2]: integer  } (1,1)-index
+---@param cursor { [1]: integer, [2]: integer  } (0,0)-index
 local function is_within(range, cursor)
   local within = true
   -- lsp.Range is 0-based and the end position is exclusive.
-  within = within and range.start.line + 1 <= cursor[1]
-  within = within and range.start.character + 1 <= cursor[2]
-  within = within and range["end"].line + 1 >= cursor[1]
-  within = within and range["end"].character + 1 > cursor[2]
+  within = within and range.start.line <= cursor[1]
+  within = within and range.start.character <= cursor[2]
+  within = within and range["end"].line >= cursor[1]
+  within = within and range["end"].character > cursor[2]
   return within
 end
 

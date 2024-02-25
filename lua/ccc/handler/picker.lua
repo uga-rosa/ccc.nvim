@@ -14,15 +14,17 @@ local PickerHandler = {}
 function PickerHandler.pick()
   local opts = require("ccc.config").options
   local line = vim.api.nvim_get_current_line()
+  --- cursor_col is 0-indexed, but start_col and end_col is 1-indexed.
   local _, cursor_col = api.get_cursor()
+  cursor_col = cursor_col + 1
 
   local init = 1
   while init <= #line do
-    local start, end_, RGB, A, input, output
+    local start_col, end_col, RGB, A, input, output
     for _, picker in ipairs(opts.pickers) do
       local s_, e_, rgb, a = picker:parse_color(line, init)
-      if s_ and e_ and rgb and (start == nil or s_ < start) then
-        start, end_, RGB, A = s_, e_, rgb, a
+      if s_ and e_ and rgb and (start_col == nil or s_ < start_col) then
+        start_col, end_col, RGB, A = s_, e_, rgb, a
 
         local pattern = utils.oc(opts.recognize, "pattern", picker) or {}
         if opts.recognize.input then
@@ -33,13 +35,13 @@ function PickerHandler.pick()
         end
       end
     end
-    if start == nil then
+    if start_col == nil then
       break
     end
-    if start <= cursor_col and cursor_col <= end_ then
-      return start, end_, RGB, A, input, output
+    if start_col <= cursor_col and cursor_col <= end_col then
+      return start_col, end_col, RGB, A, input, output
     end
-    init = end_ + 1
+    init = end_col + 1
   end
 end
 
