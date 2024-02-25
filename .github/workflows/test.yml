@@ -1,14 +1,31 @@
 name: test
 
 on:
+  workflow_dispatch:
   push:
-    branchs:
+    branches:
       - main
     paths:
-      - '**.lua'
+      - '**/*.lua'
+      - 'Makefile'
+      - '.github/workflows/test.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**/*.lua'
+      - 'Makefile'
+      - '.github/workflows/test.yml'
 
 jobs:
-  integration:
+  test:
+    strategy:
+      matrix:
+        version:
+          - nightly
+          - stable
+          - v0.8.0
+
     runs-on: ubuntu-latest
     steps:
 
@@ -18,7 +35,7 @@ jobs:
     - name: Setup neovim
       uses: rhysd/action-setup-vim@v1
       with:
-        version: nightly
+        version: ${{ matrix.version }}
         neovim: true
 
     - name: Setup lua
@@ -34,6 +51,7 @@ jobs:
       run: |
         luarocks --lua-version=5.1 install luacheck
         luarocks --lua-version=5.1 install vusted
+
     - name: Run test
       shell: bash
       run: make
