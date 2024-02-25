@@ -640,18 +640,18 @@ Default mapping: q
 	Alias of |:quit|. Cancel and close the UI without replace or insert.
 
 
-                                                  *ccc-action-toggle_input_mode*
-toggle_input_mode ~
-mapping.toggle_input_mode()
+                                                   *ccc-action-cycle_input_mode*
+cycle_input_mode ~
+mapping.cycle_input_mode()
 Default mapping: i
-	Toggle input mode. See |ccc-option-inputs|.
+	Cycles input modes. See |ccc-option-inputs|.
 
 
-                                                 *ccc-action-toggle_ouotput_mode*
-toggle_output_mode ~
-mapping.toggle_output_mode()
+                                                 *ccc-action-cycle_ouotput_mode*
+cycle_output_mode ~
+mapping.cycle_output_mode()
 Default mapping: o
-	Toggle output mode. See |ccc-option-outputs|.
+	Cycles output modes. See |ccc-option-outputs|.
 
 
 							*ccc-action-reset_mode*
