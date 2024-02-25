@@ -351,6 +351,14 @@ Default: {
 <
 
 
+                                                        *ccc-option-output-line*
+output_line ~
+function
+Default: ccc.output_line
+	This function is used to create a row below the slider that displays
+	the colors before and after the change. See source code for details.
+
+
                                                      *ccc-option-highlight-mode*
 highlight_mode ~
 "fg" | "bg" | "foreground" | "background"
@@ -359,12 +367,13 @@ Default: "bg"
 	output_line and highlighter.
 
 
-                                                        *ccc-option-output-line*
-output_line ~
-function
-Default: ccc.output_line
-	This function is used to create a row below the slider that displays
-	the colors before and after the change. See source code for details.
+                                                                *ccc-option-lsp*
+lsp ~
+boolean
+Default: true
+	Whether to enable nvim-lsp support. The color information is updated
+	in the background and the result is used by |:CccPick| and
+	highlighter.
 
 
                                                         *ccc-option-highlighter*
@@ -409,10 +418,9 @@ Default: {}
 highlighter.lsp ~
 boolean
 Default: true
-	If true, highlight using textDocument/documentColor. If LS with the
-	color provider is not attached to a buffer, it falls back to highlight
-	with pickers. The color informations returned by LS are saved and used
-	by |:CccPick|.
+	If true, highlight using nvim-lsp. If LS with the color provider is
+	not attached to a buffer, it falls back to highlight with pickers.
+	See also |ccc-option-lsp|.
 
 
                                           *ccc-option-highlighter-update_insert*

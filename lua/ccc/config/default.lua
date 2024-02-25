@@ -60,8 +60,8 @@ return {
     local a_end_col = width
     return line, b_start_col, b_end_col, a_start_col, a_end_col
   end,
-  lsp = true,
   highlight_mode = "bg",
+  lsp = true,
   highlighter = {
     auto_enable = false,
     max_byte = 100 * 1024, -- 100 KB
