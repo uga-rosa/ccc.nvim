@@ -318,4 +318,42 @@ describe("Commands", function()
       end)
     end)
   end)
+
+  describe("<Plug>(ccc-insert)", function()
+    it("the middle of a line", function()
+      utils.set_lines(0, -1, { "foobar" })
+      Keymap.spec(function()
+        Keymap.send({
+          "llli",
+          { keys = t("<Plug>(ccc-insert)"), remap = true },
+          { keys = t("MjMjM<CR>"), remap = true },
+        }):await()
+      end)
+      assert.equal("foo#808080bar", utils.get_line())
+    end)
+
+    it("the beginning of a line", function()
+      utils.set_lines(0, -1, { "foo" })
+      Keymap.spec(function()
+        Keymap.send({
+          "I",
+          { keys = t("<Plug>(ccc-insert)"), remap = true },
+          { keys = t("MjMjM<CR>"), remap = true },
+        }):await()
+      end)
+      assert.equal("#808080foo", utils.get_line())
+    end)
+
+    it("the end of a line", function()
+      utils.set_lines(0, -1, { "foo" })
+      Keymap.spec(function()
+        Keymap.send({
+          "A",
+          { keys = t("<Plug>(ccc-insert)"), remap = true },
+          { keys = t("MjMjM<CR>"), remap = true },
+        }):await()
+      end)
+      assert.equal("foo#808080", utils.get_line())
+    end)
+  end)
 end)
