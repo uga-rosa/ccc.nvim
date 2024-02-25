@@ -1,6 +1,6 @@
-local M = {}
+local Convert = {}
 
-function M.toggle()
+function Convert.toggle()
   local opts = require("ccc.config").options
 
   local line = vim.api.nvim_get_current_line()
@@ -16,6 +16,7 @@ function M.toggle()
         break
       elseif start_col <= cursor_col and end_col >= cursor_col then
         vim.api.nvim_buf_set_text(0, row, start_col - 1, row, end_col, { output.str(rgb, alpha) })
+        return
       else
         init = end_col + 1
       end
@@ -23,4 +24,4 @@ function M.toggle()
   end
 end
 
-return M
+return Convert
