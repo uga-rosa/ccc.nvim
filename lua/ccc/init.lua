@@ -68,6 +68,8 @@ local function setup(user_opts)
       end,
     })
   end
+
+  return core
 end
 
 return {

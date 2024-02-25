@@ -15,7 +15,7 @@ function M.num_win()
 end
 
 ---Get line from current buffer
----@param lnum? integer 0-index
+---@param lnum? integer 0-indexed
 ---@return string
 function M.get_line(lnum)
   if lnum then
@@ -26,11 +26,18 @@ function M.get_line(lnum)
 end
 
 ---Get lines from current buffer
----@param start integer 0-index
----@param end_ integer 0-index (exclusived)
+---@param start_row integer 0-indexed
+---@param end_row integer 0-indexed, exclusive
 ---@return string[]
-function M.get_lines(start, end_)
-  return vim.api.nvim_buf_get_lines(0, start, end_, true)
+function M.get_lines(start_row, end_row)
+  return vim.api.nvim_buf_get_lines(0, start_row, end_row, true)
+end
+
+---@param start_row integer 0-indexed
+---@param end_row integer 0-indexed, exclusive
+---@param lines string[]
+function M.set_lines(start_row, end_row, lines)
+  vim.api.nvim_buf_set_lines(0, start_row, end_row, true, lines)
 end
 
 return M
