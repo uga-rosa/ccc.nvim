@@ -373,14 +373,14 @@ table
 	These are settings for CccHighlighter.
 
 
-                                            *ccc-option-highlighter-auto-enable*
+                                            *ccc-option-highlighter-auto_enable*
 highlighter.auto_enable ~
 boolean
 Default: false
 	Whether to enable automatically on BufEnter.
 
 
-                                               *ccc-option-highlighter-max-byte*
+                                               *ccc-option-highlighter-max_byte*
 highlighter.max_byte ~
 integer
 Default: 100 * 1024 (100 KB)
@@ -415,7 +415,7 @@ Default: true
 	by |:CccPick|.
 
 
-					*ccc-option-highlighter-update_insert*
+                                          *ccc-option-highlighter-update_insert*
 highlighter.update_insert ~
 boolean
 Default: true
