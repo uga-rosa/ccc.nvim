@@ -101,6 +101,7 @@ function Core:complete()
     return
   end
   self.prev_colors:prepend(self.color:copy())
+  self.ui.is_quit = false
   self.ui:close()
   if self.is_insert then
     vim.cmd("startinsert")

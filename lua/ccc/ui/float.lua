@@ -62,7 +62,6 @@ end
 
 --- Close UI manually.
 function UI:close()
-  self.is_quit = false
   vim.api.nvim_buf_delete(self.bufnr, { force = true })
   -- A floating window is automatically closed by nvim_buf_delete().
   -- UI:on_close() is called by autocmd 'WinClosed'. See UI:open().
