@@ -8,9 +8,6 @@ local CssRgbOutput = {
 
 function CssRgbOutput.str(RGB, A)
   local R, G, B = convert.rgb_format(RGB)
-  R = utils.round(R)
-  G = utils.round(G)
-  B = utils.round(B)
   if A then
     A = utils.round(A * 100)
     return ("rgb(%d %d %d / %d%%)"):format(R, G, B, A)
