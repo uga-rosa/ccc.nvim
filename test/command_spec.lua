@@ -385,7 +385,7 @@ describe("Commands", function()
       utils.set_lines(0, -1, { "#ff00ff" })
       Keymap.spec(function()
         Keymap.send({
-          'lly',
+          "lly",
           { keys = t("<Plug>(ccc-select-color)"), remap = true },
         }):await()
       end)
