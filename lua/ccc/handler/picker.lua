@@ -1,4 +1,5 @@
 local utils = require("ccc.utils")
+local api = require("ccc.utils.api")
 local hl = require("ccc.handler.highlight")
 
 ---@class ccc.PickerHandler
@@ -13,7 +14,7 @@ local PickerHandler = {}
 function PickerHandler.pick()
   local opts = require("ccc.config").options
   local line = vim.api.nvim_get_current_line()
-  local cursor_col = utils.col()
+  local _, cursor_col = api.get_cursor()
 
   local init = 1
   while init <= #line do
@@ -60,13 +61,13 @@ function PickerHandler.info_in_range(bufnr, start_line, end_line, pickers)
     for _, picker in ipairs(pickers) do
       local init = 1
       while init <= #line do
-        local start, end_, RGB, _, hl_def = picker:parse_color(line, init)
-        if (RGB or hl_def) and end_ then
+        local start_col, end_col, RGB, _, hl_def = picker:parse_color(line, init)
+        if (RGB or hl_def) and end_col then
           table.insert(infos, {
-            range = utils.range(row, start - 1, row, end_),
+            range = { row, start_col - 1, row, end_col },
             hl_name = hl.ensure_hl_name(RGB, hl_def),
           })
-          init = end_ + 1
+          init = end_col + 1
         else
           break
         end

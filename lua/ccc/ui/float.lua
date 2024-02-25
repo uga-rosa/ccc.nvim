@@ -1,4 +1,5 @@
 local utils = require("ccc.utils")
+local api = require("ccc.utils.api")
 local convert = require("ccc.utils.convert")
 
 ---@class ccc.UI
@@ -25,7 +26,7 @@ function UI:open(color, prev_colors)
   -- Create new buffer and window and set text
   self.bufnr = vim.api.nvim_create_buf(false, true)
   local buffer, width = self:buffer()
-  utils.set_lines(self.bufnr, 0, -1, buffer)
+  api.set_lines(self.bufnr, 0, -1, buffer)
   self:highlight(width)
   opts.win_opts.height = #buffer
   opts.win_opts.width = width
@@ -52,7 +53,7 @@ function UI:update()
     return
   end
   local buffer, width = self:buffer()
-  utils.set_lines(self.bufnr, 0, -1, buffer)
+  api.set_lines(self.bufnr, 0, -1, buffer)
   self:highlight(width)
   vim.api.nvim_win_set_config(self.winid, { height = #buffer, width = width })
 end
@@ -84,14 +85,14 @@ function UI:reset_view()
 end
 
 function UI:point_at()
-  local row = utils.row()
+  local row, col = api.get_cursor()
   local num_color = #self.color:input():get()
-  if row >= 2 and row <= num_color + 1 then
-    return { type = "color", index = row - 1 }
-  elseif not self.color.alpha.is_hide and row == num_color + 2 then
+  if row > 0 and row < num_color + 1 then
+    return { type = "color", index = row }
+  elseif not self.color.alpha.is_hide and row == num_color + 1 then
     return { type = "alpha" }
-  elseif self.show_prev_colors and row == vim.fn.line("$") then
-    return { type = "prev", index = math.floor(utils.col() / 8) + 1 }
+  elseif self.show_prev_colors and row == vim.fn.line("$") - 1 then
+    return { type = "prev", index = math.floor(col / 8) + 1 }
   end
   return { type = "none" }
 end
@@ -186,13 +187,14 @@ function UI:highlight(width)
 
     -- {bar_name} + " : " + {formatted_value} + " "
     -- {formatted_value} is must be 6 byte (See `ccc.ColorInput.format()`)
-    local start, end_ = bar_name_len + 10, 0
+    -- So, +9 (0-indexed)
+    local start_col, end_col = bar_name_len + 9, 0
     for j = 1, opts.bar_len do
       -- Update end_
       if j == point_idx then
-        end_ = start + #opts.point_char
+        end_col = start_col + #opts.point_char
       else
-        end_ = start + #opts.bar_char
+        end_col = start_col + #opts.bar_char
       end
       -- Calculate a new color for highlight of a slider
       local new_value = (j - 0.5) / opts.bar_len * (max - min) + min
@@ -213,9 +215,9 @@ function UI:highlight(width)
       end
       -- Set highlight
       local color_name = "CccBar" .. i .. "_" .. j
-      utils.set_hl(self.bufnr, self.ns_id, utils.range(row, start, row, end_), color_name, hl)
+      api.set_hl(self.bufnr, self.ns_id, { row, start_col, row, end_col }, color_name, hl)
 
-      start = end_
+      start_col = end_col
     end
   end
 
@@ -225,13 +227,13 @@ function UI:highlight(width)
     row = row + 1
     local point_idx = adjust2bar(alpha, 0, 1)
 
-    local start, end_ = bar_name_len + 10, 0
+    local start_col, end_col = bar_name_len + 9, 0
     for i = 1, opts.bar_len do
       -- Update end_
       if i == point_idx then
-        end_ = start + #opts.point_char
+        end_col = start_col + #opts.point_char
       else
-        end_ = start + #opts.bar_char
+        end_col = start_col + #opts.bar_char
       end
       -- Calculate a new color for highlight of an alpha slider
       local alpha_ratio = (i + 0.5) / opts.bar_len
@@ -249,7 +251,7 @@ function UI:highlight(width)
         end
       end
       local color_name = "CccAlpha" .. i
-      utils.set_hl(self.bufnr, self.ns_id, utils.range(row, start, row, end_), color_name, hl)
+      api.set_hl(self.bufnr, self.ns_id, { row, start_col, row, end_col }, color_name, hl)
     end
   end
 
@@ -259,17 +261,17 @@ function UI:highlight(width)
   -- {bar_name} : {color_name: 6byte} {slider}
   local _, b_start, b_end, a_start, a_end = opts.output_line(self.before_color, self.color, width)
 
-  utils.set_hl(
+  api.set_hl(
     self.bufnr,
     self.ns_id,
-    utils.range(row, b_start, row, b_end),
+    { row, b_start, row, b_end },
     "CccBefore",
     utils.create_highlight(self.before_color:hex(), opts.highlight_mode)
   )
-  utils.set_hl(
+  api.set_hl(
     self.bufnr,
     self.ns_id,
-    utils.range(row, a_start, row, a_end),
+    { row, a_start, row, a_end },
     "CccAfter",
     utils.create_highlight(self.color:hex(), opts.highlight_mode)
   )
@@ -277,17 +279,17 @@ function UI:highlight(width)
   -- Prev colors
   if self.show_prev_colors then
     row = row + 1
-    local start, end_ = 0, 7
+    local start_col, end_col = 0, 7
     for i, c in ipairs(self.prev_colors:get_all()) do
-      utils.set_hl(
+      api.set_hl(
         self.bufnr,
         self.ns_id,
-        utils.range(row, start, row, end_),
+        { row, start_col, row, end_col },
         "CccPrev" .. i,
         utils.create_highlight(c:hex(), opts.highlight_mode)
       )
-      start = end_ + 1
-      end_ = start + 7
+      start_col = end_col + 1
+      end_col = start_col + 7
     end
   end
 end

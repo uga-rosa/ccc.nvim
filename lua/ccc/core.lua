@@ -1,10 +1,11 @@
 local utils = require("ccc.utils")
+local api = require("ccc.utils.api")
 
 ---@class ccc.Core
 ---@field ui ccc.UI
 ---@field color ccc.Color
 ---@field prev_colors ccc.PrevColors
----@field range lsp.Range
+---@field range integer[]
 ---@field is_insert boolean
 local Core = {}
 Core.__index = Core
@@ -31,28 +32,12 @@ function Core:pick()
   self.is_insert = false
   local opts = require("ccc.config").options
   ---@type integer?, integer?, RGB?, Alpha?, ccc.ColorInput?, ccc.ColorOutput?
-  local start, end_, rgb, alpha, input, output
+  local start_col, end_col, rgb, alpha, input, output
   if opts.lsp then
-    start, end_, rgb, alpha = require("ccc.handler.lsp"):pick()
+    start_col, end_col, rgb, alpha = require("ccc.handler.lsp"):pick()
   end
-  if start == nil then
-    start, end_, rgb, alpha, input, output = require("ccc.handler.picker").pick()
-  end
-  if start and end_ and rgb then
-    local row = utils.row()
-    self.range = {
-      start = { line = row - 1, character = start - 1 },
-      ["end"] = { line = row - 1, character = end_ },
-    }
-    self.color:set_rgb(rgb)
-  else
-    local cursor = utils.cursor()
-    local position = { line = cursor[1] - 1, character = cursor[2] - 1 }
-    self.range = { start = position, ["end"] = position }
-    self.color:reset()
-  end
-  if alpha then
-    self.color.alpha:set(alpha)
+  if start_col == nil then
+    start_col, end_col, rgb, alpha, input, output = require("ccc.handler.picker").pick()
   end
   if input then
     local index = self.color._inputs:findIndex(("x.name == %q"):format(input.name))
@@ -66,6 +51,17 @@ function Core:pick()
       self.color._output_idx = index
     end
   end
+  local row, col = api.get_cursor()
+  if start_col and end_col and rgb then
+    self.range = { row, start_col - 1, row, end_col }
+    self.color:set_rgb(rgb)
+  else
+    self.range = { row, col, row, col }
+    self.color:reset()
+  end
+  if alpha then
+    self.color.alpha:set(alpha)
+  end
   self.ui:open(self.color, self.prev_colors)
   -- Key mappings
   for lhs, rhs in pairs(opts.mappings) do
@@ -76,9 +72,8 @@ end
 function Core:insert()
   self.is_insert = true
   self.color:reset()
-  local cursor = utils.cursor()
-  local position = { line = cursor[1] - 1, character = cursor[2] - 1 }
-  self.range = { start = position, ["end"] = position }
+  local row, col = api.get_cursor()
+  self.range = { row, col, row, col }
   self.ui:open(self.color, self.prev_colors)
   -- Return to normal mode
   vim.cmd("stopinsert")
@@ -106,18 +101,10 @@ function Core:complete()
   self.ui:close()
   if self.is_insert then
     vim.cmd("startinsert")
-    local pos = self.range.start
-    vim.api.nvim_win_set_cursor(0, { pos.line + 1, pos.character })
+    api.set_cursor(self.range[1], self.range[2])
     vim.api.nvim_feedkeys(self.color:str(), "n", false)
   else
-    vim.api.nvim_buf_set_text(
-      0,
-      self.range.start.line,
-      self.range.start.character,
-      self.range["end"].line,
-      self.range["end"].character,
-      { self.color:str() }
-    )
+    api.set_text(0, self.range, self.color:str())
   end
 end
 

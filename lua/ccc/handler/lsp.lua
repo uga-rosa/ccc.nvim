@@ -1,4 +1,5 @@
 local utils = require("ccc.utils")
+local api = require("ccc.utils.api")
 local hl = require("ccc.handler.highlight")
 
 ---@class ccc.LspHandler
@@ -76,14 +77,14 @@ local function is_within(range, cursor)
   return within
 end
 
----@return integer? start
----@return integer? end_
+---@return integer? start_col 1-indexed
+---@return integer? end_col 1-indexed, inclusive
 ---@return RGB?
 ---@return Alpha?
 function LspHandler:pick()
   local bufnr = utils.ensure_bufnr(0)
   local color_infos = self.color_info_map[bufnr] or {}
-  local cursor = utils.cursor()
+  local cursor = { api.get_cursor() }
   for _, color_info in ipairs(color_infos) do
     local range = color_info.range
     local color = color_info.color
@@ -105,7 +106,15 @@ function LspHandler:info_in_range(bufnr, start_line, end_line)
     local color = color_info.color
     if range.start.line >= start_line and range["end"].line <= end_line then
       local hl_name = hl.ensure_hl_name({ color.alpha, color.green, color.blue })
-      table.insert(infos, { range = range, hl_name = hl_name })
+      table.insert(infos, {
+        range = {
+          range.start.line,
+          range.start.character,
+          range["end"].line,
+          range["end"].character,
+        },
+        hl_name = hl_name,
+      })
     end
   end
   return infos

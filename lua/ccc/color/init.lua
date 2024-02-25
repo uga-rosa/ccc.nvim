@@ -60,6 +60,8 @@ end
 
 function Color:copy()
   local new = Color.new()
+  new._input_idx = self._input_idx
+  new._output_idx = self._output_idx
   new:set(self:get())
   return new
 end

@@ -1,4 +1,5 @@
 local utils = require("ccc.utils")
+local api = require("ccc.utils.api")
 local lsp_handler = require("ccc.handler.lsp")
 local picker_handler = require("ccc.handler.picker")
 
@@ -117,7 +118,7 @@ function Highlighter:update(bufnr, start_line, end_line, pickers)
     local custom_info = picker_handler.info_in_range(bufnr, start_line, end_line, pickers)
     vim.api.nvim_buf_clear_namespace(bufnr, self.custom_ns_id, start_line, end_line)
     for _, info in ipairs(custom_info) do
-      utils.set_hl(bufnr, self.custom_ns_id, info.range, info.hl_name)
+      api.set_hl(bufnr, self.custom_ns_id, info.range, info.hl_name)
     end
     return
   end
@@ -127,14 +128,14 @@ function Highlighter:update(bufnr, start_line, end_line, pickers)
     local lsp_info = lsp_handler:info_in_range(bufnr, start_line, end_line)
     vim.api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, start_line, end_line)
     for _, info in ipairs(lsp_info) do
-      utils.set_hl(bufnr, self.lsp_ns_id, info.range, info.hl_name)
+      api.set_hl(bufnr, self.lsp_ns_id, info.range, info.hl_name)
     end
   end
   if opts.highlighter.picker then
     local picker_info = picker_handler.info_in_range(bufnr, start_line, end_line)
     vim.api.nvim_buf_clear_namespace(bufnr, self.picker_ns_id, start_line, end_line)
     for _, info in ipairs(picker_info) do
-      utils.set_hl(bufnr, self.picker_ns_id, info.range, info.hl_name)
+      api.set_hl(bufnr, self.picker_ns_id, info.range, info.hl_name)
     end
   end
 end

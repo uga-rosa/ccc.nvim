@@ -1,80 +1,12 @@
-local api = vim.api
-
 local utils = {}
 
 ---@param key string
 ---@param plain? boolean
 function utils.feedkey(key, plain)
   if not plain then
-    key = api.nvim_replace_termcodes(key, true, false, true)
+    key = vim.api.nvim_replace_termcodes(key, true, false, true)
   end
-  api.nvim_feedkeys(key, "n", false)
-end
-
----(1,1)-index
----@return integer[]
-function utils.cursor()
-  local pos = api.nvim_win_get_cursor(0)
-  pos[2] = pos[2] + 1
-  return pos
-end
-
----(1,1)-index
----@param pos integer[]
-function utils.set_cursor(pos)
-  pos[2] = pos[2] - 1
-  pcall(api.nvim_win_set_cursor, 0, pos)
-end
-
----1-index
----@return integer
-function utils.row()
-  return utils.cursor()[1]
-end
-
----1-index
----@return integer
-function utils.col()
-  return utils.cursor()[2]
-end
-
----@param bufnr integer
----@param start integer
----@param end_ integer
----@param lines string[]
-function utils.set_lines(bufnr, start, end_, lines)
-  api.nvim_set_option_value("modifiable", true, { buf = bufnr })
-  api.nvim_buf_set_lines(bufnr, start, end_, false, lines)
-  api.nvim_set_option_value("modifiable", false, { buf = bufnr })
-end
-
----@param bufnr integer
----@param lnum integer 1-index
----@return integer
-function utils.line_length(bufnr, lnum)
-  local line = vim.api.nvim_buf_get_lines(bufnr, lnum - 1, lnum, false)[1]
-  return vim.api.nvim_strwidth(line)
-end
-
----@param bufnr integer
----@param ns_id integer
----@param range lsp.Range
----@param name string
----@param hl_def? vim.api.keyset.highlight
-function utils.set_hl(bufnr, ns_id, range, name, hl_def)
-  if hl_def then
-    vim.api.nvim_set_hl(ns_id, name, hl_def)
-  end
-  vim.api.nvim_buf_add_highlight(bufnr, ns_id, name, range.start.line, range.start.character, range["end"].character)
-end
-
----@param sl integer start line
----@param sc integer start character
----@param el integer end line
----@param ec integer end character
----@return lsp.Range
-function utils.range(sl, sc, el, ec)
-  return { start = { line = sl, character = sc }, ["end"] = { line = el, character = ec } }
+  vim.api.nvim_feedkeys(key, "n", false)
 end
 
 ---@param ... number
@@ -162,7 +94,7 @@ end
 ---@return integer
 function utils.ensure_bufnr(bufnr)
   if bufnr == nil or bufnr == 0 then
-    return api.nvim_get_current_buf()
+    return vim.api.nvim_get_current_buf()
   end
   return bufnr
 end

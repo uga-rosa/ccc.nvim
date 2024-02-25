@@ -1,23 +1,25 @@
+local api = require("ccc.utils.api")
+
 local M = {}
 
 function M.select(cmd)
   local opts = require("ccc.config").options
   ---@type integer?, integer?, RGB?, Alpha?
-  local start, end_
+  local start_col, end_col
   if opts.lsp then
-    start, end_ = require("ccc.handler.lsp"):pick()
+    start_col, end_col = require("ccc.handler.lsp"):pick()
   end
-  if start == nil then
-    start, end_ = require("ccc.handler.picker").pick()
+  if start_col == nil then
+    start_col, end_col = require("ccc.handler.picker").pick()
   end
-  if not (start and end_) then
+  if not (start_col and end_col) then
     return
   end
 
-  local row = require("ccc.utils").row()
-  vim.api.nvim_win_set_cursor(0, { row, start - 1 })
+  local row = api.get_cursor()
+  api.set_cursor(row, start_col - 1)
   vim.cmd("normal! " .. cmd)
-  vim.api.nvim_win_set_cursor(0, { row, end_ - 1 })
+  api.set_cursor(row, end_col - 1)
 end
 
 return M
