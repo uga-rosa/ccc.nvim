@@ -43,11 +43,15 @@ function UI:open(color, prev_colors)
   -- Clean up on closing a window
   vim.api.nvim_create_autocmd("WinClosed", {
     pattern = self.winid .. "",
-    callback = function()
-      self:on_close()
-    end,
+    callback = utils.bind(self.on_close, self),
     once = true,
   })
+  if opts.auto_close then
+    vim.api.nvim_create_autocmd("WinLeave", {
+      pattern = self.winid,
+      callback = utils.bind(self.close, self),
+    })
+  end
 end
 
 function UI:update()
