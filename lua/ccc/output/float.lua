@@ -1,13 +1,10 @@
 local utils = require("ccc.utils")
 
----@class FloatOutput: ColorOutput
+---@class ccc.ColorOutput
 local FloatOutput = {
   name = "Float",
 }
 
----@param RGB RGB
----@param A? Alpha
----@return string
 function FloatOutput.str(RGB, A)
   local R, G, B = unpack(RGB)
   R = utils.round(R, 3)

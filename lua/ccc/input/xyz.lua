@@ -1,7 +1,7 @@
 local ColorInput = require("ccc.input")
 local convert = require("ccc.utils.convert")
 
----@class XyzInput: ColorInput
+---@class XyzInput: ccc.ColorInput
 local XyzInput = setmetatable({
   name = "XYZ",
   max = { 1, 1, 1 },

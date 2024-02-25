@@ -12,12 +12,13 @@ local pattern = {
   },
 }
 
----@class HexOutput: ColorOutput
+---@class ccc.ColorOutput
 local HexOutput = {
   name = "HEX",
   pattern = pattern.lowercase,
 }
 
+---@param opt { uppercase?: boolean }
 function HexOutput.setup(opt)
   if opt.uppercase then
     HexOutput.pattern = pattern.uppercase
@@ -26,14 +27,8 @@ function HexOutput.setup(opt)
   end
 end
 
----@param RGB RGB
----@param A? Alpha
----@return string
 function HexOutput.str(RGB, A)
   local R, G, B = convert.rgb_format(RGB)
-  R = utils.round(R)
-  G = utils.round(G)
-  B = utils.round(B)
   if A then
     A = utils.round(A * 255)
     return HexOutput.pattern[1]:format(R, G, B, A)

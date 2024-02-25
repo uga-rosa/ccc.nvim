@@ -1,4 +1,4 @@
----@diagnostic disable: invisible
+---@diagnostic disable: invisible, redefined-local
 local mpack = require("mpack")
 local Async = require("ccc.kit.Async")
 
@@ -14,8 +14,8 @@ end
 
 ---@class ccc.kit.Thread.Server.Session
 ---@field private mpack_session any
----@field private reader uv.uv_pipe_t
----@field private writer uv.uv_pipe_t
+---@field private stdin uv.uv_pipe_t
+---@field private stdout uv.uv_pipe_t
 ---@field private _on_request table<string, fun(params: table): any>
 ---@field private _on_notification table<string, fun(params: table): nil>
 local Session = {}
@@ -26,23 +26,26 @@ Session.__index = Session
 function Session.new()
   local self = setmetatable({}, Session)
   self.mpack_session = mpack.Session({ unpack = mpack.Unpacker() })
-  self.reader = nil
-  self.writer = nil
+  self.stdin = nil
+  self.stdout = nil
   self._on_request = {}
   self._on_notification = {}
   return self
 end
 
----Connect reader/writer.
----@param reader uv.uv_pipe_t
----@param writer uv.uv_pipe_t
-function Session:connect(reader, writer)
-  self.reader = reader
-  self.writer = writer
+---Connect stdin/stdout.
+---@param stdin uv.uv_pipe_t
+---@param stdout uv.uv_pipe_t
+function Session:connect(stdin, stdout)
+  self.stdin = stdin
+  self.stdout = stdout
 
-  self.reader:read_start(function(err, data)
+  self.stdin:read_start(function(err, data)
     if err then
       error(err)
+    end
+    if not data then
+      return
     end
 
     local offset = 1
@@ -58,21 +61,29 @@ function Session:connect(reader, writer)
             end)
           end)
           :next(function(res)
-            self.writer:write(self.mpack_session:reply(request_id) .. encode(mpack.NIL) .. encode(res))
+            self.stdout:write(self.mpack_session:reply(request_id) .. encode(mpack.NIL) .. encode(res))
           end)
           :catch(function(err_)
-            self.writer:write(self.mpack_session:reply(request_id) .. encode(err_) .. encode(mpack.NIL))
+            self.stdout:write(self.mpack_session:reply(request_id) .. encode(err_) .. encode(mpack.NIL))
           end)
       elseif type == "notification" then
         local method, params = method_or_error, params_or_result
-        self._on_notification[method](params)
+        Async.run(function()
+          self._on_notification[method](params)
+        end):catch(function(e)
+          self:notify("$/error", { error = e })
+        end)
       elseif type == "response" then
         local callback, err_, res = id_or_cb, method_or_error, params_or_result
-        if err_ == mpack.NIL then
-          callback(nil, res)
-        else
-          callback(err_, nil)
-        end
+        Async.run(function()
+          if err_ == mpack.NIL then
+            callback(nil, res)
+          else
+            callback(err_, nil)
+          end
+        end):catch(function(e)
+          self:notify("$/error", { error = e })
+        end)
       end
       offset = new_offset
     end
@@ -106,7 +117,7 @@ function Session:request(method, params)
         resolve(res)
       end
     end)
-    self.writer:write(request .. encode(method) .. encode(params))
+    self.stdout:write(request .. encode(method) .. encode(params))
   end)
 end
 
@@ -114,7 +125,7 @@ end
 ---@param method string
 ---@param params table
 function Session:notify(method, params)
-  self.writer:write(self.mpack_session:notify() .. encode(method) .. encode(params))
+  self.stdout:write(self.mpack_session:notify() .. encode(method) .. encode(params))
 end
 
 return Session

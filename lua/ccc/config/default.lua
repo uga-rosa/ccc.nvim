@@ -1,30 +1,20 @@
 local ccc = require("ccc")
-local mapping = ccc.mapping
 local input = ccc.input
 local output = ccc.output
 local picker = ccc.picker
+local mapping = ccc.mapping
+local utils = require("ccc.utils")
 
----@alias hl_mode "fg" | "foreground" | "bg" | "background"
----@alias show_mode "auto" | "show" | "hide"
-
+---@type ccc.Options
 return {
-  ---@type string hex
   default_color = "#000000",
-  ---@type string
   bar_char = "█",
-  ---@type string
   point_char = "◊",
-  ---@type string hex
   point_color = "",
-  ---@type boolean
   empty_point_bg = true,
-  ---@type string hex
   point_color_on_dark = "#ffffff",
-  ---@type string hex
   point_color_on_light = "#000000",
-  ---@type integer
   bar_len = 30,
-  ---@type table
   win_opts = {
     relative = "cursor",
     row = 1,
@@ -32,28 +22,22 @@ return {
     style = "minimal",
     border = "rounded",
   },
-  ---@type boolean
   auto_close = true,
-  ---@type boolean
   preserve = false,
-  ---@type boolean
   save_on_quit = false,
-  ---@type show_mode
+  max_prev_colors = 10,
   alpha_show = "auto",
-  ---@type ColorInput[]
   inputs = {
     input.rgb,
     input.hsl,
     input.cmyk,
   },
-  ---@type ColorOutput[]
   outputs = {
     output.hex,
     output.hex_short,
     output.css_rgb,
     output.css_hsl,
   },
-  ---@type ColorPicker[]
   pickers = {
     picker.hex,
     picker.css_rgb,
@@ -64,27 +48,30 @@ return {
     picker.css_oklab,
     picker.css_oklch,
   },
-  ---@type hl_mode
+  ui = require("ccc.ui.float"),
+  output_line = function(before_color, after_color, width)
+    local b_hex = before_color:hex()
+    local a_str = after_color:str()
+    local line = b_hex .. " =>" .. (" "):rep(width - #b_hex - 3 - #a_str) .. a_str
+    -- Range for highlight
+    local b_start_col = 0
+    local b_end_col = #b_hex
+    local a_start_col = width - #a_str
+    local a_end_col = width
+    return line, b_start_col, b_end_col, a_start_col, a_end_col
+  end,
   highlight_mode = "bg",
-  ---@type function
-  output_line = ccc.output_line,
-  ---@type table
+  lsp = true,
   highlighter = {
-    ---@type boolean
     auto_enable = false,
-    ---@type integer
     max_byte = 100 * 1024, -- 100 KB
-    ---@type string[]
     filetypes = {},
-    ---@type string[]
     excludes = {},
-    ---@type boolean
     lsp = true,
-    ---@type boolean
+    picker = true,
     update_insert = true,
   },
   -- stylua: ignore
-  ---@type {[1]: ColorPicker, [2]: ColorOutput}[]
   convert = {
       { picker.hex,     output.css_rgb },
       { picker.css_rgb, output.css_hsl },
@@ -93,34 +80,22 @@ return {
   recognize = {
     input = false,
     output = false,
-        -- stylua: ignore
-        ---@alias RecognizePattern table<ColorPicker, {[1]: ColorInput, [2]: ColorOutput}>
-        ---@type RecognizePattern
-        pattern = {
-            [picker.css_rgb]   = { input.rgb,   output.rgb       },
-            [picker.css_name]  = { input.rgb,   output.rgb       },
-            [picker.hex]       = { input.rgb,   output.hex       },
-            [picker.css_hsl]   = { input.hsl,   output.css_hsl   },
-            [picker.css_hwb]   = { input.hwb,   output.css_hwb   },
-            [picker.css_lab]   = { input.lab,   output.css_lab   },
-            [picker.css_lch]   = { input.lch,   output.css_lch   },
-            [picker.css_oklab] = { input.oklab, output.css_oklab },
-            [picker.css_oklch] = { input.oklch, output.css_oklch },
-        },
+    -- stylua: ignore
+    pattern = {
+        [picker.css_rgb]   = { input.rgb,   output.css_rgb   },
+        [picker.css_name]  = { input.rgb,   output.css_rgb   },
+        [picker.hex]       = { input.rgb,   output.hex       },
+        [picker.css_hsl]   = { input.hsl,   output.css_hsl   },
+        [picker.css_hwb]   = { input.hwb,   output.css_hwb   },
+        [picker.css_lab]   = { input.lab,   output.css_lab   },
+        [picker.css_lch]   = { input.lch,   output.css_lch   },
+        [picker.css_oklab] = { input.oklab, output.css_oklab },
+        [picker.css_oklch] = { input.oklch, output.css_oklch },
+    },
   },
-  ---@type table<string, function>
   mappings = {
-    ["q"] = mapping.quit,
     ["<CR>"] = mapping.complete,
-    ["i"] = mapping.toggle_input_mode,
-    ["o"] = mapping.toggle_output_mode,
-    ["r"] = mapping.reset_mode,
-    ["a"] = mapping.toggle_alpha,
-    ["g"] = mapping.toggle_prev_colors,
-    ["w"] = mapping.goto_next,
-    ["b"] = mapping.goto_prev,
-    ["W"] = mapping.goto_tail,
-    ["B"] = mapping.goto_head,
+    ["q"] = mapping.quit,
     ["l"] = mapping.increase1,
     ["d"] = mapping.increase5,
     [","] = mapping.increase10,
@@ -131,33 +106,27 @@ return {
     ["M"] = mapping.set50,
     ["L"] = mapping.set100,
     ["0"] = mapping.set0,
-    ["1"] = function()
-      ccc.set_percent(10)
-    end,
-    ["2"] = function()
-      ccc.set_percent(20)
-    end,
-    ["3"] = function()
-      ccc.set_percent(30)
-    end,
-    ["4"] = function()
-      ccc.set_percent(40)
-    end,
+    ["1"] = utils.bind(mapping._set_percent, 10),
+    ["2"] = utils.bind(mapping._set_percent, 20),
+    ["3"] = utils.bind(mapping._set_percent, 30),
+    ["4"] = utils.bind(mapping._set_percent, 40),
     ["5"] = mapping.set50,
-    ["6"] = function()
-      ccc.set_percent(60)
-    end,
-    ["7"] = function()
-      ccc.set_percent(70)
-    end,
-    ["8"] = function()
-      ccc.set_percent(80)
-    end,
-    ["9"] = function()
-      ccc.set_percent(90)
-    end,
+    ["6"] = utils.bind(mapping._set_percent, 60),
+    ["7"] = utils.bind(mapping._set_percent, 70),
+    ["8"] = utils.bind(mapping._set_percent, 80),
+    ["9"] = utils.bind(mapping._set_percent, 90),
+    ["r"] = mapping.reset_mode,
+    ["a"] = mapping.toggle_alpha,
+    ["g"] = mapping.toggle_prev_colors,
+    ["b"] = mapping.goto_prev,
+    ["w"] = mapping.goto_next,
+    ["B"] = mapping.goto_head,
+    ["W"] = mapping.goto_tail,
+    ["i"] = mapping.cycle_input_mode,
+    ["o"] = mapping.cycle_output_mode,
     ["<LeftMouse>"] = mapping.click,
     ["<ScrollWheelDown>"] = mapping.decrease1,
     ["<ScrollWheelUp>"] = mapping.increase1,
   },
+  disable_default_mappings = false,
 }

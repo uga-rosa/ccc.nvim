@@ -1,11 +1,4 @@
-.PHONY: integration
-integration: luacheck vusted
-
-.PHONY: luacheck
-luacheck:
-	luacheck ./lua
-
-.PHONY: vusted
+.PHONY: test
 vusted:
 	vusted ./test
 

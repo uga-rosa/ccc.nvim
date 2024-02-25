@@ -2,7 +2,8 @@ local utils = require("ccc.utils")
 local parse = require("ccc.utils.parse")
 local pattern = require("ccc.utils.pattern")
 
----@class CssRgbPicker: ColorPicker
+---@class ccc.ColorPicker.CssRgb: ccc.ColorPicker
+---@field pattern string[]
 local CssRgbPicker = {}
 
 function CssRgbPicker:init()
@@ -21,23 +22,23 @@ end
 
 ---@param s string
 ---@param init? integer
----@return integer? start
----@return integer? end_
----@return RGB?
----@return Alpha?
+---@return integer? start_col
+---@return integer? end_col
+---@return RGB? rgb
+---@return Alpha? alpha
 function CssRgbPicker:parse_color(s, init)
   self:init()
-  init = vim.F.if_nil(init, 1)
+  init = init or 1
   -- The shortest patten is 10 characters like `rgb(0 0 0)`
   while init < #s - 9 do
-    local start, end_, cap1, cap2, cap3, cap4
+    local start_col, end_col, cap1, cap2, cap3, cap4
     for _, pat in ipairs(self.pattern) do
-      start, end_, cap1, cap2, cap3, cap4 = pattern.find(s, pat, init)
-      if start then
+      start_col, end_col, cap1, cap2, cap3, cap4 = pattern.find(s, pat, init)
+      if start_col then
         break
       end
     end
-    if not (start and end_ and cap1 and cap2 and cap3) then
+    if not (start_col and end_col and cap1 and cap2 and cap3) then
       return
     end
     local R = parse.percent(cap1, 255, true)
@@ -45,9 +46,9 @@ function CssRgbPicker:parse_color(s, init)
     local B = parse.percent(cap3, 255, true)
     if utils.valid_range({ R, G, B }, 0, 1) then
       local A = parse.alpha(cap4)
-      return start, end_, { R, G, B }, A
+      return start_col, end_col, { R, G, B }, A
     end
-    init = end_ + 1
+    init = end_col + 1
   end
 end
 

@@ -3,7 +3,8 @@ local convert = require("ccc.utils.convert")
 local parse = require("ccc.utils.parse")
 local pattern = require("ccc.utils.pattern")
 
----@class CssHwbPicker: ColorPicker
+---@class ccc.ColorPicker.CssHwb: ccc.ColorPicker
+---@field pattern string
 local CssHwbPicker = {}
 
 function CssHwbPicker:init()
@@ -16,17 +17,17 @@ end
 
 ---@param s string
 ---@param init? integer
----@return integer? start
----@return integer? end_
----@return RGB?
----@return Alpha?
+---@return integer? start_col
+---@return integer? end_col
+---@return RGB? rgb
+---@return Alpha? alpha
 function CssHwbPicker:parse_color(s, init)
   self:init()
-  init = vim.F.if_nil(init, 1)
+  init = init or 1
   -- The shortest patten is 12 characters like `hwb(0 0% 0%)`
   while init <= #s - 11 do
-    local start, end_, cap1, cap2, cap3, cap4 = pattern.find(s, self.pattern, init)
-    if not (start and end_ and cap1 and cap2 and cap3) then
+    local start_col, end_col, cap1, cap2, cap3, cap4 = pattern.find(s, self.pattern, init)
+    if not (start_col and end_col and cap1 and cap2 and cap3) then
       return
     end
     local H = parse.hue(cap1)
@@ -35,9 +36,9 @@ function CssHwbPicker:parse_color(s, init)
     if H and utils.valid_range({ W, B }, 0, 1) then
       local RGB = convert.hwb2rgb({ H, W, B })
       local A = parse.alpha(cap4)
-      return start, end_, RGB, A
+      return start_col, end_col, RGB, A
     end
-    init = end_ + 1
+    init = end_col + 1
   end
 end
 

@@ -1,59 +1,12 @@
-local api = vim.api
-
 local utils = {}
 
 ---@param key string
 ---@param plain? boolean
 function utils.feedkey(key, plain)
   if not plain then
-    key = api.nvim_replace_termcodes(key, true, false, true)
+    key = vim.api.nvim_replace_termcodes(key, true, false, true)
   end
-  api.nvim_feedkeys(key, "n", false)
-end
-
----(1,1)-index
----@return integer[]
-function utils.cursor()
-  local pos = api.nvim_win_get_cursor(0)
-  pos[2] = pos[2] + 1
-  return pos
-end
-
----(1,1)-index
----@param pos integer[]
-function utils.set_cursor(pos)
-  pos[2] = pos[2] - 1
-  pcall(api.nvim_win_set_cursor, 0, pos)
-end
-
----1-index
----@return integer
-function utils.row()
-  return utils.cursor()[1]
-end
-
----1-index
----@return integer
-function utils.col()
-  return utils.cursor()[2]
-end
-
----@param bufnr integer
----@param start integer
----@param end_ integer
----@param lines string[]
-function utils.set_lines(bufnr, start, end_, lines)
-  api.nvim_set_option_value("modifiable", true, { buf = bufnr })
-  api.nvim_buf_set_lines(bufnr, start, end_, false, lines)
-  api.nvim_set_option_value("modifiable", false, { buf = bufnr })
-end
-
----@param bufnr integer
----@param lnum integer 1-index
----@return integer
-function utils.line_length(bufnr, lnum)
-  local line = vim.api.nvim_buf_get_lines(bufnr, lnum - 1, lnum, false)[1]
-  return vim.api.nvim_strwidth(line)
+  vim.api.nvim_feedkeys(key, "n", false)
 end
 
 ---@param ... number
@@ -93,22 +46,6 @@ function utils.round(float, digit)
   end
 end
 
----@param array any[]
----@param value any
----@param func? function
----@return integer?
-function utils.search_idx(array, value, func)
-  func = vim.F.if_nil(func, function(x)
-    return x
-  end)
-
-  for i, v in ipairs(array) do
-    if func(v) == value then
-      return i
-    end
-  end
-end
-
 ---@param int integer
 ---@param min integer
 ---@param max integer
@@ -142,8 +79,8 @@ local function is_bright_HEX(HEX)
 end
 
 ---@param hex string
----@param hl_mode hl_mode
----@return table
+---@param hl_mode ccc.Option.hl_mode
+---@return vim.api.keyset.highlight
 function utils.create_highlight(hex, hl_mode)
   local contrast = is_bright_HEX(hex) and "#000000" or "#ffffff"
   if hl_mode == "fg" or hl_mode == "foreground" then
@@ -155,9 +92,9 @@ end
 
 ---@param bufnr? integer
 ---@return integer
-function utils.resolve_bufnr(bufnr)
+function utils.ensure_bufnr(bufnr)
   if bufnr == nil or bufnr == 0 then
-    return api.nvim_get_current_buf()
+    return vim.api.nvim_get_current_buf()
   end
   return bufnr
 end
@@ -180,18 +117,28 @@ function utils.valid_range(value, min, max)
   return false
 end
 
----@param tbl table
----@param ... unknown
----@return any
-function utils.resolve_tree(tbl, ...)
-  for i = 1, select("#", ...) do
-    local key = select(i, ...)
-    tbl = tbl[key]
-    if tbl == nil then
+function utils.bind(func, ...)
+  local args = { ... }
+  return function(...)
+    for _, v in ipairs({ ... }) do
+      table.insert(args, v)
+    end
+    func(unpack(args))
+  end
+end
+
+---optional chain
+---@param root table
+---@param ... unknown keys
+---@return unknown | nil
+function utils.oc(root, ...)
+  for _, key in ipairs({ ... }) do
+    root = root[key]
+    if root == nil then
       return
     end
   end
-  return tbl
+  return root
 end
 
 return utils

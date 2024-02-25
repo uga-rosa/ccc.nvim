@@ -11,12 +11,13 @@ local pattern = {
   },
 }
 
----@class HexShortOutput: ColorOutput
+---@class ccc.ColorOutput
 local HexShortOutput = {
   name = "HEXshort",
   pattern = pattern.lowercase,
 }
 
+---@param opt { uppercase?: boolean }
 function HexShortOutput.setup(opt)
   if opt.uppercase then
     HexShortOutput.pattern = pattern.uppercase
@@ -25,9 +26,6 @@ function HexShortOutput.setup(opt)
   end
 end
 
----@param RGB RGB
----@param A? Alpha
----@return string
 function HexShortOutput.str(RGB, A)
   local R, G, B = convert.rgb_format(RGB)
   -- No rounding here

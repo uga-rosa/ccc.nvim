@@ -2,7 +2,7 @@ local ColorInput = require("ccc.input")
 local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
----@class HslInput: ColorInput
+---@class HslInput: ccc.ColorInput
 local HslInput = setmetatable({
   name = "HSL",
   max = { 360, 1, 1 },

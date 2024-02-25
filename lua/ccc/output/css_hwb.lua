@@ -1,14 +1,11 @@
 local utils = require("ccc.utils")
 local convert = require("ccc.utils.convert")
 
----@class CssHwbOutput: ColorOutput
+---@class ccc.ColorOutput
 local CssHwbOutput = {
   name = "CssHWB",
 }
 
----@param RGB RGB
----@param A? Alpha
----@return string
 function CssHwbOutput.str(RGB, A)
   local H, W, B = unpack(convert.rgb2hwb(RGB))
   H = utils.round(H)

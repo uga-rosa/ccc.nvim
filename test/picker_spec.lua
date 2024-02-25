@@ -20,7 +20,7 @@ local function div255(a)
   end, a)
 end
 
----@param module ColorPicker
+---@param module ccc.ColorPicker
 ---@param str string
 ---@param expect_rgb integer[]? #range in [0-255]. If nil, expect parsing fail.
 ---@param expect_alpha Alpha?
@@ -277,7 +277,7 @@ describe("Color detection test", function()
   end)
 
   describe("ANSI Escape", function()
-    ---@param module ColorPicker
+    ---@param module ccc.ColorPicker
     ---@param str string
     ---@param expect_hl_def highlightDefinition
     local function test_hl_def(module, str, expect_hl_def)

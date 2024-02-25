@@ -1,7 +1,7 @@
 local ColorInput = require("ccc.input")
 local utils = require("ccc.utils")
 
----@class RgbInput: ColorInput
+---@class RgbInput: ccc.ColorInput
 local RgbInput = setmetatable({
   name = "RGB",
   max = { 1, 1, 1 },

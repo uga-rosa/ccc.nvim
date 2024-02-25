@@ -1,11 +1,12 @@
----@class TrailingWhitespacePicker: ColorPicker
+local utils = require("ccc.utils")
+
+---@class ccc.ColorPicker.TrailingWhiteSpace: ccc.ColorPicker
 ---@field ft2color table<string, RGB>
 ---@field filter table<string, boolean>
----@field already_in_insert boolean
----@field highlighter? Highlighter
 local TrailingWhitespacePicker = {}
+TrailingWhitespacePicker.__index = TrailingWhitespacePicker
 
----@class TrailingWhitespaceConfig
+---@class ccc.Option.TrailingWhitespace
 ---@field palette table<string, string> Keys are filetypes, values are colors (hex)
 ---@field default_color string Hex
 ---@field enable string[]|true List of filetypes for which highlighting is enabled or true.
@@ -19,8 +20,8 @@ local default = {
 
 local contains = vim.list_contains or vim.tbl_contains
 
----@param opts? TrailingWhitespaceConfig
----@return TrailingWhitespacePicker
+---@param opts? ccc.Option.TrailingWhitespace
+---@return ccc.ColorPicker.TrailingWhiteSpace
 function TrailingWhitespacePicker.new(opts)
   opts = vim.tbl_extend("keep", opts or {}, default)
 
@@ -28,10 +29,9 @@ function TrailingWhitespacePicker.new(opts)
   for ft, hex in pairs(opts.palette) do
     palette[ft] = hex
   end
-  local default_color = opts.default_color
   local ft2color = setmetatable(palette, {
     __index = function()
-      return default_color
+      return opts.default_color
     end,
   })
 
@@ -54,48 +54,39 @@ function TrailingWhitespacePicker.new(opts)
     end
   end
 
-  return setmetatable({
+  local self = setmetatable({
     ft2color = ft2color,
     filter = filter,
-  }, { __index = TrailingWhitespacePicker })
+  }, TrailingWhitespacePicker)
+
+  vim.api.nvim_create_autocmd("InsertLeave", {
+    callback = function(ev)
+      require("ccc.highlighter"):update(ev.buf, 0, -1, { self })
+    end,
+  })
+
+  return self
 end
 
 ---@param s string
 ---@param init? integer
 ---@param bufnr? integer
----@return integer? start
----@return integer? end_
----@return nil
----@return nil
----@return vim.api.keyset.highlight?
+---@return integer? start_col
+---@return integer? end_col
+---@return nil rgb
+---@return nil alpha
+---@return vim.api.keyset.highlight? hl_def
 function TrailingWhitespacePicker:parse_color(s, init, bufnr)
-  bufnr = vim.F.if_nil(bufnr, 0)
-  if not self.filter(bufnr) then
+  init = init or 1
+  bufnr = utils.ensure_bufnr(bufnr)
+  if not self.filter(bufnr) or vim.fn.mode() == "i" then
     return
   end
-  if vim.startswith(vim.fn.mode(), "i") then
-    if not self.already_in_insert then
-      if self.highlighter == nil then
-        -- Can't initialize in new() because setup() must be called before highlighter.new()
-        self.highlighter = require("ccc.highlighter").new(false)
-        self.highlighter.pickers = { self }
-      end
-      vim.api.nvim_create_autocmd("InsertLeave", {
-        callback = function(opts)
-          self.highlighter:update_picker(opts.buf, 0, -1, true)
-          self.already_in_insert = false
-        end,
-        once = true,
-      })
-      self.already_in_insert = true
-    end
-    return
-  end
-  local start, end_ = s:find("%s+$", init or 1)
-  if start then
+  local start_col, end_col = s:find("%s+$", init or 1)
+  if start_col and end_col then
     local ft = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
     local hex = self.ft2color[ft]
-    return start, end_, nil, nil, { bg = hex }
+    return start_col, end_col, nil, nil, { bg = hex }
   end
 end
 

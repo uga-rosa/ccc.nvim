@@ -1,20 +1,21 @@
 local parse = require("ccc.utils.parse")
 local pattern = require("ccc.utils.pattern")
 
----@class CustomEntries: ColorPicker
+---@class ccc.ColorPicker.CustomEntries: ccc.ColorPicker
 ---@field rgb { [string]: integer[] }
 ---@field min_length integer
 ---@field color_table { [string]: string }
 local CustomEntries = {}
+CustomEntries.__index = CustomEntries
 
 ---@param color_table { [string]: string }
----@return CustomEntries
+---@return ccc.ColorPicker.CustomEntries
 CustomEntries.new = function(color_table)
   return setmetatable({
     rgb = {},
     min_length = 0,
     color_table = color_table,
-  }, { __index = CustomEntries })
+  }, CustomEntries)
 end
 
 function CustomEntries:init()
@@ -47,10 +48,10 @@ end
 
 ---@param s string
 ---@param init? integer
----@return integer? start
----@return integer? end_
----@return RGB?
----@return Alpha?
+---@return integer? start_col
+---@return integer? end_col
+---@return RGB? rgb
+---@return Alpha? alpha
 function CustomEntries:parse_color(s, init)
   if vim.tbl_isempty(self.color_table) then
     vim.notify_once("[ccc] no entries for the custom_entries picker", vim.log.levels.WARN)
@@ -61,12 +62,12 @@ function CustomEntries:parse_color(s, init)
   if #s - init + 1 < self.min_length then
     return
   end
-  local start, end_ = pattern.find(s, self.pattern, init)
-  if start and end_ then
-    local name = s:sub(start, end_)
+  local start_col, end_col = pattern.find(s, self.pattern, init)
+  if start_col and end_col then
+    local name = s:sub(start_col, end_col)
     local rgb = self.rgb[name]
     if rgb then
-      return start, end_, rgb
+      return start_col, end_col, rgb
     end
   end
 end

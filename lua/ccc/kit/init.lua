@@ -76,23 +76,19 @@ function kit.merge(tbl1, tbl2)
     for k, v in pairs(tbl1) do
       if tbl2[k] == nil then
         if v ~= vim.NIL then
-          new_tbl[k] = v
+          new_tbl[k] = kit.merge(v, {})
         else
           new_tbl[k] = nil
         end
       end
     end
     return new_tbl
-  elseif is_dict1 and not is_dict2 then
-    return kit.merge(tbl1, {})
-  elseif not is_dict1 and is_dict2 then
-    return kit.merge(tbl2, {})
   end
 
   if tbl1 == vim.NIL then
     return nil
   elseif tbl1 == nil then
-    return tbl2
+    return kit.merge(tbl2, {})
   else
     return tbl1
   end
@@ -207,7 +203,10 @@ function kit.get(value, path, default)
       return default
     end
   end
-  return result or default
+  if result == nil then
+    return default
+  end
+  return result
 end
 
 return kit

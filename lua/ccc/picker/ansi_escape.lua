@@ -73,7 +73,7 @@ local default_name2color = {
   bright_white = "#f2f2f2",
 }
 
----@class AnsiEscapePicker: ColorPicker
+---@class ccc.ColorPicker.AnsiEscape: ccc.ColorPicker
 ---@field pattern string
 ---@field name2color { [string]: string }
 ---@field meaning1 "bold"|"bright"
@@ -84,31 +84,32 @@ local AnsiEscapePicker = {
   pattern = [=[\V\c\%(\\\?\\u001b\|\\\?\\033\|\\\?\\x1b\|27\|\^[\|\\\?\\e\)[\(\[0-9;]\+\)m]=],
   meaning1 = "bright",
 }
+AnsiEscapePicker.__index = AnsiEscapePicker
 
 ---@param name2color? { [string]: string }
 ---@param opts? table
----@return AnsiEscapePicker
+---@return ccc.ColorPicker.AnsiEscape
 function AnsiEscapePicker.new(name2color, opts)
-  name2color = vim.F.if_nil(name2color, {})
-  opts = vim.F.if_nil(opts, {})
+  name2color = name2color or {}
+  opts = opts or {}
   return setmetatable({
     name2color = vim.tbl_extend("keep", name2color, default_name2color),
     meaning1 = opts.meaning1,
-  }, { __index = AnsiEscapePicker })
+  }, AnsiEscapePicker)
 end
 
 ---@param s string
 ---@param init? integer
----@return integer? start
----@return integer? end_
----@return nil
----@return nil
----@return vim.api.keyset.highlight?
+---@return integer? start_col
+---@return integer? end_col
+---@return nil rgb
+---@return nil alpha
+---@return vim.api.keyset.highlight? hl_def
 function AnsiEscapePicker:parse_color(s, init)
-  init = vim.F.if_nil(init, 1)
+  init = init or 1
 
-  local start, end_, codes = pattern.find(s, self.pattern, init)
-  if not (start and end_ and codes) then
+  local start_col, end_col, codes = pattern.find(s, self.pattern, init)
+  if not (start_col and end_col and codes) then
     return
   end
 
@@ -125,7 +126,7 @@ function AnsiEscapePicker:parse_color(s, init)
   hl_def.fg = hl_def.fg and self.name2color[hl_def.fg] or self.name2color["foreground"]
   hl_def.bg = hl_def.bg and self.name2color[hl_def.bg] or self.name2color["background"]
 
-  return start, end_, nil, nil, hl_def
+  return start_col, end_col, nil, nil, hl_def
 end
 
 return AnsiEscapePicker.new

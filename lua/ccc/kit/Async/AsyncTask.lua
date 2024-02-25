@@ -147,19 +147,20 @@ end
 ---@param timeout? number
 ---@return any
 function AsyncTask:sync(timeout)
+  timeout = timeout or 1000
+
   self.synced = true
 
-  if is_thread then
-    while true do
-      if self.status ~= AsyncTask.Status.Pending then
-        break
-      end
-      uv.run("once")
+  local time = uv.now()
+  while uv.now() - time <= timeout do
+    if self.status ~= AsyncTask.Status.Pending then
+      break
     end
-  else
-    vim.wait(timeout or 24 * 60 * 60 * 1000, function()
-      return self.status ~= AsyncTask.Status.Pending
-    end, 1, false)
+    if is_thread then
+      uv.run("once")
+    else
+      vim.wait(0)
+    end
   end
   if self.status == AsyncTask.Status.Rejected then
     error(self.value, 2)
@@ -220,11 +221,15 @@ function AsyncTask:dispatch(on_fulfilled, on_rejected)
 
   local function dispatch(resolve, reject)
     local on_next = self.status == AsyncTask.Status.Fulfilled and on_fulfilled or on_rejected
-    local res = on_next(self.value)
+    local ok, res = pcall(on_next, self.value)
     if AsyncTask.is(res) then
       res:dispatch(resolve, reject)
     else
-      resolve(res)
+      if ok then
+        resolve(res)
+      else
+        reject(res)
+      end
     end
   end
 
