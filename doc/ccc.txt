@@ -37,8 +37,8 @@ Features:
 Setup                                                                *ccc-setup*
 
 
-If you do not change the default setting, there is no need to call setup.
-See |ccc-option| for the options that can be used.
+Enable |'termguicolors'| and call `require("ccc").setup()`.
+See |ccc-options| for the options that can be used.
 >lua
 	-- Enable true color
 	vim.opt.termguicolors = true
@@ -59,7 +59,7 @@ See |ccc-option| for the options that can be used.
 
 
 ==============================================================================
-Option                                                             *ccc-option*
+Options                                                            *ccc-options*
 
 
                                                       *ccc-option-default-color*
