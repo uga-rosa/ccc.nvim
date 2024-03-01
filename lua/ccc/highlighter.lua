@@ -83,7 +83,10 @@ function Highlighter:enable(bufnr)
       elseif not opts.highlighter.update_insert and vim.fn.mode() == "i" then
         return
       end
-      self:update(bufnr, first_line, last_line)
+      -- Without vim.schedule(), it does not update correctly when undo/redo
+      vim.schedule(function()
+        self:update(bufnr, first_line, last_line)
+      end)
     end,
     on_detach = function()
       self.attached_buffer[bufnr] = nil
