@@ -51,6 +51,10 @@ end
 ---@param ft string
 ---@return boolean
 local function ft_filter(ft)
+  -- Disable in UI
+  if ft == "ccc-ui" then
+    return false
+  end
   local opts = require("ccc.config").options
   if not opts.highlighter.auto_enable then
     return true
