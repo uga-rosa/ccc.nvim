@@ -57,7 +57,7 @@ function PickerHandler.info_in_range(bufnr, start_line, end_line, pickers)
   end
 
   local infos = {}
-  local lines = vim.api.nvim_buf_get_lines(bufnr, start_line, end_line, true)
+  local lines = vim.api.nvim_buf_get_lines(bufnr, start_line, end_line, false)
   for i, line in ipairs(lines) do
     local row = start_line + i - 1
     for _, picker in ipairs(pickers) do
