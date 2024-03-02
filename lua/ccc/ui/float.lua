@@ -42,6 +42,12 @@ function UI:open(color, prev_colors)
   vim.api.nvim_set_option_value("modifiable", false, { buf = self.bufnr })
   vim.api.nvim_set_option_value("filetype", "ccc-ui", { buf = self.bufnr })
   vim.api.nvim_set_option_value("signcolumn", "no", { win = self.winid })
+  -- Set highlight
+  local float_normal = vim.api.nvim_get_hl(0, { name = "CccFloatNormal" }) --[[@as vim.api.keyset.highlight]]
+  local float_border = vim.api.nvim_get_hl(0, { name = "CccFloatBorder" }) --[[@as vim.api.keyset.highlight]]
+  vim.api.nvim_set_hl(self.ns_id, "Normal", float_normal)
+  vim.api.nvim_set_hl(self.ns_id, "EndOfBuffer", float_normal)
+  vim.api.nvim_set_hl(self.ns_id, "FloatBorder", float_border)
   -- For callback
   self.is_quit = true
   -- Clean up on closing a window
