@@ -35,11 +35,13 @@ function UI:open(color, prev_colors)
   opts.win_opts.width = width
   self.winid = vim.api.nvim_open_win(self.bufnr, true, opts.win_opts)
   vim.api.nvim_win_set_hl_ns(self.winid, self.ns_id)
+  -- Move cursor to the top color bar
   api.set_cursor(1, 0)
   -- Set options
   vim.api.nvim_set_option_value("buftype", "nofile", { buf = self.bufnr })
   vim.api.nvim_set_option_value("modifiable", false, { buf = self.bufnr })
   vim.api.nvim_set_option_value("filetype", "ccc-ui", { buf = self.bufnr })
+  vim.api.nvim_set_option_value("signcolumn", "no", { win = self.winid })
   -- For callback
   self.is_quit = true
   -- Clean up on closing a window
