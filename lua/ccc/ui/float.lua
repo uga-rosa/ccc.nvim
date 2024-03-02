@@ -70,6 +70,9 @@ function UI:update()
   api.set_lines(self.bufnr, 0, -1, buffer)
   self:highlight(width)
   vim.api.nvim_win_set_config(self.winid, { height = #buffer, width = width })
+  -- In v0.9.5, nvim_win_set_config() destroys the association between window and namespace.
+  -- This bug is fixed in nightly.
+  vim.api.nvim_win_set_hl_ns(self.winid, self.ns_id)
 end
 
 --- Close UI manually.
