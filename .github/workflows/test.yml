@@ -24,7 +24,7 @@ jobs:
         version:
           - nightly
           - stable
-          - v0.8.0
+          - v0.9.0
 
     runs-on: ubuntu-latest
     steps:

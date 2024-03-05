@@ -15,7 +15,7 @@ Use the colorful sliders to easily generate any desired color!
     - Programmable modules (input/output/picker)
 
 - Requirements
-    - neovim 0.8+
+    - neovim 0.9.0+
 
 See [doc](./doc/ccc.txt) for details.
 
