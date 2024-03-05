@@ -31,6 +31,9 @@ Features:
 - Color Highlighter for many formats.
 - Programmable modules (input/output/picker)
 
+Requirements:
+- Neovim 0.9.0+
+
 
 
 ==============================================================================
