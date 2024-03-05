@@ -34,8 +34,8 @@ end
 ---@return integer? end
 ---@return string? ... submatches
 function pattern.find(str, pat, init)
-  -- matchlist() considers a string containing `\n` as a blob and cannot process them.
-  if str:find("\n") then
+  -- matchlist() considers a string containing `\0` as a blob and cannot process them.
+  if str:find("\0") then
     return
   end
 
