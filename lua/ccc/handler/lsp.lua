@@ -34,6 +34,13 @@ function LspHandler:attach(bufnr)
     self.color_info_map[bufnr] = nil
     return
   end
+  vim.api.nvim_create_autocmd("LspAttach", {
+    buffer = bufnr,
+    callback = function()
+      self:update(bufnr)
+    end,
+    once = true,
+  })
   vim.api.nvim_buf_attach(bufnr, false, {
     on_lines = function()
       if not self.enabled then
