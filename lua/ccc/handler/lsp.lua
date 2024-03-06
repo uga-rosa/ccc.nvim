@@ -5,7 +5,6 @@ local hl = require("ccc.handler.highlight")
 ---@class ccc.LspHandler
 ---@field enabled boolean
 ---@field color_info_map table<integer, lsp.ColorInformation[]> Keys are bufnrs
----@field update_callback? fun(bufnr: integer)
 local LspHandler = {
   enabled = false,
   color_info_map = {},
@@ -72,9 +71,6 @@ function LspHandler:update(bufnr)
       end
     end
     self.color_info_map[bufnr] = color_informations
-    if self.update_callback then
-      self.update_callback(bufnr)
-    end
   end)
 end
 
