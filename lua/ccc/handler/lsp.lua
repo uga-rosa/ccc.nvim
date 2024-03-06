@@ -49,7 +49,21 @@ end
 ---Asynchronously update color informations
 ---@param bufnr integer
 function LspHandler:update(bufnr)
+  local method = "textDocument/documentColor"
   local param = { textDocument = vim.lsp.util.make_text_document_params() }
+
+  local active = false
+  ---@diagnostic disable-next-line
+  local clients = (vim.lsp.get_clients or vim.lsp.get_active_clients)({ bufnr = bufnr })
+  for _, client in ipairs(clients) do
+    if client.supports_method(method, { bufnr = bufnr }) then
+      active = true
+    end
+  end
+  if not active then
+    return
+  end
+
   vim.lsp.buf_request_all(bufnr, "textDocument/documentColor", param, function(resps)
     local color_informations = {}
     for _, resp in pairs(resps) do
