@@ -121,6 +121,11 @@ end
 ---@param end_line integer
 ---@param pickers? ccc.ColorPicker[]
 function Highlighter:update(bufnr, start_line, end_line, pickers)
+  if not utils.bufnr_is_valid(bufnr) then
+    self:disable(bufnr)
+    return
+  end
+
   if pickers then
     local custom_info = picker_handler.info_in_range(bufnr, start_line, end_line, pickers)
     vim.api.nvim_buf_clear_namespace(bufnr, self.custom_ns_id, start_line, end_line)

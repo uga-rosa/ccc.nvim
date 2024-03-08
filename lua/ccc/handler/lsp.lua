@@ -30,7 +30,7 @@ end
 ---@param bufnr integer
 function LspHandler:attach(bufnr)
   bufnr = utils.ensure_bufnr(bufnr)
-  if not vim.api.nvim_buf_is_valid(bufnr) then
+  if not utils.bufnr_is_valid(bufnr) then
     self.color_info_map[bufnr] = nil
     return
   end

@@ -99,6 +99,13 @@ function utils.ensure_bufnr(bufnr)
   return bufnr
 end
 
+---@param bufnr? integer
+---@return boolean
+function utils.bufnr_is_valid(bufnr)
+  bufnr = utils.ensure_bufnr(bufnr)
+  return vim.api.nvim_buf_is_valid(bufnr)
+end
+
 ---@param value? number|number[]
 ---@param min number
 ---@param max number
