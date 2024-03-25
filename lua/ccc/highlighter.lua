@@ -102,8 +102,10 @@ end
 function Highlighter:disable(bufnr)
   bufnr = utils.ensure_bufnr(bufnr)
   self.attached_buffer[bufnr] = nil
-  vim.api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, 0, -1)
-  vim.api.nvim_buf_clear_namespace(bufnr, self.picker_ns_id, 0, -1)
+  if utils.bufnr_is_valid(bufnr) then
+    vim.api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, 0, -1)
+    vim.api.nvim_buf_clear_namespace(bufnr, self.picker_ns_id, 0, -1)
+  end
 end
 
 ---@param bufnr? integer
