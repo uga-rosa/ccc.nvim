@@ -55,6 +55,9 @@ function utils.clamp(int, min, max)
     return min
   elseif int > max then
     return max
+  elseif int ~= int then
+    -- int is NaN
+    return min
   end
   return int
 end

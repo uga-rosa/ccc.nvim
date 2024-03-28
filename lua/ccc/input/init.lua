@@ -22,6 +22,9 @@ end
 
 ---@param value number[]
 function ColorInput:set(value)
+  for i, v in ipairs(value) do
+    value[i] = utils.clamp(v, self.min[i], self.max[i])
+  end
   self.value = value
 end
 
