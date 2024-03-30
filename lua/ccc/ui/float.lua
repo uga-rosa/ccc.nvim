@@ -278,7 +278,7 @@ function UI:highlight(width)
         end_col = start_col + #opts.bar_char
       end
       -- Calculate a new color for highlight of an alpha slider
-      local alpha_ratio = (i + 0.5) / opts.bar_len
+      local alpha_ratio = (i - 0.5) / opts.bar_len
       local hex = self.color.alpha:hex(alpha_ratio)
       local hl = { fg = hex }
       if i == point_idx then
@@ -294,6 +294,8 @@ function UI:highlight(width)
       end
       local color_name = "CccAlpha" .. i
       api.set_hl(self.bufnr, self.ns_id, { row, start_col, row, end_col }, color_name, hl)
+
+      start_col = end_col
     end
   end
 
