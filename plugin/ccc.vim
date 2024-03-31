@@ -1,4 +1,4 @@
-if !get(g:, 'loaded_ccc', 0)
+if exists('g:loaded_ccc')
   finish
 endif
 let g:loaded_ccc = 1
