@@ -122,7 +122,7 @@ function LspHandler:info_in_range(bufnr, start_line, end_line)
     local range = color_info.range
     local color = color_info.color
     if range.start.line >= start_line and range["end"].line <= end_line then
-      local hl_name = hl.ensure_hl_name({ color.alpha, color.green, color.blue })
+      local hl_name = hl.ensure_hl_name({ color.red, color.green, color.blue })
       table.insert(infos, {
         range = {
           range.start.line,
