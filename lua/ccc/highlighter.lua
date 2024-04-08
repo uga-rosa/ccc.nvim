@@ -2,42 +2,39 @@ local utils = require("ccc.utils")
 local api = require("ccc.utils.api")
 local lsp_handler = require("ccc.handler.lsp")
 local picker_handler = require("ccc.handler.picker")
+local hl = require("ccc.handler.highlight")
 
 ---@class ccc.Highlighter
 ---@field picker_ns_id integer
 ---@field lsp_ns_id integer
 ---@field custom_ns_id integer
 ---@field attached_buffer table<integer, boolean> Keys are bufnrs.
----@field is_defined table<string, boolean> Keys are highlight names.
 local Highlighter = {
   picker_ns_id = vim.api.nvim_create_namespace("ccc-highlighter-picker"),
   lsp_ns_id = vim.api.nvim_create_namespace("ccc-highlighter-lsp"),
   custom_ns_id = vim.api.nvim_create_namespace("ccc-highlighter-custom"),
   attached_buffer = {},
-  is_defined = {},
 }
 
 function Highlighter:init()
   local opts = require("ccc.config").options
-  if opts.highlighter.auto_enable then
-    vim.api.nvim_create_autocmd("ColorScheme", {
-      callback = function()
-        -- Re-highlight only visible buffers.
-        local visible_buf = {}
-        for _, win in ipairs(vim.api.nvim_list_wins()) do
-          visible_buf[vim.api.nvim_win_get_buf(win)] = true
+  vim.api.nvim_create_autocmd("ColorScheme", {
+    callback = function()
+      hl.reset()
+      -- Re-highlight only visible buffers.
+      local visible_buf = {}
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        visible_buf[vim.api.nvim_win_get_buf(win)] = true
+      end
+      for bufnr in pairs(self.attached_buffer) do
+        if visible_buf[bufnr] then
+          self:update(bufnr, 0, -1)
+        else
+          self:disable(bufnr)
         end
-        self.is_defined = {}
-        for bufnr in pairs(self.attached_buffer) do
-          if visible_buf[bufnr] then
-            self:update(bufnr, 0, -1)
-          else
-            self:disable(bufnr)
-          end
-        end
-      end,
-    })
-  end
+      end
+    end,
+  })
   if not opts.highlighter.update_insert then
     vim.api.nvim_create_autocmd("InsertLeave", {
       callback = function(args)

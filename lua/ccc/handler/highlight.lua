@@ -5,6 +5,10 @@ local M = {
   hl_name_cache = {},
 }
 
+function M.reset()
+  M.hl_name_cache = {}
+end
+
 ---@param rgb? RGB
 ---@param hl_def? vim.api.keyset.highlight
 ---@return string hl_name
