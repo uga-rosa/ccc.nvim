@@ -229,8 +229,8 @@ function UI:highlight(width)
 
     -- {bar_name} + " : " + {formatted_value} + " "
     -- {formatted_value} is must be 6 byte (See `ccc.ColorInput.format()`)
-    -- So, +9 (0-indexed)
-    local start_col, end_col = bar_name_len + 9, 0
+    -- So, +10 (0-indexed)
+    local start_col, end_col = bar_name_len + 10, 0
     for j = 1, opts.bar_len do
       -- Update end_
       if j == point_idx then
@@ -269,7 +269,7 @@ function UI:highlight(width)
     row = row + 1
     local point_idx = adjust2bar(alpha, 0, 1)
 
-    local start_col, end_col = bar_name_len + 9, 0
+    local start_col, end_col = bar_name_len + 10, 0
     for i = 1, opts.bar_len do
       -- Update end_
       if i == point_idx then
