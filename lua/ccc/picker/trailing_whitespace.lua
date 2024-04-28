@@ -61,7 +61,7 @@ function TrailingWhitespacePicker.new(opts)
 
   vim.api.nvim_create_autocmd("InsertLeave", {
     callback = function(ev)
-      require("ccc.highlighter"):update(ev.buf, 0, -1, { self })
+      require("ccc.highlighter"):update(ev.buf, 0, -1)
     end,
   })
 

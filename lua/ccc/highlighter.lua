@@ -7,12 +7,10 @@ local hl = require("ccc.handler.highlight")
 ---@class ccc.Highlighter
 ---@field picker_ns_id integer
 ---@field lsp_ns_id integer
----@field custom_ns_id integer
 ---@field attached_buffer table<integer, boolean> Keys are bufnrs.
 local Highlighter = {
   picker_ns_id = vim.api.nvim_create_namespace("ccc-highlighter-picker"),
   lsp_ns_id = vim.api.nvim_create_namespace("ccc-highlighter-lsp"),
-  custom_ns_id = vim.api.nvim_create_namespace("ccc-highlighter-custom"),
   attached_buffer = {},
 }
 
@@ -118,19 +116,9 @@ end
 ---@param bufnr integer
 ---@param start_line integer
 ---@param end_line integer
----@param pickers? ccc.ColorPicker[]
-function Highlighter:update(bufnr, start_line, end_line, pickers)
+function Highlighter:update(bufnr, start_line, end_line)
   if not utils.bufnr_is_valid(bufnr) then
     self:disable(bufnr)
-    return
-  end
-
-  if pickers then
-    local custom_info = picker_handler.info_in_range(bufnr, start_line, end_line, pickers)
-    vim.api.nvim_buf_clear_namespace(bufnr, self.custom_ns_id, start_line, end_line)
-    for _, info in ipairs(custom_info) do
-      api.set_hl(bufnr, self.custom_ns_id, info.range, info.hl_name)
-    end
     return
   end
 
