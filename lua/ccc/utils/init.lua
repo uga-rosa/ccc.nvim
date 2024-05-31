@@ -85,6 +85,9 @@ end
 ---@param hl_mode ccc.Option.hl_mode
 ---@return vim.api.keyset.highlight
 function utils.create_highlight(hex, hl_mode)
+  if hl_mode == "virtual" then
+    return { fg = hex }
+  end
   local contrast = is_bright_HEX(hex) and "#000000" or "#ffffff"
   if hl_mode == "fg" or hl_mode == "foreground" then
     return { fg = hex, bg = contrast }

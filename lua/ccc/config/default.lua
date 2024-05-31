@@ -61,6 +61,8 @@ return {
     return line, b_start_col, b_end_col, a_start_col, a_end_col
   end,
   highlight_mode = "bg",
+  virtual_symbol = " ● ",
+  virtual_pos = "inline-left",
   lsp = true,
   highlighter = {
     auto_enable = false,

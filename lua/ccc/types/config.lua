@@ -20,6 +20,8 @@
 ---@field lsp boolean
 ---@field output_line fun(before_color: ccc.Color, after_color: ccc.Color, width: integer): string, integer, integer, integer, integer
 ---@field highlight_mode ccc.Option.hl_mode
+---@field virtual_symbol string
+---@field virtual_pos ccc.Option.virtual_pos
 ---@field highlighter ccc.Option.highlighter
 ---@field convert { [1]: ccc.ColorPicker, [2]: ccc.ColorOutput }[]
 ---@field recognize ccc.Option.recognize
@@ -27,7 +29,8 @@
 ---@field disable_default_mappings boolean
 
 ---@alias ccc.Option.show_mode "auto" | "show" | "hide"
----@alias ccc.Option.hl_mode "fg" | "foreground" | "bg" | "background"
+---@alias ccc.Option.hl_mode "fg" | "foreground" | "bg" | "background" | "virtual"
+---@alias ccc.Option.virtual_pos "inline-left" | "inline-right" | "eol"
 
 ---@class ccc.Option.highlighter
 ---@field auto_enable boolean
@@ -66,14 +69,13 @@
 ---@field lsp? boolean
 ---@field output_line? fun(before_color: ccc.Color, after_color: ccc.Color, width: integer): string, integer, integer, integer, integer
 ---@field highlight_mode? ccc.Option.hl_mode
+---@field virtual_symbol? string
+---@field virtual_pos? "inline-left" | "inline-right" | "eol"
 ---@field highlighter? ccc.Option.highlighter.P
 ---@field convert? { [1]: ccc.ColorPicker, [2]: ccc.ColorOutput }[]
 ---@field recognize? ccc.Option.recognize.P
 ---@field mappings? table<string, function>
 ---@field disable_default_mappings? boolean
-
----@alias ccc.Option.show_mode "auto" | "show" | "hide"
----@alias ccc.Option.hl_mode "fg" | "foreground" | "bg" | "background"
 
 ---@class ccc.Option.highlighter.P
 ---@field auto_enable? boolean
