@@ -85,6 +85,8 @@ return {
         [picker.css_rgb]   = { input.rgb,   output.css_rgb   },
         [picker.css_name]  = { input.rgb,   output.css_rgb   },
         [picker.hex]       = { input.rgb,   output.hex       },
+        [picker.hex_long]  = { input.rgb,   output.hex       },
+        [picker.hex_short] = { input.rgb,   output.hex_short },
         [picker.css_hsl]   = { input.hsl,   output.css_hsl   },
         [picker.css_hwb]   = { input.hwb,   output.css_hwb   },
         [picker.css_lab]   = { input.lab,   output.css_lab   },
