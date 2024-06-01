@@ -364,10 +364,28 @@ Default: ccc.output_line
 
                                                      *ccc-option-highlight-mode*
 highlight_mode ~
-"fg" | "bg" | "foreground" | "background"
+"fg" | "bg" | "foreground" | "background" | "virtual"
 Default: "bg"
 	Option to highlight text foreground or background. It is used to
 	output_line and highlighter.
+	If "virtual", use colored virtual texts.
+
+
+                                                     *ccc-option-virtual_symbol*
+virtual_symbol ~
+string
+Default: " ● "
+	When |ccc-options-highlight_mode| is "virtual", this option controls
+	the text of the virt_text.
+
+
+                                                        *ccc-option-virtual_pos*
+virtual_pos ~
+"inline-left" | "inline-right" | "eol"
+Default: "inline-left"
+	When |ccc-options-highlight_mode| is "virtual", this option controls
+	where to put it out. You can choose whether to put the color inline on
+	the left or right side of the color, or at the end of the line.
 
 
                                                                 *ccc-option-lsp*
