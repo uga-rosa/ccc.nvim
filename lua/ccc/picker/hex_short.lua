@@ -1,13 +1,13 @@
 local HexPicker = require("ccc.picker.hex")
 
----@class ccc.ColorPicker.HexLong: ccc.ColorPicker.Hex
-local HexLongPicker = setmetatable({}, { __index = HexPicker })
+---@class ccc.ColorPicker.HexShort: ccc.ColorPicker.Hex
+local HexShortPicker = setmetatable({}, { __index = HexPicker })
 
 -- #RGB
 -- #RGBA
-HexLongPicker.pattern = {
+HexShortPicker.pattern = {
   [=[\v%(^|[^[:keyword:]])\zs#(\x)(\x)(\x)>]=],
   [=[\v%(^|[^[:keyword:]])\zs#(\x)(\x)(\x)(\x)>]=],
 }
 
-return HexLongPicker
+return HexShortPicker
