@@ -3,23 +3,18 @@ local pattern = require("ccc.utils.pattern")
 
 ---@class ccc.ColorPicker.Hex: ccc.ColorPicker
 ---@field pattern string[]
-local HexPicker = {}
-
-function HexPicker:init()
-  if self.pattern then
-    return
-  end
+local HexPicker = {
   -- #RRGGBB
-  -- #RGB
   -- #RRGGBBAA
+  -- #RGB
   -- #RGBA
-  self.pattern = {
+  pattern = {
     [=[\v%(^|[^[:keyword:]])\zs#(\x\x)(\x\x)(\x\x)>]=],
-    [=[\v%(^|[^[:keyword:]])\zs#(\x)(\x)(\x)>]=],
     [=[\v%(^|[^[:keyword:]])\zs#(\x\x)(\x\x)(\x\x)(\x\x)>]=],
+    [=[\v%(^|[^[:keyword:]])\zs#(\x)(\x)(\x)>]=],
     [=[\v%(^|[^[:keyword:]])\zs#(\x)(\x)(\x)(\x)>]=],
-  }
-end
+  },
+}
 
 ---@param s string
 ---@param init? integer
@@ -28,7 +23,6 @@ end
 ---@return number[]? rgb
 ---@return number? alpha
 function HexPicker:parse_color(s, init)
-  self:init()
   init = init or 1
   -- The shortest patten is 4 characters like `#fff`
   while init <= #s - 3 do
