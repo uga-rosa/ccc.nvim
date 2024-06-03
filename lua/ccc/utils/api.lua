@@ -37,13 +37,34 @@ end
 ---@param bufnr integer
 ---@param ns_id integer
 ---@param range ccc.Range
----@param name string
+---@param hl_group string
 ---@param hl_def? vim.api.keyset.highlight
-function M.set_hl(bufnr, ns_id, range, name, hl_def)
+function M.set_hl(bufnr, ns_id, range, hl_group, hl_def)
   if hl_def then
-    vim.api.nvim_set_hl(ns_id, name, hl_def)
+    vim.api.nvim_set_hl(ns_id, hl_group, hl_def)
   end
-  vim.api.nvim_buf_add_highlight(bufnr, ns_id, name, range[1], range[2], range[4])
+  vim.api.nvim_buf_set_extmark(bufnr, ns_id, range[1], range[2], {
+    hl_group = hl_group,
+    end_row = range[3],
+    end_col = range[4],
+  })
+end
+
+---@param bufnr integer
+---@param ns_id integer
+---@param pos ccc.Position
+---@param mark string
+---@param virt_pos "inline" | "eol"
+---@param hl_group string
+---@param hl_def? vim.api.keyset.highlight
+function M.virtual_hl(bufnr, ns_id, pos, mark, virt_pos, hl_group, hl_def)
+  if hl_def then
+    vim.api.nvim_set_hl(ns_id, hl_group, hl_def)
+  end
+  vim.api.nvim_buf_set_extmark(bufnr, ns_id, pos[1], pos[2], {
+    virt_text = { { mark, hl_group } },
+    virt_text_pos = virt_pos,
+  })
 end
 
 ---@param bufnr integer

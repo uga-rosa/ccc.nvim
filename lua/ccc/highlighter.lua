@@ -123,18 +123,32 @@ function Highlighter:update(bufnr, start_line, end_line)
   end
 
   local opts = require("ccc.config").options
+  local virt_pos = opts.virtual_pos == "eol" and "eol" or "inline"
+
+  ---@param info ccc.hl_info
+  ---@param ns_id integer
+  local function set_hl(info, ns_id)
+    if opts.highlight_mode == "virtual" then
+      local r = info.range
+      local pos = opts.virtual_pos == "inline-right" and { r[3], r[4] } or { r[1], r[2] }
+      api.virtual_hl(bufnr, ns_id, pos, opts.virtual_symbol, virt_pos, info.hl_name)
+    else
+      api.set_hl(bufnr, ns_id, info.range, info.hl_name)
+    end
+  end
+
   if opts.highlighter.lsp then
     local lsp_info = lsp_handler:info_in_range(bufnr, start_line, end_line)
     vim.api.nvim_buf_clear_namespace(bufnr, self.lsp_ns_id, start_line, end_line)
     for _, info in ipairs(lsp_info) do
-      api.set_hl(bufnr, self.lsp_ns_id, info.range, info.hl_name)
+      set_hl(info, self.lsp_ns_id)
     end
   end
   if opts.highlighter.picker then
     local picker_info = picker_handler.info_in_range(bufnr, start_line, end_line)
     vim.api.nvim_buf_clear_namespace(bufnr, self.picker_ns_id, start_line, end_line)
     for _, info in ipairs(picker_info) do
-      api.set_hl(bufnr, self.picker_ns_id, info.range, info.hl_name)
+      set_hl(info, self.picker_ns_id)
     end
   end
 end
