@@ -261,6 +261,7 @@ Default: {
 		- CssOKLab  ccc.picker.css_oklab,
 		- CssOKLCH  ccc.picker.css_oklch,
 		- CssName   ccc.picker.css_name
+		- Defaults  ccc.picker.defaults (Neovim default colorscheme)
 	Css* conforms to CSS Color Module Level 4.
 	https://www.w3.org/TR/css-color-4/
 
