@@ -44,6 +44,7 @@ function M.set_hl(bufnr, ns_id, range, hl_group, hl_def)
     vim.api.nvim_set_hl(ns_id, hl_group, hl_def)
   end
   vim.api.nvim_buf_set_extmark(bufnr, ns_id, range[1], range[2], {
+    strict = false, -- prevents #126
     hl_group = hl_group,
     end_row = range[3],
     end_col = range[4],
