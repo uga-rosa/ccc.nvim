@@ -76,6 +76,11 @@ function M.hide_alpha(core)
 end
 
 ---@param core ccc.Core
+function M.reset_mode(core)
+  core:reset_mode()
+end
+
+---@param core ccc.Core
 function M.toggle_alpha(core)
   core.color.alpha:toggle()
   core.ui:update()
