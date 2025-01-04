@@ -219,6 +219,7 @@ Default: {
 		- HEX (6/8 digits)  ccc.output.hex
 		      (3/4 digits)  ccc.output.hex_short
 		- CssRGB            ccc.output.css_rgb
+		- CssRGBA           ccc.output.css_rgba
 		- CssHSL            ccc.output.css_hsl
 		- CssHWB            ccc.output.css_hwb
 		- CssLab            ccc.output.css_lab
