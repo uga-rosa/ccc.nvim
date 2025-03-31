@@ -61,7 +61,11 @@ function LspHandler:update(bufnr)
   ---@diagnostic disable-next-line
   local clients = (vim.lsp.get_clients or vim.lsp.get_active_clients)({ bufnr = bufnr })
   clients = vim.tbl_filter(function(client)
-    return client.supports_method(method, { bufnr = bufnr })
+    if vim.fn.has("nvim-0.11") then
+      return client:supports_method(method, { bufnr = bufnr })
+    else
+      return client.supports_method(method, { bufnr = bufnr })
+    end
   end, clients)
   -- Number of clients who responsed
   local result_count = 0
