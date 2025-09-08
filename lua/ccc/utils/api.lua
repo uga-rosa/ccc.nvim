@@ -44,6 +44,7 @@ function M.set_hl(bufnr, ns_id, range, hl_group, hl_def)
     vim.api.nvim_set_hl(ns_id, hl_group, hl_def)
   end
   vim.api.nvim_buf_set_extmark(bufnr, ns_id, range[1], range[2], {
+    invalidate = true,
     strict = false, -- prevents #126
     hl_group = hl_group,
     end_row = range[3],
@@ -63,6 +64,7 @@ function M.virtual_hl(bufnr, ns_id, pos, mark, virt_pos, hl_group, hl_def)
     vim.api.nvim_set_hl(ns_id, hl_group, hl_def)
   end
   vim.api.nvim_buf_set_extmark(bufnr, ns_id, pos[1], pos[2], {
+    invalidate = true,
     virt_text = { { mark, hl_group } },
     virt_text_pos = virt_pos,
   })
