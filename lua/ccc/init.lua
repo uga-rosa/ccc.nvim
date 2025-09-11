@@ -57,7 +57,7 @@ local function setup(user_opts)
   end, { nargs = "?" })
 
   if opts.highlighter.auto_enable then
-    vim.api.nvim_create_autocmd("BufEnter", {
+    vim.api.nvim_create_autocmd("FileType", {
       group = vim.api.nvim_create_augroup("ccc-highlighter-auto-enable", {}),
       callback = function(ev)
         local ok, stat = pcall(vim.loop.fs_stat, ev.file)
