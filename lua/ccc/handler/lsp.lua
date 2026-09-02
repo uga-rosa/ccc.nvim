@@ -5,9 +5,13 @@ local hl = require("ccc.handler.highlight")
 ---@class ccc.LspHandler
 ---@field enabled boolean
 ---@field color_info_map table<integer, lsp.ColorInformation[]> Keys are bufnrs
+---@field request_generation table<integer, integer> Keys are bufnrs
+---@field next_generation integer
 local LspHandler = {
   enabled = false,
   color_info_map = {},
+  request_generation = {},
+  next_generation = 0,
 }
 
 function LspHandler:enable()
@@ -25,6 +29,7 @@ end
 function LspHandler:disable()
   self.enabled = false
   self.color_info_map = {}
+  self.request_generation = {}
 end
 
 ---@param bufnr integer
@@ -32,6 +37,7 @@ function LspHandler:attach(bufnr)
   bufnr = utils.ensure_bufnr(bufnr)
   if not utils.bufnr_is_valid(bufnr) then
     self.color_info_map[bufnr] = nil
+    self.request_generation[bufnr] = nil
     return
   end
   vim.api.nvim_create_autocmd("LspAttach", {
@@ -48,6 +54,10 @@ function LspHandler:attach(bufnr)
       end
       self:update(bufnr)
     end,
+    on_detach = function()
+      self.color_info_map[bufnr] = nil
+      self.request_generation[bufnr] = nil
+    end,
   })
 end
 
@@ -55,6 +65,15 @@ end
 ---Asynchronously update color informations
 ---@param bufnr integer
 function LspHandler:update(bufnr)
+  if not utils.bufnr_is_valid(bufnr) then
+    self.color_info_map[bufnr] = nil
+    self.request_generation[bufnr] = nil
+    return
+  end
+  self.next_generation = self.next_generation + 1
+  local generation = self.next_generation
+  self.request_generation[bufnr] = generation
+  local changedtick = vim.api.nvim_buf_get_changedtick(bufnr)
   local method = "textDocument/documentColor"
   local param = { textDocument = vim.lsp.util.make_text_document_params() }
 
@@ -78,7 +97,18 @@ function LspHandler:update(bufnr)
       end
       -- Responses have been received from all expected clients
       if result_count >= #clients then
-        self.color_info_map[bufnr] = color_informations
+        if
+          generation == self.request_generation[bufnr]
+          and utils.bufnr_is_valid(bufnr)
+          and changedtick == vim.api.nvim_buf_get_changedtick(bufnr)
+        then
+          self.color_info_map[bufnr] = color_informations
+          local highlighter = require("ccc.highlighter")
+          local options = require("ccc.config").options
+          if highlighter.attached_buffer[bufnr] and (options.highlighter.update_insert or vim.fn.mode() ~= "i") then
+            highlighter:update(bufnr, 0, vim.api.nvim_buf_line_count(bufnr))
+          end
+        end
       end
     end)
   end
